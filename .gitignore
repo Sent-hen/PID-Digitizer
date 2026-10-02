@@ -1,0 +1,22 @@
+# Dataset (CC BY-SA 4.0, 13 GB) - download separately, see DATASET_NOTES.md
+PID2Graph/
+PID2Graph.zip
+
+# Generated
+outputs/
+.cache/
+*.onnx
+*.pt
+*.pth
+weights/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
