@@ -23,6 +23,10 @@ dev = [
     "mypy>=1.10",
     "types-PyYAML",
 ]
+ml = [
+    "torch>=2.6",
+    "torchvision>=0.21",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -47,8 +51,15 @@ mypy_path = "src"
 packages = ["pid"]
 
 [[tool.mypy.overrides]]
-module = ["networkx.*", "cv2.*", "pycocotools.*", "matplotlib.*", "scipy.*"]
+module = ["networkx.*", "cv2.*", "torch.*", "torchvision.*", "pycocotools.*", "matplotlib.*", "scipy.*"]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# torch is optional (not installed in CI); its decorators are untyped there
+module = ["pid.detect.model"]
+disallow_untyped_decorators = false
+disallow_subclassing_any = false
+warn_unused_ignores = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -57,3 +68,16 @@ markers = [
     "dataset: requires the full PID2Graph dataset on disk (not run in CI)",
 ]
 addopts = "-m 'not dataset and not slow'"
+
+[tool.uv]
+# Local dev installs everything; CPU-only CI skips the GPU stack with `--no-group ml`
+default-groups = ["dev", "ml"]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128", marker = "sys_platform == 'win32' or sys_platform == 'linux'" }
+torchvision = { index = "pytorch-cu128", marker = "sys_platform == 'win32' or sys_platform == 'linux'" }

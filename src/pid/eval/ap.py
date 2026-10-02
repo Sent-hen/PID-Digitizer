@@ -18,10 +18,16 @@ def average_precision(scores: Sequence[float], is_tp: Sequence[bool], n_positive
         return float("nan")
     if len(scores) == 0:
         return 0.0
-    order = np.argsort(-np.asarray(scores, dtype=np.float64), kind="stable")
+    s = np.asarray(scores, dtype=np.float64)
+    order = np.argsort(-s, kind="stable")
     tp = np.asarray(is_tp, dtype=np.float64)[order]
     ctp = np.cumsum(tp)
     cfp = np.cumsum(1.0 - tp)
+    # Tied scores form one threshold (as in sklearn): only evaluate the PR curve at the
+    # last element of each tie group, so the result does not depend on input order.
+    s_sorted = s[order]
+    last = np.r_[np.nonzero(np.diff(s_sorted))[0], len(s_sorted) - 1]
+    ctp, cfp = ctp[last], cfp[last]
     recall = ctp / n_positives
     precision = ctp / np.maximum(ctp + cfp, np.finfo(np.float64).eps)
     mrec = np.concatenate(([0.0], recall, [recall[-1]]))

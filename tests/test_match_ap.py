@@ -58,3 +58,10 @@ def test_ap_known_value() -> None:
     # ranks: TP, FP, TP with 4 positives -> recall 0.25@P1, 0.5@P(2/3)
     ap = average_precision([0.9, 0.8, 0.7], [True, False, True], 4)
     assert ap == pytest.approx(0.25 * 1.0 + 0.25 * (2 / 3))
+
+
+def test_ap_ties_are_one_threshold_and_order_independent() -> None:
+    # all scores equal: one operating point P = 2/4, R = 2/2 -> AP = 0.5
+    a = average_precision([1.0] * 4, [True, True, False, False], 2)
+    b = average_precision([1.0] * 4, [False, False, True, True], 2)
+    assert a == pytest.approx(0.5) and b == pytest.approx(0.5)

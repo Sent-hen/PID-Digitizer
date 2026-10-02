@@ -1,22 +1,37 @@
-PY ?= uv run python
-SPLITS ?= --split dataset_pid_test --split synthetic_test --split open100_test
+# Uses the project venv directly when present (Windows: .venv/Scripts, POSIX: .venv/bin),
+# otherwise `uv run`.
+ifneq ($(wildcard .venv/Scripts/python.exe),)
+  PY := .venv/Scripts/python.exe
+  BIN := .venv/Scripts/
+else ifneq ($(wildcard .venv/bin/python),)
+  PY := .venv/bin/python
+  BIN := .venv/bin/
+else
+  PY := uv run python
+  BIN := uv run
+endif
 
-.PHONY: install lint typecheck test test-dataset check inspect splits eval-oracle eval baseline demo
+TEST_SPLITS ?= --split dataset_pid_test --split synthetic_test --split open100_test
+VAL_SPLITS ?= --split dataset_pid_val --split synthetic_val
+RUN ?= m1_baseline
+
+.PHONY: install lint typecheck test test-dataset check inspect splits eval-oracle \
+        tiles train baseline baseline-val baseline-oracle eval demo
 
 install:
 	uv sync
 
 lint:
-	uv run ruff check src tests scripts
+	$(BIN)ruff check src tests scripts
 
 typecheck:
-	uv run mypy
+	$(BIN)mypy
 
 test:
-	uv run pytest
+	$(PY) -m pytest
 
 test-dataset:  ## needs the full dataset on disk
-	uv run pytest -m dataset
+	$(PY) -m pytest -m dataset
 
 check: lint typecheck test
 
@@ -27,14 +42,24 @@ splits:
 	$(PY) scripts/make_splits.py
 
 eval-oracle:  ## harness sanity check: GT vs GT must score 1.0
-	$(PY) scripts/evaluate.py --oracle $(SPLITS)
+	$(PY) scripts/evaluate.py --oracle $(TEST_SPLITS)
 
-eval:
-	@echo "No model yet (Milestone 1). Running the oracle sanity check instead."
-	$(MAKE) eval-oracle
+tiles:
+	$(PY) -c "from pid.config import load_config as L, resolve as R; from pid.detect.tiles import build_cache as B; c=L('detect'); B(c['tiles']['train_splits'], R(L('data')['splits']['dir']), R(c['tiles']['cache_dir'])/'train', c, L('pipeline')['preprocess']['target_long_side'])"
 
-baseline:
-	@echo "Milestone 1: not implemented yet" && exit 1
+train:
+	$(PY) scripts/train_detector.py
+
+baseline-val:
+	$(PY) scripts/run_baseline.py --run $(RUN) $(VAL_SPLITS)
+
+baseline:  ## Milestone 1: end-to-end on the test splits
+	$(PY) scripts/run_baseline.py --run $(RUN) $(TEST_SPLITS)
+
+baseline-oracle:  ## same pipeline with ground-truth symbols (error propagation)
+	$(PY) scripts/run_baseline.py --run $(RUN)_oracle_symbols --oracle-symbols $(VAL_SPLITS) $(TEST_SPLITS)
+
+eval: baseline
 
 demo:
 	@echo "Milestone 6: not implemented yet" && exit 1

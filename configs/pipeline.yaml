@@ -1,0 +1,26 @@
+# Walking-skeleton pipeline (Milestone 1). Pixel values refer to the *working* image,
+# i.e. after rescaling each sheet so its long side is `target_long_side`.
+preprocess:
+  target_long_side: 7000   # paper resizes to 4500x7000; equalizes symbol scale across subsets
+
+lines:
+  threshold: 150           # gray < threshold is ink (Dataset-PID background is gray ~199)
+  mask_pad: 1              # px added around symbol boxes when blanking them
+  min_length: 30           # morphological opening length; shorter runs (text) are dropped
+  bridge_gap: 21           # closing length; bridges dash gaps (Dataset-PID gaps: median 11, p99 20 px)
+  max_width: 14            # thicker components are not lines (text blocks, fills)
+  solid_min_fill: 0.85     # ink coverage below this -> non-solid
+  max_length_frac: 0.8     # longer runs are the drawing frame, not pipes
+  context_offset: 4        # gap between line edge and the side bands checked for ink
+  context_width: 8         # height of each side band
+  max_context_ink: 0.5     # reject candidates with ink beside them along >50% of length (text)
+
+graph:
+  collinear_tol: 3         # max centerline offset for merging collinear fragments
+  merge_gap: 12            # max gap bridged between collinear fragments
+  join_tol: 8              # H/V segments within this distance meet at a node
+  snap_tol: 12             # segment end within this distance of a symbol border -> ankle
+  node_merge_tol: 3
+  struct_size: 8           # crossing/ankle box size, as in the dataset
+  min_segment_length: 0
+  prune_symbolless_components: true  # drop line networks touching no symbol (frame, tables, text)
