@@ -19,7 +19,7 @@ Project spec: [docs/PROPOSAL.md](docs/PROPOSAL.md). Work milestone by milestone,
   - changing the output schema after Milestone 4;
   - any change to scope.
 
-## Commands (Windows: no `make`; use these directly)
+## Commands (`make check|baseline|baseline-val|baseline-oracle|train` wrap these; make is installed via Chocolatey)
 ```
 .venv/Scripts/uv sync                                  # install (UV_PROJECT_ENVIRONMENT=.venv)
 .venv/Scripts/python -m pytest                         # unit tests (CI set)
