@@ -24,3 +24,13 @@ graph:
   struct_size: 8           # crossing/ankle box size, as in the dataset
   min_segment_length: 0
   prune_symbolless_components: true  # drop line networks touching no symbol (frame, tables, text)
+
+crop:
+  enabled: true            # val: Dataset-PID edge F1 0.886 -> 0.904 (RESULTS R-004)
+  scale: 0.125             # detect ruling lines on a 1/8 downscaled copy
+  threshold: 150
+  frame_min_frac: 0.5      # frame rules span >= 50% of the sheet side
+  frame_edge_frac: 0.1     # frame lies within 10% of at least 3 sheet edges
+  separator_min_frac: 0.8  # interior separator spans >= 80% of the frame
+  separator_band: 0.4      # separators only within the right/bottom 40% of the frame
+  frame_margin_frac: 0.01  # ignore rules within 1% of the frame edge (double frames)

@@ -34,4 +34,4 @@ Project spec: [docs/PROPOSAL.md](docs/PROPOSAL.md). Work milestone by milestone,
 ## Layout notes
 - Canonical model: `src/pid/io/drawing.py`. Everything converts to and from `Drawing`.
 - Class names are canonical (`ankle` = raw `connector`, `inlet_outlet` = raw `inlet/outlet`). The mapping is in `configs/data.yaml`.
-- Drawing uid = `<subset_key>/<id>`, e.g. `dataset_pid/17`. Predictions go in `<pred_dir>/<subset_key>/<id>.json`.
+- Drawing uid = `<subset_key>/<id>`, e.g. `dataset_pid/17`. Predictions are GraphML files at `<pred_dir>/<subset_key>/<id>.graphml` (`export/graphml.py`).

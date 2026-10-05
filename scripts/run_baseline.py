@@ -19,12 +19,13 @@ import time
 import traceback
 from typing import Any
 
-from pid.config import load_config, resolve
+from pid.config import apply_overrides, load_config, resolve
 from pid.eval.report import evaluate
 from pid.export.graphml import read_graphml, validate_graphml, write_graphml
 from pid.io.drawing import Drawing
 from pid.io.pid2graph import load_drawing, ref_from_uid
-from pid.pipeline import Detector, digitize
+from pid.pipeline import Detector, digitize, load_gray
+from pid.preprocess.degrade import degrade, transform_drawing
 
 
 def main() -> None:
@@ -34,8 +35,14 @@ def main() -> None:
     ap.add_argument("--oracle-symbols", action="store_true",
                     help="use GT symbols instead of the detector (error-propagation analysis)")
     ap.add_argument("--weights", help="detector weights (default: detect.yaml train.out)")
+    ap.add_argument("--degrade", type=int, default=0, choices=[0, 1, 2, 3],
+                    help="degradation severity (configs/degrade.yaml); GT is mapped to match")
+    ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE",
+                    help="override configs/pipeline.yaml, e.g. --set crop.enabled=true")
     args = ap.parse_args()
-    pcfg, dcfg = load_config("pipeline"), load_config("data")
+    pcfg = apply_overrides(load_config("pipeline"), args.set)
+    dcfg = load_config("data")
+    degcfg = load_config("degrade")
 
     detector: Detector | None = None
     if not args.oracle_symbols:
@@ -59,8 +66,13 @@ def main() -> None:
             gt = load_drawing(ref_from_uid(uid, dcfg), dcfg)
             t0 = time.perf_counter()
             try:
+                gray = None
+                if args.degrade:
+                    gray, M = degrade(load_gray(gt.image_path or ""), args.degrade, degcfg, uid)
+                    gt = transform_drawing(gt, M, float(pcfg["graph"].get("struct_size", 8)))
                 pred = digitize(gt.image_path or "", pcfg, gt.id, gt.subset, detector=detector,
-                                oracle_symbols=gt.symbols if args.oracle_symbols else None)
+                                oracle_symbols=gt.symbols if args.oracle_symbols else None,
+                                gray=gray)
             except Exception as exc:  # noqa: BLE001 - every failure is counted, never fatal
                 failures.append({"uid": uid, "error": repr(exc),
                                  "trace": traceback.format_exc(limit=3)})
@@ -76,7 +88,8 @@ def main() -> None:
             pairs.append((gt, pred))
         res: dict[str, Any] = evaluate(pairs, dcfg)
         record = {"time": time.strftime("%Y-%m-%dT%H:%M:%S"), "run": args.run, "split": split,
-                  "oracle_symbols": args.oracle_symbols, "n_failures": len(failures),
+                  "oracle_symbols": args.oracle_symbols, "overrides": args.set,
+                  "degrade_level": args.degrade, "n_failures": len(failures),
                   "n_invalid_graphml": len(invalid), "invalid_graphml": invalid,
                   "failures": failures, "sec_per_drawing": sum(times) / max(1, len(times)),
                   **res}

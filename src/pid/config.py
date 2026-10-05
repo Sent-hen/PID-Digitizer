@@ -27,3 +27,17 @@ def resolve(path: str | Path) -> Path:
     """Resolve a config path relative to the repo root."""
     p = Path(path)
     return p if p.is_absolute() else REPO_ROOT / p
+
+
+def apply_overrides(cfg: dict[str, Any], overrides: list[str]) -> dict[str, Any]:
+    """Apply `dotted.key=value` overrides (values parsed as YAML) in place."""
+    for item in overrides:
+        key, sep, raw = item.partition("=")
+        if not sep:
+            raise ValueError(f"override must be key=value: {item!r}")
+        node = cfg
+        parts = key.split(".")
+        for p in parts[:-1]:
+            node = node.setdefault(p, {})
+        node[parts[-1]] = yaml.safe_load(raw)
+    return cfg
