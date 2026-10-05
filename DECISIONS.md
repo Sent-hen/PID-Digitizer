@@ -131,3 +131,22 @@ The pipeline assigns score 1.0 to all structural nodes and edges for now. The fi
 - **Rejected:**
   - Staying on cu128: a CUDA 12 runtime alongside a CUDA 13 toolkit, so extension builds would mismatch.
   - cu130: older, no benefit.
+
+## D-013 Proposal v3 scope (2026-10-04, user-approved)
+
+The user approved:
+- GraphML as the primary output, with DEXPI-structured XML as secondary;
+- option B (4 OPEN100 sheets in training, chosen rare-class-aware, oversampled about 3×);
+- four scope cuts: vector PDF → stretch; OCR → text mask only; drop junction/ports/off-page; merge JSON into GraphML;
+- removing items that are only for show.
+
+The full change table is in `docs/PROPOSAL.md` §9.
+
+- **Why GraphML over DEXPI as primary:**
+  - It's the dataset's own GT format, so predictions and GT share one loader and round trip exactly.
+  - Our classes (7 coarse classes plus structural nodes) map only partly to DEXPI component classes.
+  - DEXPI stays as the interoperability export.
+- **Rejected:**
+  - DEXPI as primary: the conversion is lossy, and evaluation would need a DEXPI-to-graph converter.
+  - AutomationML/PandIX: less P&ID tool support and heavier to generate and validate.
+- **Milestone 1 is redone** under v3: new OPEN100 split, retrained detector, GraphML export.
