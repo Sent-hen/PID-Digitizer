@@ -86,7 +86,7 @@ The user approved moving to Milestone 1 without choosing among the proposed adju
   - **Training:** 7 symbol classes, AMP, SGD with cosine schedule, 6000 iterations at batch 4 (about 1.2 epochs over 19 398 tiles).
 - **Tile cache:** `.cache/tiles/train`, 1.2 GB, built in 33 s with 8 processes.
 - **Torch packaging:**
-  - torch/torchvision come from the PyTorch cu128 index in uv group `ml`, which is a default group locally so `uv sync` won't uninstall it.
+  - torch/torchvision come from the PyTorch cu132 index (see D-012) in uv group `ml`, which is a default group locally so `uv sync` won't uninstall it.
   - CI runs `uv sync --no-group ml` and `uv run --no-sync`, and the merge/tiling code is numpy-only, so CI never needs torch.
 
 ## D-009 Tile merging: complete-first NMS with intersection-over-smaller
@@ -116,3 +116,18 @@ The proposal suggested skeletonize → segments. We chose directional morphology
 ## D-011 AP with tied scores
 
 The pipeline assigns score 1.0 to all structural nodes and edges for now. The first edge-AP implementation broke ties by list order, which made AP depend on output order. `eval/ap.py` now treats each tied-score group as one threshold, as sklearn does, with a regression test.
+
+## D-012 CUDA build of torch: cu132 (2026-10-04)
+
+- **Machine:**
+  - CUDA Toolkit 13.4 installed (nvcc V13.4.92).
+  - Driver 610.88 reports CUDA UMD 13.3, the highest runtime it supports.
+- **Choice:** the PyTorch cu132 build (torch 2.14.1+cu132, torchvision 0.29.1+cu132), replacing the earlier cu128 pin.
+- **Why cu132:**
+  - PyTorch publishes no 13.4 Windows wheels. The cu134 index holds only old aarch64 placeholders, and cu133 doesn't exist.
+  - cu132 is the newest CUDA 13 build at or below the driver's 13.3.
+  - It shares major version 13 with the installed toolkit. torch's `cpp_extension` checks only the major version, so building custom CUDA extensions with nvcc 13.4 works.
+  - PyTorch wheels bundle their own CUDA runtime, so the toolkit's version isn't what torch loads at runtime.
+- **Rejected:**
+  - Staying on cu128: a CUDA 12 runtime alongside a CUDA 13 toolkit, so extension builds would mismatch.
+  - cu130: older, no benefit.

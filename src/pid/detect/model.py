@@ -28,7 +28,8 @@ def build_model(cfg: Mapping[str, Any], pretrained: bool = True) -> torch.nn.Mod
         box_detections_per_img=int(m["box_detections_per_img"]))
     in_features = model.roi_heads.box_predictor.cls_score.in_features
     model.roi_heads.box_predictor = FastRCNNPredictor(in_features, len(cfg["classes"]) + 1)
-    return model
+    out: torch.nn.Module = model  # torchvision ships no type stubs
+    return out
 
 
 def to_tensor(gray_tile: NDArray[np.uint8]) -> torch.Tensor:
