@@ -1,40 +1,41 @@
 # Progress
 
-## Current milestone: 2 (Ingestion paths and detection improvements): not started
+Spec: [docs/PROPOSAL.md](docs/PROPOSAL.md) **v3** (GraphML primary output, dataset-driven scope, option B).
 
-Milestones 0 and 1 are complete. Milestone 1's numbers (RESULTS.md R-002) are the baseline every later milestone must beat.
+## Current milestone: 2 (Detection and preprocessing): not started
 
-### Milestone 1: walking skeleton (complete, 2026-10-04)
+Milestones 0 and 1 are complete under v3. **RESULTS.md R-003 is the baseline to beat.** R-002 is the superseded first run.
 
-Acceptance:
-- [x] `make baseline` runs end to end on all test splits with zero failures. Failures are caught, logged and counted in `metrics_<split>.json`.
-- [x] Baseline detection and connectivity numbers are recorded (RESULTS R-002), along with the oracle-symbol diagnostic (R-001).
+### Milestone 1 (redone for v3, complete 2026-10-05)
 
-Done:
-- **Tiling:** `preprocess/tiling.py`, with overlapping tiles, coordinate mapping and rescaling to a 7000 px long side. Round-trip tests pass within 1 px.
-- **Detector:** torchvision Faster R-CNN R50-FPN v2, BSD-3 (D-008). Trained 0.87 GPU-hours on 19 398 train tiles; weights are in `weights/detector_m1.pt` (gitignored, 166 MB).
-- **Tile merging:** `detect/merge.py`, complete-first NMS using max(IoU, IoS) and unioning truncated boxes (D-009). Unit-tested at tile seams.
-- **Lines and graph:** `lines/extract.py` and `graph/assemble.py`, using orthogonal morphology and dataset-convention graph assembly (D-010). Synthetic fixtures cover the inline valve, T, X, bend, dashed line, and frame plus text.
-- **Export and runner:** `export/json_export.py` (minimal JSON) and `scripts/run_baseline.py`.
-- **CUDA:** torch 2.14.1+cu132, matched to the installed CUDA 13.4 toolkit and the driver's 13.3 ceiling (D-012).
+Acceptance (v3):
+- [x] `make baseline` runs on all test splits with zero failures.
+- [x] Every output GraphML passes the official GraphML 1.0 XSD and reloads with the GT loader: 0 invalid across 1 140 files (val + test + oracle).
+- [x] Baseline (R-003) and oracle-symbol numbers recorded.
 
-Headline test results (R-002), edge F1 / edge mAP:
-- dataset_pid: 0.903 / 0.684
-- synthetic: 0.932 / 0.908
-- open100: 0.409 / 0.369
+Done in the redo:
+- **Option B split:** rare-class-aware pick of 4 OPEN100 training sheets {0, 6, 7, 9}, leaving 8 test sheets (D-014). OPEN100 tiles are oversampled 3×.
+- **Detector:** retrained (0.84 GPU-hours); weights in `weights/detector_m1b.pt`.
+- **GraphML output:** `export/graphml.py`, with an exact round trip, the vendored XSD, and per-file validation in `run_baseline.py` (D-015). The minimal JSON export is removed.
+- **Loader fix:** invalid OPEN100 node ids (e.g. `inlet/outlet3`) are mapped to valid tokens.
 
-### Milestone 0 (complete)
-Covers the dataset audit, the canonical model, splits, the evaluation harness with oracle tests, and scaffolding. See git history and DATASET_NOTES/DECISIONS.
+Headline test results (R-003), edge F1 / edge mAP:
+- dataset_pid: 0.893 / 0.673
+- synthetic: 0.925 / 0.907
+- open100 (8 sheets): 0.492 / 0.375
 
-### Open issues and observations for later milestones
-- **Detection on real drawings is the bottleneck.** OPEN100 symbol mAP is 0.416. Pump and inlet/outlet have no usable training data, and tank only has Synthetic-style examples. Milestone 2 should try class imbalance handling and degradation augmentations. The decision to keep OPEN100 held out (D-007) caps what's achievable here.
-- **Dashed lines in Dataset-PID** have non-solid edge AP of 0.43 against 0.93 for solid (Milestone 3).
-- **OPEN100 line extraction** reaches oracle edge F1 of only 0.65: diagonal lines, direct symbol–symbol edges and faint signal lines (Milestone 3).
-- **Scores:** all structural nodes and edges get score 1.0, so AP collapses to a single operating point. Confidence scoring comes in Milestone 3.
-- **Ignore regions** (title block) aren't used at inference. The frame and title block are suppressed only by heuristics (D-010). Border cropping is part of Milestone 2.
+On the same 8 OPEN100 sheets, option B raised symbol mAP from 0.397 to 0.704 and edge F1 from 0.395 to 0.492.
+
+### Open issues for later milestones
+- **Pump** gets 0 AP on OPEN100, with only 5 training instances (Milestone 2: class imbalance and augmentation).
+- **Tank** gets 0.356 AP on OPEN100: large symbols, often bigger than the tile overlap (Milestone 2: tile size/overlap sweep).
+- **Dashed lines in Dataset-PID:** non-solid edge AP is 0.42 against 0.92 for solid (Milestone 3).
+- **OPEN100 line extraction:** oracle edge F1 is 0.62 (diagonal lines, direct symbol–symbol edges, faint lines) (Milestone 3).
+- **Scores:** structural nodes and edges all get score 1.0, so AP collapses to one operating point (Milestone 3 confidence).
+- **Ignore regions** aren't used at inference. Frame and title-block false positives are removed only by heuristics (Milestone 2 cropping).
 
 ## Next concrete step
-Milestone 2:
-1. `io/classify.py`, PDF vector vs raster classification, with ≥4 test PDFs.
-2. `preprocess/degrade.py`, a deterministic degradation simulator.
-3. Detection improvements, measured on val only: degradation and rotation augmentations, class balancing, tile size/overlap sweeps.
+Milestone 2 (v3 §6):
+1. `preprocess/degrade.py`, deterministic, 3 severity levels.
+2. `preprocess/crop.py`, frame and title-block detection evaluated against ignore regions.
+3. Detection improvements on val only: class balancing (pump), degradation and rotation augmentations, tile size/overlap sweep.

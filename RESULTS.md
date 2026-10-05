@@ -37,7 +37,9 @@ What the numbers show:
 - **Dataset-PID edge mAP** is pulled down by dashed lines: non-solid AP is 0.44 against 0.93 for solid (val).
 - **OPEN100's low recall** comes from diagonal lines, direct symbol–symbol edges and faint signal lines (DECISIONS D-010).
 
-## R-002 Milestone 1 baseline (walking skeleton): the numbers to beat
+## R-002 Milestone 1 baseline, original split (superseded by R-003)
+
+This was the first run, with OPEN100 fully held out (12 sheets). After the proposal v3 change to option B, R-003 is the baseline to beat; R-002 is kept for the record.
 
 Pipeline:
 1. rescale the sheet to a 7000 px long side;
@@ -114,3 +116,72 @@ On the generated subsets, most remaining error is in lines and graph assembly. O
 Caveat for Dataset-P&ID: the paper merged all edges into a single class, while we score solid and non-solid separately, and our non-solid AP is 0.43.
 
 Near-perfect symbol mAP on the generated subsets reflects that their symbols are rendered from a small fixed template set, so train and test symbols are visually near-identical. OPEN100 is the meaningful number.
+
+## R-003 Milestone 1 baseline, proposal v3 (option B, GraphML output): **the numbers to beat**
+
+Same pipeline as R-002, with three differences:
+- 4 OPEN100 sheets (0, 6, 7, 9) were added to training, with their tiles repeated 3× (D-014);
+- the OPEN100 test now has 8 sheets;
+- predictions are written as GraphML and each file is validated against the official XSD and reloaded (D-015).
+
+**Detector training:**
+- **Config:** `configs/detect.yaml`.
+- **Data:** 19 857 tile records (13 973 Dataset-PID, 5 425 Synthetic, 459 OPEN100 = 153 unique × 3).
+- **Schedule:** 6000 iterations, batch 4, AMP. Final loss 0.067.
+- **Run:** run id `20261004-230530`.
+- **Commit:** `54146c5`, plus the option B config, committed in `775d43a`.
+- **Time:** 3039 s, 0.84 GPU-hours.
+- **Hardware:** RTX 4070 Laptop, torch 2.14.1+cu132.
+- **Weights:** `weights/detector_m1b.pt`.
+
+**Evaluation:**
+- **Command:** `make baseline RUN=m1b_baseline` (test) and `make baseline-val RUN=m1b_baseline` (val).
+- **Config:** `configs/pipeline.yaml`. Score threshold 0.3.
+- **Scope:** test run once, with no tuning afterwards.
+- **Outcome:** zero failures and **zero invalid GraphML files** on every split.
+
+| split | n | Symbols mAP@0.5 | mAP@0.5:0.95 | Nodes AP@0.5 | Edge P / R / F1 | per-drawing F1 median / p10 | line-type acc | Edge mAP (PID2Graph) |
+|---|---|---|---|---|---|---|---|---|
+| dataset_pid_val | 75 | 1.000 | 0.950 | 0.847 | 0.854 / 0.919 / 0.886 | 0.888 / 0.810 | 0.976 | 0.647 |
+| synthetic_val | 38 | 0.996 | 0.906 | 0.927 | 0.910 / 0.921 / 0.915 | 0.916 / 0.869 | 0.973 | 0.904 |
+| **dataset_pid_test** | 75 | 0.997 | 0.946 | 0.857 | 0.871 / 0.917 / 0.893 | 0.904 / 0.799 | 0.980 | 0.673 |
+| **synthetic_test** | 38 | 0.991 | 0.919 | 0.940 | 0.919 / 0.930 / 0.925 | 0.926 / 0.879 | 0.974 | 0.907 |
+| **open100_test** (8 real sheets) | 8 | 0.704 | 0.500 | 0.501 | 0.571 / 0.433 / 0.492 | 0.515 / 0.401 | 0.996 | 0.375 |
+
+**Per-class AP@0.5 (test):**
+
+| class | dataset_pid | synthetic | open100 |
+|---|---|---|---|
+| general | 0.989 | 0.990 | 0.807 |
+| tank | – | 0.967 | 0.356 |
+| valve | 1.000 | 1.000 | 0.857 |
+| instrumentation | 1.000 | – | 0.989 |
+| pump | – | 1.000 | 0.000 |
+| arrow | 1.000 | 1.000 | 0.926 |
+| inlet_outlet | – | – | 0.995 |
+
+"–" means the class is absent from that subset.
+
+**Edge AP by line type (test):**
+
+| subset | solid | non-solid |
+|---|---|---|
+| dataset_pid | 0.923 | 0.422 |
+| synthetic | 0.922 | 0.892 |
+| open100 | 0.375 | n/a (OPEN100 has no non-solid lines) |
+
+**Effect of option B on the same 8 OPEN100 test sheets.** Both rows use identical sheets: R-002's saved predictions were re-scored on the 8-sheet list.
+
+| detector | Symbols mAP@0.5 | mAP@0.5:0.95 | Nodes AP | Edge P / R / F1 | Edge mAP | tank / pump / inlet_outlet AP |
+|---|---|---|---|---|---|---|
+| R-002, no OPEN100 in training | 0.397 | 0.249 | 0.366 | 0.425 / 0.370 / 0.395 | 0.336 | 0.020 / 0.000 / 0.000 |
+| R-003, option B | **0.704** | **0.500** | **0.501** | **0.571 / 0.433 / 0.492** | **0.375** | 0.356 / 0.000 / 0.995 |
+
+- **Cost on the generated subsets:** small. Dataset-PID test edge F1 went from 0.903 to 0.893, and Synthetic from 0.932 to 0.925.
+- **Pump** stays at 0 AP: there are only 5 training instances, all from sheet 7.
+
+**Oracle symbols on the 8-sheet OPEN100 test:**
+- **Run:** `m1b_oracle_symbols`, same line/graph code as R-001.
+- **Result:** node AP 0.652, edge P/R/F1 0.799 / 0.505 / 0.619, edge mAP 0.464.
+- **Error propagation on OPEN100:** edge F1 drops from 0.619 with GT symbols to 0.492 with predicted symbols, a gap of 0.127.
+- **Other subsets:** Dataset-PID and Synthetic oracle numbers are unchanged from R-001, since their splits are identical.

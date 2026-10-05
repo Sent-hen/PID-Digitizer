@@ -13,7 +13,7 @@ endif
 
 TEST_SPLITS ?= --split dataset_pid_test --split synthetic_test --split open100_test
 VAL_SPLITS ?= --split dataset_pid_val --split synthetic_val
-RUN ?= m1_baseline
+RUN ?= m1b_baseline
 
 .PHONY: install lint typecheck test test-dataset check inspect splits eval-oracle \
         tiles train baseline baseline-val baseline-oracle eval demo
