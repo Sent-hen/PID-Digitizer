@@ -208,3 +208,11 @@ The full change table is in `docs/PROPOSAL.md` §9.
 - **Degradation augmentation:** 50% of tiles get a random level-1 to level-3 degradation, with boxes mapped through the skew. This targets robustness on degraded inputs, which is measurable on degraded val.
 - **Repeat-factor sampling** (threshold 0.04) upweights tiles with tank (4.9% of tiles), pump (2.9%) and inlet/outlet (0.5%), at most 2.9×.
 - **Limitation:** pump tiles are almost all Synthetic-style pumps, and OPEN100 has no val split (D-014). So the effect on real pumps can only be seen at the final OPEN100 test, not on val.
+
+## D-019 Adopted Milestone 2 configuration (2026-10-05)
+
+- **Detector:** m2c. Degradation augmentation (p = 0.3, no skew) plus repeat-factor sampling, **without rot90/flip**.
+  - Rot/flip were rejected after the m2 → m2b → m2c ablation (R-005 to R-007). They cost about 0.08 mAP@0.5:0.95 and 0.12 edge F1 on clean Dataset-PID, because that subset's boxes follow an asymmetric convention (larger left/top margins) that a rotation-invariant model can't learn.
+  - This supersedes the rot/flip part of D-018.
+- **Pipeline:** deskew on, crop on, inference overlap 256 (512 gave no gain at 2× cost).
+- **Rejected:** m1b, the M1 detector. It's 0.003–0.010 better in clean edge F1, but much worse on degraded input (Synthetic level 2: symbol mAP 0.859 vs 0.996, edge F1 0.747 vs 0.877).

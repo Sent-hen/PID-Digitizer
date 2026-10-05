@@ -30,10 +30,10 @@ train:
   amp: true
   num_workers: 4
   log_every: 50
-  out: weights/detector_m2b.pt
+  out: weights/detector_m2c.pt
   augment:
-    rot90: true           # label-preserving: no class encodes direction (D-016)
-    flip: true
+    rot90: false          # m2/m2b: rot/flip blur Dataset-PID's asymmetric box convention (R-006)
+    flip: false
     degrade_prob: 0.3     # m2 used 0.5: hurt box precision on clean val (R-005)
     degrade_skew: false   # skewed targets are looser hull boxes (R-005 hypothesis)
   rfs_threshold: 0.04     # repeat-factor sampling for rare classes (pump, tank)

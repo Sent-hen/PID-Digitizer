@@ -232,3 +232,102 @@ Cropping is now on by default. Recall is unchanged and precision rises, because 
 **On clean val, m2 is worse.** Detection at IoU 0.5 is unchanged, but localization (mAP@0.5:0.95) drops by 0.03–0.08, and that propagates strongly to connectivity.
 
 The reason is the line stage: it places ankles exactly on symbol bbox borders, and an 8 px ankle tolerates only about 2.7 px of error at IoU 0.5. So box precision, not detection, is what limits edge F1. Robustness on degraded val is evaluated next (R-006).
+
+## R-006 Milestone 2: robustness at degradation level 2, deskew, augmentation variants (val)
+
+**Setup:**
+- **Degradation:** `configs/degrade.yaml` level 2, applied to the original sheet; GT mapped through the skew (D-016).
+- **Pipeline:** crop on. Each row records its detector weights hash in its metrics file.
+- **Commit:** `e749f73`.
+
+**Detector weights:**
+
+| model | weights sha1 | augmentation |
+|---|---|---|
+| m1b | `b566b21f84ad` | none (R-003) |
+| m2 | `77e0c127b746` | rot90 + flip, degrade p = 0.5 with skew, RFS (R-005) |
+| m2b | `b844ff9084ce` | rot90 + flip, degrade p = 0.3 without skew, RFS. Run `20261005-143151`, 3055 s. |
+
+| split | detector | deskew | Symbols mAP@0.5 | mAP@0.5:0.95 | Nodes AP | Edge P / R / F1 | Edge mAP |
+|---|---|---|---|---|---|---|---|
+| dataset_pid_val | m1b | off | 1.000 | 0.908 | 0.488 | 0.524 / 0.470 / 0.496 | 0.507 |
+| dataset_pid_val | m2 | off | 1.000 | 0.868 | 0.397 | 0.418 / 0.372 / 0.394 | 0.517 |
+| dataset_pid_val | m1b | **on** | 1.000 | 0.920 | **0.866** | **0.881 / 0.909 / 0.895** | **0.680** |
+| dataset_pid_val | m2b | on | 1.000 | 0.874 | 0.762 | 0.784 / 0.803 / 0.793 | 0.673 |
+| synthetic_val | m1b | off | 0.858 | 0.733 | 0.391 | 0.487 / 0.320 / 0.386 | 0.535 |
+| synthetic_val | m2 | off | 0.993 | 0.876 | 0.447 | 0.562 / 0.379 / 0.453 | 0.574 |
+| synthetic_val | m1b | **on** | 0.859 | 0.712 | 0.770 | 0.749 / 0.745 / 0.747 | 0.833 |
+| synthetic_val | m2b | on | **0.992** | **0.875** | **0.906** | **0.882 / 0.889 / 0.886** | **0.892** |
+
+**m2b on clean val:**
+
+| split | Symbols mAP@0.5 | mAP@0.5:0.95 | Nodes AP | Edge P / R / F1 | Edge mAP |
+|---|---|---|---|---|---|
+| dataset_pid_val | 1.000 | 0.871 | 0.748 | 0.774 / 0.799 / 0.786 | 0.683 |
+| synthetic_val | 0.993 | 0.889 | 0.923 | 0.896 / 0.906 / 0.901 | 0.902 |
+
+Findings:
+1. **Deskew** restores the line stage under skew. At level 2, Dataset-PID edge F1 goes from 0.496 to 0.895 (clean: 0.904), and Synthetic from 0.386 to 0.747. On clean sheets the estimated angle is at most 0.01°, below the 0.05° threshold, so they're never resampled. Deskew is now enabled by default.
+2. **Degradation augmentation** makes detection robust: Synthetic symbol mAP at level 2 is 0.99 against 0.86 without it.
+3. **Clean Dataset-PID localization** (mAP@0.5:0.95 0.95 → 0.87, edge F1 0.904 → 0.786) is *not* caused by skewed training targets, since m2b without skew shows the same loss. The remaining suspect is rot90/flip versus the asymmetric Dataset-PID box convention: border-to-ink gap p90 is 5 px on the left/top and 3 px on the right/bottom. The m2c variant, without rot/flip, tests this.
+
+## R-007 Milestone 2: adopted detector m2c (no rot/flip) + overlap sweep (val)
+
+**m2c training:**
+- **Augmentation:** degrade p = 0.3 without skew, RFS 0.04, **no rot90/flip**.
+- **Run:** run id `20261005-155321`, commit `e749f73` + config.
+- **Schedule:** 6000 iterations. Final loss 0.025.
+- **Time:** 6169 s, 1.7 GPU-hours. The machine ran at about half speed, the GPU apparently thermally or power-limited at 79 °C and 18 W, so wall-clock timings from this run onward aren't comparable with earlier rows. Accuracy is unaffected.
+- **Weights:** `weights/detector_m2c.pt` (sha1 `531ab26ce150`).
+
+**Evaluation:**
+- **Pipeline:** crop and deskew on (deskew doesn't resample clean sheets).
+- **Commit:** `e749f73` + the `--set-detect` option.
+
+| split | detector | input | Symbols mAP@0.5 | mAP@0.5:0.95 | Nodes AP | Edge P / R / F1 | median F1 | Edge mAP |
+|---|---|---|---|---|---|---|---|---|
+| dataset_pid_val | m1b (R-004) | clean | 1.000 | 0.950 | 0.869 | 0.889 / 0.919 / 0.904 | 0.902 | 0.686 |
+| dataset_pid_val | **m2c** | clean | 1.000 | 0.950 | 0.869 | 0.887 / 0.916 / 0.901 | 0.896 | 0.687 |
+| synthetic_val | m1b (R-004) | clean | 0.996 | 0.906 | 0.927 | 0.910 / 0.921 / 0.915 | 0.916 | 0.904 |
+| synthetic_val | **m2c** | clean | 0.996 | 0.878 | 0.925 | 0.900 / 0.911 / 0.905 | 0.895 | 0.896 |
+| dataset_pid_val | m1b (R-006) | level 2 | 1.000 | 0.920 | 0.866 | 0.881 / 0.909 / 0.895 | 0.883 | 0.680 |
+| dataset_pid_val | **m2c** | level 2 | 1.000 | 0.946 | 0.881 | 0.893 / 0.922 / 0.907 | 0.900 | 0.681 |
+| synthetic_val | m1b (R-006) | level 2 | 0.859 | 0.712 | 0.770 | 0.749 / 0.745 / 0.747 | 0.751 | 0.833 |
+| synthetic_val | **m2c** | level 2 | 0.996 | 0.871 | 0.904 | 0.873 / 0.881 / 0.877 | 0.887 | 0.893 |
+
+**Per-class AP@0.5 (val, m2c):**
+
+| class | Dataset-PID clean | Dataset-PID L2 | Synthetic clean | Synthetic L2 | Synthetic L2, m1b for contrast |
+|---|---|---|---|---|---|
+| general | 1.000 | 1.000 | 0.990 | 0.989 | 0.947 |
+| tank | – | – | 0.992 | 0.992 | 0.982 |
+| valve | 1.000 | 1.000 | 1.000 | 1.000 | 0.595 |
+| instrumentation | 1.000 | 1.000 | – | – | – |
+| pump | – | – | 1.000 | 1.000 | 0.772 |
+| arrow | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 |
+
+inlet_outlet exists only in OPEN100, which has no val split (D-014).
+
+**Removing rot/flip** restores clean Dataset-PID localization (mAP@0.5:0.95 0.871 → 0.950, edge F1 0.786 → 0.901). This confirms that rot/flip conflicted with the asymmetric Dataset-PID box convention.
+
+**Inference tile overlap 512 vs 256** (m2c, clean val, `--set-detect tiles.overlap=512`):
+
+| split | overlap | Edge F1 | Nodes AP |
+|---|---|---|---|
+| dataset_pid_val | 256 | 0.901 | 0.869 |
+| dataset_pid_val | 512 | 0.899 | 0.867 |
+| synthetic_val | 256 | 0.905 | 0.925 |
+| synthetic_val | 512 | 0.908 | 0.927 |
+
+Overlap 512 changes metrics by ≤0.003 and doubles detection time, so 256 is kept. Tile *size* wasn't swept: it needs a retrain per value, and val symbol mAP@0.5 is already 0.996–1.000. The open question for size is large OPEN100 tanks, which val can't measure.
+
+**Milestone 2 val summary** (vs the M1 baseline R-003, crop off, no deskew, m1b):
+
+| split | input | Nodes AP | Edge F1 |
+|---|---|---|---|
+| Dataset-PID | clean | 0.847 → 0.869 | 0.886 → 0.901 |
+| Synthetic | clean | 0.927 → 0.925 | 0.915 → 0.905 |
+| Dataset-PID | level 2 | 0.488 → 0.881 | 0.496 → 0.907 |
+| Synthetic | level 2 | 0.391 → 0.904 | 0.386 → 0.877 |
+
+Clean symbol mAP@0.5 is saturated at 0.996–1.000 for both models.

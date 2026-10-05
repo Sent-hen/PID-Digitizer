@@ -37,6 +37,8 @@ def main() -> None:
     ap.add_argument("--weights", help="detector weights (default: detect.yaml train.out)")
     ap.add_argument("--degrade", type=int, default=0, choices=[0, 1, 2, 3],
                     help="degradation severity (configs/degrade.yaml); GT is mapped to match")
+    ap.add_argument("--set-detect", action="append", default=[], metavar="KEY=VALUE",
+                    help="override configs/detect.yaml at inference, e.g. tiles.overlap=512")
     ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE",
                     help="override configs/pipeline.yaml, e.g. --set crop.enabled=true")
     args = ap.parse_args()
@@ -49,7 +51,7 @@ def main() -> None:
     if not args.oracle_symbols:
         from pid.detect.model import TiledDetector
 
-        det_cfg = load_config("detect")
+        det_cfg = apply_overrides(load_config("detect"), args.set_detect)
         wpath = resolve(args.weights or det_cfg["train"]["out"])
         detector = TiledDetector(det_cfg, wpath)
         # Provenance: exactly which weights produced these metrics.
@@ -96,6 +98,7 @@ def main() -> None:
         res: dict[str, Any] = evaluate(pairs, dcfg)
         record = {"time": time.strftime("%Y-%m-%dT%H:%M:%S"), "run": args.run, "split": split,
                   "oracle_symbols": args.oracle_symbols, "overrides": args.set,
+                  "detect_overrides": args.set_detect,
                   "degrade_level": args.degrade, **weights_info, "n_failures": len(failures),
                   "n_invalid_graphml": len(invalid), "invalid_graphml": invalid,
                   "failures": failures, "sec_per_drawing": sum(times) / max(1, len(times)),

@@ -4,7 +4,7 @@ preprocess:
   target_long_side: 7000   # paper resizes to 4500x7000; equalizes symbol scale across subsets
 
 deskew:
-  enabled: false           # set after degraded-val evaluation (Milestone 2)
+  enabled: true            # level-2 val: Dataset-PID edge F1 0.496 -> 0.895 (R-006); clean untouched
   factor: 4                # estimate on a 1/4 block-minimum downscale
   threshold: 160
   max_angle: 3.0           # search range (degrees)
