@@ -14,6 +14,8 @@ from pid.graph.assemble import assemble
 from pid.io.drawing import BBox, Drawing, Symbol
 from pid.lines.extract import extract_segments
 from pid.preprocess.crop import detect_content_box
+from pid.preprocess.degrade import transform_drawing
+from pid.preprocess.deskew import estimate_skew, invert_affine, rotate
 from pid.preprocess.tiling import rescale_factor, rescale_image, scale_drawing
 
 U8 = NDArray[np.uint8]
@@ -47,6 +49,15 @@ def digitize(image_path: str | Path, cfg: Mapping[str, Any], drawing_id: str = "
     f = rescale_factor(W, H, cfg["preprocess"].get("target_long_side"))
     work = rescale_image(gray, f)
 
+    # Deskew first: cropping and line extraction both assume axis-aligned rules.
+    dcfg = cfg.get("deskew", {})
+    back: NDArray[np.float64] | None = None
+    if dcfg.get("enabled"):
+        angle = estimate_skew(work, dcfg)
+        if abs(angle) >= float(dcfg["min_angle"]):
+            work, M = rotate(work, angle)
+            back = invert_affine(M)
+
     crop_cfg = cfg.get("crop", {})
     box = detect_content_box(work, crop_cfg) if crop_cfg.get("enabled") else None
     if box is not None:
@@ -72,6 +83,8 @@ def digitize(image_path: str | Path, cfg: Mapping[str, Any], drawing_id: str = "
 
     segments = extract_segments(masked, [s.bbox for s in symbols], cfg["lines"])
     graph = assemble(drawing_id, symbols, segments, cfg["graph"], subset)
+    if back is not None:  # map results from the deskewed frame back to the input's
+        graph = transform_drawing(graph, back, float(cfg["graph"].get("struct_size", 8)))
     out = scale_drawing(graph, 1.0 / f)
     # Structural nodes are fixed-size markers in original pixels (dataset convention),
     # not physical extents: re-center them at their size instead of scaling.

@@ -3,6 +3,15 @@
 preprocess:
   target_long_side: 7000   # paper resizes to 4500x7000; equalizes symbol scale across subsets
 
+deskew:
+  enabled: false           # set after degraded-val evaluation (Milestone 2)
+  factor: 4                # estimate on a 1/4 block-minimum downscale
+  threshold: 160
+  max_angle: 3.0           # search range (degrees)
+  coarse_step: 0.25
+  fine_step: 0.02
+  min_angle: 0.05          # smaller estimates are treated as level (no resampling)
+
 lines:
   threshold: 150           # gray < threshold is ink (Dataset-PID background is gray ~199)
   mask_pad: 1              # px added around symbol boxes when blanking them

@@ -185,3 +185,50 @@ Same pipeline as R-002, with three differences:
 - **Result:** node AP 0.652, edge P/R/F1 0.799 / 0.505 / 0.619, edge mAP 0.464.
 - **Error propagation on OPEN100:** edge F1 drops from 0.619 with GT symbols to 0.492 with predicted symbols, a gap of 0.127.
 - **Other subsets:** Dataset-PID and Synthetic oracle numbers are unchanged from R-001, since their splits are identical.
+
+## R-004 Milestone 2: border cropping (val)
+
+**Crop detector** (`preprocess/crop.py`, `configs/pipeline.yaml: crop`):
+- **Scope:** content box vs. the GT box derived from ignore regions, on train and val sheets.
+- **Result:**
+  - Dataset-PID train/val: mean IoU 0.950, min 0.949. The ceiling is about 0.95, because the GT box is a fixed inset rectangle (D-017).
+  - OPEN100 train: mean IoU 0.959, min 0.937.
+  - Synthetic train/val: 0 of 212 sheets cropped (no frame).
+  - Zero GT nodes fall outside a predicted crop on any train/val sheet.
+- **OPEN100 test** sheets weren't inspected.
+
+**Effect on the full pipeline (val):**
+- **Detector:** `weights/detector_m1b.pt` (sha1 `b566b21f84ad`).
+- **Runs:** `m1b_baseline` (crop off, R-003) vs `m1b_crop_clean` (crop on).
+- **Commit:** `b64644e`.
+
+| split | crop | Nodes AP | Edge P / R / F1 | median F1 | Edge mAP |
+|---|---|---|---|---|---|
+| dataset_pid_val | off | 0.847 | 0.854 / 0.919 / 0.886 | 0.888 | 0.647 |
+| dataset_pid_val | **on** | **0.869** | **0.889 / 0.919 / 0.904** | **0.902** | **0.686** |
+| synthetic_val | off | 0.927 | 0.910 / 0.921 / 0.915 | 0.916 | 0.904 |
+| synthetic_val | on | 0.927 | 0.910 / 0.921 / 0.915 | 0.916 | 0.904 |
+
+Cropping is now on by default. Recall is unchanged and precision rises, because title-block and frame false positives are removed. Synthetic is identical because no Synthetic sheet is cropped.
+
+## R-005 Milestone 2: detector with augmentation + repeat-factor sampling (val, clean)
+
+**Training:**
+- **Config:** `configs/detect.yaml`, with rot90 + flip, `degrade_prob` 0.5 and RFS threshold 0.04 (D-018).
+- **Run:** run id `20261005-130438`, commit `00bb6eb` + the augmentation code (committed `b64644e`).
+- **Schedule:** 6000 iterations. Final loss 0.064.
+- **Time:** 3167 s, 0.88 GPU-hours.
+- **Weights:** `weights/detector_m2.pt` (sha1 `77e0c127b746`).
+
+**Evaluation:** crop on; same pipeline as R-004.
+
+| split | detector | Symbols mAP@0.5 | mAP@0.5:0.95 | Nodes AP | Edge P / R / F1 | median F1 | Edge mAP |
+|---|---|---|---|---|---|---|---|
+| dataset_pid_val | m1b | 1.000 | 0.950 | 0.869 | 0.889 / 0.919 / 0.904 | 0.902 | 0.686 |
+| dataset_pid_val | m2 | 0.998 | 0.867 | 0.747 | 0.772 / 0.798 / 0.785 | 0.762 | 0.685 |
+| synthetic_val | m1b | 0.996 | 0.906 | 0.927 | 0.910 / 0.921 / 0.915 | 0.916 | 0.904 |
+| synthetic_val | m2 | 0.993 | 0.877 | 0.910 | 0.891 / 0.899 / 0.895 | 0.901 | 0.901 |
+
+**On clean val, m2 is worse.** Detection at IoU 0.5 is unchanged, but localization (mAP@0.5:0.95) drops by 0.03–0.08, and that propagates strongly to connectivity.
+
+The reason is the line stage: it places ankles exactly on symbol bbox borders, and an 8 px ankle tolerates only about 2.7 px of error at IoU 0.5. So box precision, not detection, is what limits edge F1. Robustness on degraded val is evaluated next (R-006).

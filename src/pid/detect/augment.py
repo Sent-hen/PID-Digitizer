@@ -70,6 +70,10 @@ def augment(img: U8, boxes: F, labels: I64, rng: np.random.Generator,
     p = float(cfg.get("degrade_prob", 0.0))
     if p > 0 and rng.random() < p:
         level = int(rng.integers(1, 4))
+        if not cfg.get("degrade_skew", True):
+            # Skewed targets become looser hull boxes; optionally train without skew.
+            degcfg = {**degcfg, "levels": {k: {**v, "skew_deg": 0.0}
+                                           for k, v in degcfg["levels"].items()}}
         img, boxes, labels = degrade_tile(img, boxes, labels, level, degcfg,
                                           key=f"aug{int(rng.integers(1 << 31))}")
     return img, boxes, labels
