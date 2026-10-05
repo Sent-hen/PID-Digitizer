@@ -1,6 +1,6 @@
 """Evaluate predictions against PID2Graph ground truth.
 
-Predictions are one `Drawing` JSON per drawing at <pred-dir>/<subset>/<id>.json.
+Predictions are one GraphML file per drawing at <pred-dir>/<subset>/<id>.graphml.
 `--oracle` evaluates ground truth against itself (harness sanity check; must be 1.0).
 
 Usage:
@@ -19,6 +19,7 @@ from pathlib import Path
 
 from pid.config import load_config, resolve
 from pid.eval.report import evaluate
+from pid.export.graphml import read_graphml
 from pid.io.drawing import Drawing
 from pid.io.pid2graph import load_drawing, ref_from_uid
 
@@ -52,12 +53,12 @@ def main() -> None:
             if args.oracle:
                 pred = gt.model_copy(deep=True)
             else:
-                p = Path(args.pred_dir) / f"{uid}.json"
+                p = Path(args.pred_dir) / f"{uid}.graphml"
                 if not p.exists():
                     missing += 1  # counts as an empty prediction, never silently skipped
                     pred = Drawing(id=gt.id, subset=gt.subset)
                 else:
-                    pred = Drawing.model_validate_json(p.read_text(encoding="utf-8"))
+                    pred = read_graphml(p, cfg["label_map"])
             pairs.append((gt, pred))
         res = evaluate(pairs, cfg)
         record = {"time": dt.datetime.now().isoformat(timespec="seconds"), "commit": git_hash(),

@@ -32,7 +32,13 @@ splits:
   val_fraction: 0.15
   test_fraction: 0.15
   # subsets never used for training; kept whole as a cross-domain test set
-  held_out_subsets: [open100]
+  held_out_subsets: []
+  # subsets too small for a val split: n_train sheets go to training, chosen so every
+  # class stays in test and rare classes appear in train (proposal v3, option B)
+  small_subsets:
+    open100:
+      n_train: 4
+      rare_classes: [tank, pump, inlet_outlet]
   # ink-map Jaccard similarity at or above which two drawings share a group
   # (near-duplicate / same-template control; see scripts/make_splits.py)
   ink_jaccard_min: 0.6

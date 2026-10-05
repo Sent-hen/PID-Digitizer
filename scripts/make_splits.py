@@ -31,7 +31,8 @@ from numpy.typing import NDArray
 from PIL import Image
 
 from pid.config import load_config, resolve
-from pid.io.pid2graph import DrawingRef, iter_refs, load_drawing
+from pid.io.pid2graph import DrawingRef, iter_refs, load_drawing, ref_from_uid
+from pid.io.splits import rare_class_aware_pick
 
 Image.MAX_IMAGE_PIXELS = None
 GRID = (96, 64)  # ink-map cells (w, h); every subset is ~3:2
@@ -146,8 +147,21 @@ def main() -> None:
             "multi_member_groups": [g for g in glist if len(g) > 1],
         }
 
+        small = scfg.get("small_subsets", {}).get(subset)
         if subset in scfg["held_out_subsets"]:
             assign = {"test": [u for g in glist for u in g]}
+        elif small is not None:
+            # Too few sheets for a val split: pick a few training sheets so rare classes
+            # are represented on both sides (own seeded RNG - the shared `rng` is left
+            # untouched so the other subsets' splits do not change).
+            if any(len(g) > 1 for g in glist):
+                raise ValueError(f"{subset}: rare-class pick assumes singleton groups")
+            counts = {u: Counter(s.cls for s in load_drawing(ref_from_uid(u, cfg), cfg,
+                                                             with_size=False).symbols)
+                      for u in uids}
+            train = rare_class_aware_pick(counts, int(small["n_train"]),
+                                          list(small["rare_classes"]), int(scfg["seed"]))
+            assign = {"train": train, "test": [u for u in uids if u not in train]}
         else:
             order = list(range(len(glist)))
             rng.shuffle(order)

@@ -4,22 +4,24 @@
   python scripts/run_baseline.py --run m1_oracle --oracle-symbols --split ...   # GT symbols
 
 Every drawing is processed; failures are caught, logged and counted (a failed drawing
-is scored as an empty prediction). Predictions go to outputs/preds/<run>/<uid>.json,
-minimal JSON exports to outputs/export/<run>/<uid>.json, metrics to
-outputs/eval_log.jsonl and outputs/preds/<run>/metrics_<split>.json.
+is scored as an empty prediction). Predictions are GraphML (the project output
+format) at outputs/preds/<run>/<uid>.graphml; metrics go to outputs/eval_log.jsonl and
+outputs/preds/<run>/metrics_<split>.json.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import subprocess
 import time
 import traceback
 from typing import Any
 
 from pid.config import load_config, resolve
 from pid.eval.report import evaluate
-from pid.export.json_export import export_minimal
+from pid.export.graphml import read_graphml, validate_graphml, write_graphml
 from pid.io.drawing import Drawing
 from pid.io.pid2graph import load_drawing, ref_from_uid
 from pid.pipeline import Detector, digitize
@@ -43,11 +45,15 @@ def main() -> None:
         detector = TiledDetector(det_cfg, resolve(args.weights or det_cfg["train"]["out"]))
 
     pred_root = resolve("outputs/preds") / args.run
-    export_root = resolve("outputs/export") / args.run
+    commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True,
+                            text=True, cwd=resolve(".")).stdout.strip()
+    cfg_hash = hashlib.sha1(json.dumps([pcfg, load_config("detect")], sort_keys=True,
+                                       default=str).encode()).hexdigest()[:12]
     for split in args.split:
         uids = (resolve(dcfg["splits"]["dir"]) / f"{split}.txt").read_text().split()
         pairs: list[tuple[Drawing, Drawing]] = []
         failures: list[dict[str, str]] = []
+        invalid: list[dict[str, Any]] = []
         times: list[float] = []
         for uid in uids:
             gt = load_drawing(ref_from_uid(uid, dcfg), dcfg)
@@ -61,16 +67,17 @@ def main() -> None:
                 print(f"FAILED {uid}: {exc!r}")
                 pred = Drawing(id=gt.id, subset=gt.subset)
             times.append(time.perf_counter() - t0)
-            out = pred_root / f"{uid}.json"
-            out.parent.mkdir(parents=True, exist_ok=True)
-            out.write_text(pred.model_dump_json(), encoding="utf-8")
-            exp = export_root / f"{uid}.json"
-            exp.parent.mkdir(parents=True, exist_ok=True)
-            exp.write_text(json.dumps(export_minimal(pred)), encoding="utf-8")
+            gpath = write_graphml(pred, pred_root / f"{uid}.graphml",
+                                  pipeline_version=commit, config_hash=cfg_hash)
+            # Acceptance: every output passes the GraphML XSD and reloads to the same graph.
+            errs = validate_graphml(gpath.read_bytes())
+            if errs or read_graphml(gpath, dcfg["label_map"]).edges != pred.edges:
+                invalid.append({"uid": uid, "errors": errs[:3]})
             pairs.append((gt, pred))
         res: dict[str, Any] = evaluate(pairs, dcfg)
         record = {"time": time.strftime("%Y-%m-%dT%H:%M:%S"), "run": args.run, "split": split,
                   "oracle_symbols": args.oracle_symbols, "n_failures": len(failures),
+                  "n_invalid_graphml": len(invalid), "invalid_graphml": invalid,
                   "failures": failures, "sec_per_drawing": sum(times) / max(1, len(times)),
                   **res}
         (pred_root / f"metrics_{split}.json").write_text(json.dumps(record, indent=1))
@@ -78,6 +85,7 @@ def main() -> None:
             f.write(json.dumps(record) + "\n")
         e, s = res["edges"], res["symbols"]
         print(f"{args.run} {split}: n={len(uids)} failures={len(failures)} "
+              f"invalid_graphml={len(invalid)} "
               f"symbol mAP50={s['mAP50']:.3f} mAP50:95={s['mAP50_95']:.3f} "
               f"nodeAP={res['node_AP50']:.3f} edge P/R/F1={e['precision']:.3f}/"
               f"{e['recall']:.3f}/{e['f1']:.3f} "

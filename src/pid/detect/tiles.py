@@ -72,8 +72,11 @@ def build_cache(split_names: list[str], split_dir: Path, out_dir: Path,
     recs: list[dict[str, Any]] = []
     with ProcessPoolExecutor(workers) as ex:
         futs = [ex.submit(tile_sheet, u, out_dir, det_cfg, target_long_side, seed) for u in uids]
-        for n, fut in enumerate(futs, 1):
-            recs.extend(fut.result())
+        repeat = {k: int(v) for k, v in det_cfg["tiles"].get("oversample", {}).items()}
+        for n, (u, fut) in enumerate(zip(uids, futs, strict=True), 1):
+            # Oversampling repeats index records (not files): a subset with factor k
+            # contributes each of its tiles k times per epoch.
+            recs.extend(fut.result() * repeat.get(u.split("/")[0], 1))
             if n % 50 == 0:
                 print(f"tiled {n}/{len(uids)} sheets, {len(recs)} tiles")
     index.write_text(json.dumps({"splits": split_names, "tiles": recs}))

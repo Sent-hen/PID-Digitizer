@@ -22,7 +22,7 @@ Implications:
 
 `uv` was not installed system-wide, so `py -3.13 -m venv .venv` was created and `uv` installed into it. Dependencies are pinned in `uv.lock`. We rejected installing uv globally to avoid changing the user's system Python.
 
-## D-003 Splits: our own, per drawing, OPEN100 fully held out
+## D-003 Splits: our own, per drawing, OPEN100 fully held out (OPEN100 part superseded by D-014)
 
 - PID2Graph ships no training data. All three subsets are the paper's test sets (DATASET_NOTES.md).
 - **Splits** (seed 1234, `configs/data.yaml`):
@@ -150,3 +150,30 @@ The full change table is in `docs/PROPOSAL.md` §9.
   - DEXPI as primary: the conversion is lossy, and evaluation would need a DEXPI-to-graph converter.
   - AutomationML/PandIX: less P&ID tool support and heavier to generate and validate.
 - **Milestone 1 is redone** under v3: new OPEN100 split, retrained detector, GraphML export.
+
+## D-014 Option B split and oversampling (2026-10-04, user-approved)
+
+- **OPEN100:** 4 sheets go to training, and 8 stay in test with no val split.
+- **How the 4 are chosen** (`io/splits.rare_class_aware_pick`, seed 1234), out of all C(12,4) = 495 combinations:
+  - every class keeps at least 1 instance in test;
+  - every rare class (tank, pump, inlet/outlet) has at least 1 instance in train;
+  - among those, minimize the squared deviation of each rare class's train share from 4/12.
+- **Result:**
+  - train = {0, 6, 7, 9}: tank 12/35, pump 5/16, inlet/outlet 29/96;
+  - test = {1, 2, 3, 4, 5, 8, 10, 11}, which still contains pumps (sheets 1, 3, 5).
+- **Other subsets:** the split uses its own RNG, so the Dataset-PID and Synthetic lists are byte-identical to Milestone 0's.
+- **Oversampling:** OPEN100 train tiles are repeated 3× in the tile index (`detect.yaml: tiles.oversample`): 153 unique tiles become 459 of 19 857. Without it, real sheets make up 0.8% of tiles. The paper likewise augmented real P&IDs 3× more than synthetic ones.
+- **Rejected:**
+  - a random seeded pick, which could put all pump sheets on one side;
+  - an OPEN100 val split, which with 12 sheets would leave too few for train or test.
+- **Consequence:** there's no OPEN100-specific validation. Tuning uses Dataset-PID/Synthetic val, and the 8-sheet OPEN100 test is run once per final config.
+
+## D-015 GraphML export implementation
+
+- **Attribute names:** the GT names and raw label spellings, so `read_graphml` reuses the GT loader.
+- **Floats:** written with `repr`, so Drawing → GraphML → Drawing is exact and GraphML → Drawing → GraphML is byte-identical (tested).
+- **Edge order and orientation:** networkx scrambles both for undirected graphs, so they're restored from the file.
+- **Validation:**
+  - against the official GraphML 1.0 XSD, vendored in `src/pid/export/xsd/` with local `schemaLocation`s for offline CI, using `lxml` (BSD-3, new light dependency);
+  - `run_baseline.py` validates and reloads every output, counting `invalid_graphml`.
+- **Removed:** the minimal JSON export. JSON remains only the API transport, per proposal v3.

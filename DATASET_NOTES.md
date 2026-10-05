@@ -80,11 +80,15 @@ There is no text ground truth, no port annotation, and no line polylines (edges 
    - Nearest-neighbour Jaccard is at most 0.44 (Dataset-PID), 0.30 (Synthetic) and 0.24 (OPEN100), against a grouping threshold of 0.6.
    - No two drawings have identical annotation graphs.
 9. **Non-solid lines** make up 4.1% of Dataset-PID edges, 14.6% of Synthetic and 0% of OPEN100.
-10. In Dataset-PID, text such as notes and tags is rendered but not annotated. Synthetic text is random strings (e.g. `#i)XA8E6`), useless for tag-grammar work.
+10. **OPEN100 node ids are not valid GraphML.** Ids like `inlet/outlet3` contain `/`, but GraphML ids must be XML NMTOKENs, so the source files fail the official XSD. The loader maps disallowed characters to `_` (`pid2graph.safe_id`) so all exports validate.
+11. In Dataset-PID, text such as notes and tags is rendered but not annotated. Synthetic text is random strings (e.g. `#i)XA8E6`), useless for tag-grammar work.
 
 ## Official splits and evaluation protocol
 
-**No train split is released.** Paper Table A3 lists all three released subsets as **test** data. The authors trained on "Synthetic 700" plus 60 real-world P&IDs, neither of which is public. Any model we build must therefore be trained on part of these test sets, so **our numbers are not directly comparable to the paper's.** They come from a different training set and a different (smaller) test set. Our splits are in `splits/` (see DECISIONS.md D-003).
+**No train split is released.** Paper Table A3 lists all three released subsets as **test** data. The authors trained on "Synthetic 700" plus 60 real-world P&IDs, neither of which is public. Any model we build must therefore be trained on part of these test sets, so **our numbers are not directly comparable to the paper's.** They come from a different training set and a different (smaller) test set. Our splits are in `splits/`:
+- Dataset-PID: 350 / 75 / 75 (train / val / test).
+- Synthetic: 174 / 38 / 38.
+- OPEN100: 4 train (sheets 0, 6, 7, 9; option B, D-014) and 8 test.
 
 Protocol (paper §III-E, Appendix A1), implemented in `src/pid/eval/`:
 

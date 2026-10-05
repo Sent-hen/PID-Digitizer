@@ -9,7 +9,8 @@ tiles:
   min_visible: 0.5        # keep a GT box cut by the tile if >= this fraction is visible
   empty_keep_prob: 0.1    # fraction of symbol-free tiles kept as negatives
   cache_dir: .cache/tiles
-  train_splits: [dataset_pid_train, synthetic_train]
+  train_splits: [dataset_pid_train, synthetic_train, open100_train]
+  oversample: {open100: 3}   # real sheets are <1% of tiles otherwise (paper: 3x for real P&IDs)
   val_splits: [dataset_pid_val, synthetic_val]
 
 model:
@@ -29,7 +30,7 @@ train:
   amp: true
   num_workers: 4
   log_every: 50
-  out: weights/detector_m1.pt
+  out: weights/detector_m1b.pt
 
 infer:
   batch_size: 4

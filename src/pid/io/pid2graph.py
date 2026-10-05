@@ -7,6 +7,7 @@ declared twice with long/double types), so attributes are resolved by name.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -64,6 +65,15 @@ def ref_from_uid(uid: str, cfg: Mapping[str, Any] | None = None) -> DrawingRef:
     return DrawingRef(subset, drawing_id, g, _image_for(g))
 
 
+_NMTOKEN_BAD = re.compile(r"[^\w.\-:]")
+
+
+def safe_id(node_id: object) -> str:
+    """GraphML node ids must be XML NMTOKENs; OPEN100 GT uses ids like
+    'inlet/outlet3'. Replace disallowed characters so exports validate."""
+    return _NMTOKEN_BAD.sub("_", str(node_id))
+
+
 def graph_to_drawing(G: nx.Graph, drawing_id: str, label_map: Mapping[str, str | None],
                      subset: str = "") -> Drawing:
     symbols: list[Symbol] = []
@@ -79,16 +89,18 @@ def graph_to_drawing(G: nx.Graph, drawing_id: str, label_map: Mapping[str, str |
         if cls is None:
             ignore.append(bbox)
             continue
-        symbols.append(Symbol(id=str(nid), cls=cls, bbox=bbox))
-        kept.add(str(nid))
+        symbols.append(Symbol(id=safe_id(nid), cls=cls, bbox=bbox,
+                              score=float(d.get("confidence", 1.0))))
+        kept.add(safe_id(nid))
 
     edges: list[Edge] = []
     for i, (u, v, d) in enumerate(G.edges(data=True)):
-        u, v = str(u), str(v)
+        u, v = safe_id(u), safe_id(v)
         if u not in kept or v not in kept:
             raise ValueError(f"{subset}/{drawing_id}: edge touches non-graph node {u}-{v}")
-        edges.append(Edge(id=f"e{i}", source=u, target=v,
-                          line_type=LineType(d.get("edge_label", "solid"))))
+        edges.append(Edge(id=str(d.get("id", f"e{i}")), source=u, target=v,
+                          line_type=LineType(d.get("edge_label", "solid")),
+                          score=float(d.get("confidence", 1.0))))
     return Drawing(id=drawing_id, subset=subset, symbols=symbols, edges=edges,
                    ignore_regions=ignore)
 
