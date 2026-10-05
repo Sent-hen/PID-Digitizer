@@ -45,11 +45,18 @@ def main() -> None:
     degcfg = load_config("degrade")
 
     detector: Detector | None = None
+    weights_info: dict[str, str] = {}
     if not args.oracle_symbols:
         from pid.detect.model import TiledDetector
 
         det_cfg = load_config("detect")
-        detector = TiledDetector(det_cfg, resolve(args.weights or det_cfg["train"]["out"]))
+        wpath = resolve(args.weights or det_cfg["train"]["out"])
+        detector = TiledDetector(det_cfg, wpath)
+        # Provenance: exactly which weights produced these metrics.
+        with wpath.open("rb") as fh:
+            digest = hashlib.sha1(fh.read()).hexdigest()[:12]
+        weights_info = {"weights": str(wpath.relative_to(resolve("."))), "weights_sha1": digest}
+        print(f"detector weights: {weights_info}")
 
     pred_root = resolve("outputs/preds") / args.run
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True,
@@ -89,7 +96,7 @@ def main() -> None:
         res: dict[str, Any] = evaluate(pairs, dcfg)
         record = {"time": time.strftime("%Y-%m-%dT%H:%M:%S"), "run": args.run, "split": split,
                   "oracle_symbols": args.oracle_symbols, "overrides": args.set,
-                  "degrade_level": args.degrade, "n_failures": len(failures),
+                  "degrade_level": args.degrade, **weights_info, "n_failures": len(failures),
                   "n_invalid_graphml": len(invalid), "invalid_graphml": invalid,
                   "failures": failures, "sec_per_drawing": sum(times) / max(1, len(times)),
                   **res}

@@ -17,18 +17,23 @@ from pathlib import Path
 from typing import Any
 
 import cv2
+import numpy as np
 import torch
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 
 from pid.config import load_config, resolve
+from pid.detect.augment import augment, repeat_factors
 from pid.detect.model import build_model, to_tensor
 from pid.detect.tiles import build_cache
 
 
 class TileDataset(Dataset[tuple[torch.Tensor, dict[str, torch.Tensor]]]):
-    def __init__(self, index: Path) -> None:
+    def __init__(self, index: Path, aug_cfg: dict[str, Any] | None = None,
+                 degcfg: dict[str, Any] | None = None) -> None:
         self.root = index.parent
         self.recs: list[dict[str, Any]] = json.loads(index.read_text())["tiles"]
+        self.aug_cfg = aug_cfg or {}
+        self.degcfg = degcfg or {}
 
     def __len__(self) -> int:
         return len(self.recs)
@@ -36,9 +41,17 @@ class TileDataset(Dataset[tuple[torch.Tensor, dict[str, torch.Tensor]]]):
     def __getitem__(self, i: int) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
         r = self.recs[i]
         img = cv2.imread(str(self.root / r["file"]), cv2.IMREAD_GRAYSCALE)
-        boxes = torch.tensor(r["boxes"], dtype=torch.float32).reshape(-1, 4)
-        labels = torch.tensor(r["labels"], dtype=torch.int64) + 1  # 0 = background
-        return to_tensor(img), {"boxes": boxes, "labels": labels}
+        boxes = np.asarray(r["boxes"], dtype=np.float64).reshape(-1, 4)
+        labels = np.asarray(r["labels"], dtype=np.int64)
+        if self.aug_cfg:
+            # torch.initial_seed() differs per worker and epoch but is fixed by the base
+            # seed, so augmentation is reproducible.
+            rng = np.random.default_rng([torch.initial_seed() % (1 << 32), i])
+            img, boxes, labels = augment(img, boxes, labels, rng, self.aug_cfg, self.degcfg)
+        return to_tensor(img), {
+            "boxes": torch.as_tensor(boxes, dtype=torch.float32).reshape(-1, 4),
+            "labels": torch.as_tensor(labels, dtype=torch.int64) + 1,  # 0 = background
+        }
 
 
 def collate(batch: list[Any]) -> tuple[list[Any], list[Any]]:
@@ -68,10 +81,18 @@ def main() -> None:
     seed = int(cfg["seed"])
     random.seed(seed)
     torch.manual_seed(seed)  # also seeds DataLoader worker numpy RNGs via torch
-    ds = TileDataset(index)
-    print(f"{len(ds)} training tiles")
+    ds = TileDataset(index, tr.get("augment"), load_config("degrade"))
+    print(f"{len(ds)} training tiles, augment={tr.get('augment')}")
     g = torch.Generator().manual_seed(seed)
-    dl = DataLoader(ds, batch_size=int(tr["batch_size"]), shuffle=True, generator=g,
+    sampler = None
+    if tr.get("rfs_threshold"):
+        w = repeat_factors([r["labels"] for r in ds.recs], float(tr["rfs_threshold"]))
+        sampler = WeightedRandomSampler(w, num_samples=len(ds), replacement=True,
+                                        generator=g)
+        print(f"repeat-factor sampling: max weight {max(w):.2f}, "
+              f"{sum(x > 1 for x in w)} tiles upweighted")
+    dl = DataLoader(ds, batch_size=int(tr["batch_size"]), shuffle=sampler is None,
+                    sampler=sampler, generator=g if sampler is None else None,
                     num_workers=int(tr["num_workers"]), collate_fn=collate, drop_last=True,
                     persistent_workers=int(tr["num_workers"]) > 0)
 

@@ -177,3 +177,34 @@ The full change table is in `docs/PROPOSAL.md` §9.
   - against the official GraphML 1.0 XSD, vendored in `src/pid/export/xsd/` with local `schemaLocation`s for offline CI, using `lxml` (BSD-3, new light dependency);
   - `run_baseline.py` validates and reloads every output, counting `invalid_graphml`.
 - **Removed:** the minimal JSON export. JSON remains only the API transport, per proposal v3.
+
+## D-016 Degradation simulator design (Milestone 2)
+
+- **Operations**, each level applies all of them in order: contrast loss → blur → skew → noise and speckle → resolution loss → JPEG. Level 3 adds fax-like binarization. Parameters are in `configs/degrade.yaml`.
+- **Determinism:** all randomness comes from `default_rng([seed, crc32(uid), level])`.
+- **Skew** direction and relative magnitude (0.5–1× the level maximum) are fixed *per sheet* and scaled by level. Without this, a sheet could be skewed less at level 3 than at level 2, which would make robustness curves non-monotone.
+- **Ground truth** is mapped through the skew: symbols get the axis-aligned hull of their rotated corners, and structural nodes are re-centred at a fixed 8 px.
+- **Rejected:** per-operation severity sweeps, which would cost 6+ evaluation runs per model with no extra decision value.
+
+## D-017 Frame/title-block cropping from ruling lines
+
+- **What the GT content box is:** for Dataset-PID it's a fixed rectangle, `[400, 304, 5568, 4304|4312]` on every sheet, set slightly inside the drawn frame and left of the notes column. A line-based detector therefore tops out at IoU about 0.95.
+- **Method:**
+  1. Downscale by block-minimum (area averaging erased thin 1–2 px frames, e.g. sheet 3).
+  2. The frame is the outermost long horizontal and vertical rules. It must hug at least 3 sheet edges (OPEN100 puts the title block outside the frame), and its top and bottom rules must cover at least 90% of its width.
+  3. A notes or title-block column is a long interior vertical rule in the right 40%.
+  4. Content outside the box is blanked before line extraction, and detections centred outside it are dropped.
+- **Train/val result:**
+  - IoU 0.950 on Dataset-PID and 0.959 on OPEN100 train;
+  - no crops on any Synthetic sheet (an earlier version cropped 3, losing 94 GT nodes; fixed by the edge and coverage checks);
+  - zero GT nodes outside the box.
+- **Rejected:**
+  - using the subset identity to apply the fixed rectangle: that's leakage, since the subset is unknown at inference;
+  - a learned crop model: no need, given IoU at the ceiling.
+
+## D-018 Detector augmentation and rare-class sampling
+
+- **90° rotations and horizontal flips** are treated as label-preserving because none of the 7 classes encodes direction. `arrow` covers all orientations, and valves appear in both orientations on real sheets. The proposal asked to note this for directional symbols; for this dataset the label set makes it safe.
+- **Degradation augmentation:** 50% of tiles get a random level-1 to level-3 degradation, with boxes mapped through the skew. This targets robustness on degraded inputs, which is measurable on degraded val.
+- **Repeat-factor sampling** (threshold 0.04) upweights tiles with tank (4.9% of tiles), pump (2.9%) and inlet/outlet (0.5%), at most 2.9×.
+- **Limitation:** pump tiles are almost all Synthetic-style pumps, and OPEN100 has no val split (D-014). So the effect on real pumps can only be seen at the final OPEN100 test, not on val.
