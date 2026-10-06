@@ -438,3 +438,15 @@ These are functional checks, not benchmarks. The same sample, Dataset-P&ID valid
 - **CPU vs GPU:** the one-edge difference comes from CPU vs GPU floating-point differences in the detector.
 - **Validity:** both runs' GraphML and DEXPI downloads validate with zero errors.
 - **Container:** reports healthy and runs as uid 10001. Image size 2.06 GB (CPU torch).
+
+## R-012 Committed example output (`examples/dataset_pid_10/`)
+
+- **Run:** service job `33fcd3b0ca18` (Docker CPU image, detector sha1 `531ab26ce150`) on Dataset-P&ID validation sheet 10.
+- **Scoring:** against its ground truth with `pid.eval.report.evaluate`.
+
+| GT nodes / edges | predicted nodes / edges | Symbols mAP@0.5 | Nodes AP@0.5 | Edge P / R / F1 | Edge mAP |
+|---|---|---|---|---|---|
+| 406 / 457 | 410 / 458 | 1.000 | 0.934 | 0.908 / 0.910 / 0.909 | 0.913 |
+
+- **Validity:** GraphML and DEXPI outputs validate. The DEXPI file is byte-identical to `to_dexpi()` of the GraphML.
+- **DEXPI content:** 49 valves, 16 instruments, 75 tees, 197 segments, 7 systems. 38 `general` symbols and 3 arrows are unmapped.
