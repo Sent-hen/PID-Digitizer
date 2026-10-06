@@ -1,0 +1,238 @@
+{
+ "run": "final_test",
+ "counts": {
+  "dataset_pid_test": {
+   "missed_symbol": 9,
+   "false_symbol": 39,
+   "broken_pipe": 3220,
+   "broken_pipe_node_offset": 2574,
+   "spurious_link": 3220,
+   "dashed_error": 881
+  },
+  "synthetic_test": {
+   "missed_symbol": 0,
+   "false_symbol": 73,
+   "broken_pipe": 405,
+   "dashed_error": 166,
+   "broken_pipe_node_offset": 247,
+   "spurious_link": 460,
+   "class_confusion": 12
+  },
+  "open100_test": {
+   "class_confusion": 49,
+   "missed_symbol": 46,
+   "false_symbol": 209,
+   "broken_pipe": 1853,
+   "broken_pipe_node_offset": 332,
+   "spurious_link": 805,
+   "dashed_error": 1
+  }
+ },
+ "totals": {
+  "dataset_pid_test": {
+   "gt_symbols": 8947,
+   "gt_edges": 38009,
+   "gt_nonsolid_edges": 1357,
+   "pred_symbols": 8977,
+   "pred_edges": 38009
+  },
+  "synthetic_test": {
+   "gt_symbols": 869,
+   "gt_edges": 5052,
+   "gt_nonsolid_edges": 801,
+   "pred_symbols": 942,
+   "pred_edges": 5107
+  },
+  "open100_test": {
+   "gt_symbols": 975,
+   "gt_edges": 3111,
+   "gt_nonsolid_edges": 0,
+   "pred_symbols": 1138,
+   "pred_edges": 2063
+  }
+ },
+ "examples": {
+  "broken_pipe": [
+   {
+    "file": "broken_pipe_1.jpg",
+    "uid": "dataset_pid/287",
+    "x": 1542,
+    "y": 513
+   },
+   {
+    "file": "broken_pipe_2.jpg",
+    "uid": "dataset_pid/453",
+    "x": 5204,
+    "y": 2844
+   },
+   {
+    "file": "broken_pipe_3.jpg",
+    "uid": "synthetic/158",
+    "x": 3166,
+    "y": 2114
+   },
+   {
+    "file": "broken_pipe_4.jpg",
+    "uid": "open100/5",
+    "x": 1930,
+    "y": 441
+   }
+  ],
+  "broken_pipe_node_offset": [
+   {
+    "file": "broken_pipe_node_offset_1.jpg",
+    "uid": "dataset_pid/28",
+    "x": 928,
+    "y": 2366
+   },
+   {
+    "file": "broken_pipe_node_offset_2.jpg",
+    "uid": "dataset_pid/187",
+    "x": 826,
+    "y": 2777
+   },
+   {
+    "file": "broken_pipe_node_offset_3.jpg",
+    "uid": "dataset_pid/418",
+    "x": 4064,
+    "y": 4103
+   },
+   {
+    "file": "broken_pipe_node_offset_4.jpg",
+    "uid": "dataset_pid/490",
+    "x": 1268,
+    "y": 1368
+   }
+  ],
+  "class_confusion": [
+   {
+    "file": "class_confusion_1.jpg",
+    "uid": "open100/3",
+    "x": 660,
+    "y": 1225
+   },
+   {
+    "file": "class_confusion_2.jpg",
+    "uid": "open100/4",
+    "x": 999,
+    "y": 178
+   },
+   {
+    "file": "class_confusion_3.jpg",
+    "uid": "open100/5",
+    "x": 1429,
+    "y": 1502
+   },
+   {
+    "file": "class_confusion_4.jpg",
+    "uid": "open100/10",
+    "x": 746,
+    "y": 1344
+   }
+  ],
+  "dashed_error": [
+   {
+    "file": "dashed_error_1.jpg",
+    "uid": "dataset_pid/12",
+    "x": 2616,
+    "y": 3770
+   },
+   {
+    "file": "dashed_error_2.jpg",
+    "uid": "dataset_pid/309",
+    "x": 3779,
+    "y": 2223
+   },
+   {
+    "file": "dashed_error_3.jpg",
+    "uid": "dataset_pid/397",
+    "x": 3209,
+    "y": 3691
+   },
+   {
+    "file": "dashed_error_4.jpg",
+    "uid": "dataset_pid/479",
+    "x": 1213,
+    "y": 3959
+   }
+  ],
+  "false_symbol": [
+   {
+    "file": "false_symbol_1.jpg",
+    "uid": "synthetic/47",
+    "x": 5806,
+    "y": 3514
+   },
+   {
+    "file": "false_symbol_2.jpg",
+    "uid": "open100/4",
+    "x": 18,
+    "y": 666
+   },
+   {
+    "file": "false_symbol_3.jpg",
+    "uid": "open100/5",
+    "x": 2528,
+    "y": 1184
+   },
+   {
+    "file": "false_symbol_4.jpg",
+    "uid": "open100/8",
+    "x": 2289,
+    "y": 387
+   }
+  ],
+  "missed_symbol": [
+   {
+    "file": "missed_symbol_1.jpg",
+    "uid": "dataset_pid/453",
+    "x": 4776,
+    "y": 1653
+   },
+   {
+    "file": "missed_symbol_2.jpg",
+    "uid": "open100/1",
+    "x": 687,
+    "y": 621
+   },
+   {
+    "file": "missed_symbol_3.jpg",
+    "uid": "open100/3",
+    "x": 1124,
+    "y": 886
+   },
+   {
+    "file": "missed_symbol_4.jpg",
+    "uid": "open100/4",
+    "x": 1068,
+    "y": 209
+   }
+  ],
+  "spurious_link": [
+   {
+    "file": "spurious_link_1.jpg",
+    "uid": "dataset_pid/5",
+    "x": 961,
+    "y": 3101
+   },
+   {
+    "file": "spurious_link_2.jpg",
+    "uid": "dataset_pid/5",
+    "x": 4603,
+    "y": 969
+   },
+   {
+    "file": "spurious_link_3.jpg",
+    "uid": "dataset_pid/116",
+    "x": 3976,
+    "y": 1192
+   },
+   {
+    "file": "spurious_link_4.jpg",
+    "uid": "dataset_pid/462",
+    "x": 674,
+    "y": 1655
+   }
+  ]
+ }
+}
