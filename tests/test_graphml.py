@@ -72,3 +72,12 @@ def test_invalid_dataset_ids_are_sanitized(data_cfg: dict[str, object]) -> None:
     d = graph_to_drawing(G, "x", data_cfg["label_map"])  # type: ignore[arg-type]
     assert {sym.id for sym in d.symbols} == {"inlet_outlet3", "valve1"}
     assert validate_graphml(to_graphml(d)) == []
+
+
+def test_incompatible_schema_version_rejected(mini: Drawing, tmp_path: Path) -> None:
+    import pytest
+
+    p = write_graphml(mini, tmp_path / "v.graphml")
+    p.write_bytes(p.read_bytes().replace(b">1.0<", b">2.0<", 1))
+    with pytest.raises(ValueError, match="schema_version"):
+        read_graphml(p)

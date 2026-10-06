@@ -113,6 +113,10 @@ def read_graphml(path: Path, label_map: Mapping[str, str | None] | None = None,
     label_map = label_map or load_config("data")["label_map"]
     G = nx.read_graphml(path)
     gd = G.graph
+    ver = str(gd.get("schema_version", SCHEMA_VERSION))  # GT files carry no version
+    if ver.split(".")[0] != SCHEMA_VERSION.split(".")[0]:
+        raise ValueError(f"{path}: GraphML schema_version {ver} is incompatible with "
+                         f"{SCHEMA_VERSION} (docs/GRAPHML_SCHEMA.md)")
     d = graph_to_drawing(G, str(gd.get("drawing_id", path.stem)), label_map,
                          str(gd.get("subset", "")))
     # networkx returns undirected edges in adjacency order with arbitrary endpoint

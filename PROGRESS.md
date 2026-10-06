@@ -2,13 +2,19 @@
 
 Spec: [docs/PROPOSAL.md](docs/PROPOSAL.md) **v3** (GraphML primary output, dataset-driven scope, option B).
 
-## Current milestone: 4 (Export: GraphML schema doc + DEXPI-structured XML): not started
+## Current milestone: 5 (Evaluation and error analysis): not started
 
-Milestones 0–3 are complete. The current configuration is the M3 pipeline (RESULTS R-008):
-- detector m2c;
-- deskew, crop, and the ankle-port rule;
-- dashed-join tolerance and the paper-relative ink threshold;
-- calibrated confidence.
+Milestones 0–4 are complete.
+
+### Milestone 4 (complete 2026-10-06; D-023, RESULTS R-009)
+- [x] **GraphML:** versioned schema 1.0, documented in `docs/GRAPHML_SCHEMA.md`. XSD-valid, with an exact round trip, and readers reject an incompatible major version.
+- [x] **DEXPI-structured XML** (DEXPI 2.0.1 "DEXPI XML"), via `export/dexpi.py` and `export/dexpi_mapping.yaml`.
+  - Validated against the official XSD plus a DEXPI model vocabulary built from the official model sources (`scripts/build_dexpi_vocab.py`).
+  - 0 invalid files across 230 val/train drawings; the official reference P&ID passes too.
+- [x] **Mapping coverage table:** `docs/DEXPI_COVERAGE.md` (`scripts/dexpi_coverage.py`).
+  - Unmapped classes, listed explicitly: general, arrow, inlet_outlet.
+  - Mapped share: 68% Dataset-PID, 30% Synthetic, 49% OPEN100 train.
+- **Runner:** `run_baseline.py --dexpi` writes and validates `<uid>.dexpi.xml` next to the GraphML.
 
 ### Milestone 3 (complete 2026-10-05; D-021, D-022)
 - [x] **Val edge F1 / edge mAP vs M1** (R-008):
@@ -56,8 +62,10 @@ An early robustness run silently loaded 20-iteration smoke-test weights, because
 - **Machine speed:** the GPU looked thermally or power-limited during recent runs (timings roughly doubled).
 
 ## Next concrete step
-Milestone 4 (v3 §6):
-1. `docs/GRAPHML_SCHEMA.md` and a versioned schema check. XSD validation and round trip already exist.
-2. DEXPI: fetch the current DEXPI specification and Proteus schema, and record the version.
-3. `export/dexpi_mapping.yaml` with an explicit unmapped list, an `lxml` writer, then XSD or required-element validation.
-4. Mapping coverage table.
+Milestone 5 (v3 §6):
+1. **Final test run, once per final config** (M3 pipeline, detector m2c): all three test splits, plus `--dexpi`.
+2. **Robustness:** degradation levels 1–3 on test, with the per-stage metric drop.
+3. **Ablations** tied to decisions: crop, deskew, ankle-port rule, dashed tolerance, confidence, OPEN100 oversampling (m1 vs m1b).
+4. **Error propagation:** oracle vs predicted symbols on test.
+5. **`docs/ERROR_ANALYSIS.md`** with counts and examples (`scripts/analyze_errors.py`).
+6. **`make eval`** regenerates all tables; the README table matches RESULTS.

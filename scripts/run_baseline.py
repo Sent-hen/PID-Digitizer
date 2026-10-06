@@ -17,10 +17,12 @@ import json
 import subprocess
 import time
 import traceback
+from collections import Counter, defaultdict
 from typing import Any
 
 from pid.config import apply_overrides, load_config, resolve
 from pid.eval.report import evaluate
+from pid.export.dexpi import to_dexpi, validate_dexpi
 from pid.export.graphml import read_graphml, validate_graphml, write_graphml
 from pid.io.drawing import Drawing
 from pid.io.pid2graph import load_drawing, ref_from_uid
@@ -39,6 +41,8 @@ def main() -> None:
                     help="degradation severity (configs/degrade.yaml); GT is mapped to match")
     ap.add_argument("--set-detect", action="append", default=[], metavar="KEY=VALUE",
                     help="override configs/detect.yaml at inference, e.g. tiles.overlap=512")
+    ap.add_argument("--dexpi", action="store_true",
+                    help="also write <uid>.dexpi.xml (DEXPI-structured) and validate it")
     ap.add_argument("--set", action="append", default=[], metavar="KEY=VALUE",
                     help="override configs/pipeline.yaml, e.g. --set crop.enabled=true")
     args = ap.parse_args()
@@ -70,6 +74,8 @@ def main() -> None:
         pairs: list[tuple[Drawing, Drawing]] = []
         failures: list[dict[str, str]] = []
         invalid: list[dict[str, Any]] = []
+        invalid_dexpi: list[dict[str, Any]] = []
+        dexpi_totals: dict[str, Counter[str]] = defaultdict(Counter)
         times: list[float] = []
         for uid in uids:
             gt = load_drawing(ref_from_uid(uid, dcfg), dcfg)
@@ -94,6 +100,14 @@ def main() -> None:
             errs = validate_graphml(gpath.read_bytes())
             if errs or read_graphml(gpath, dcfg["label_map"]).edges != pred.edges:
                 invalid.append({"uid": uid, "errors": errs[:3]})
+            if args.dexpi:
+                xml, rep = to_dexpi(pred)
+                (pred_root / f"{uid}.dexpi.xml").write_bytes(xml)
+                derr = validate_dexpi(xml)
+                if derr:
+                    invalid_dexpi.append({"uid": uid, "errors": derr[:3]})
+                for part, counts in rep.as_dict().items():
+                    dexpi_totals[part].update(counts)
             pairs.append((gt, pred))
         res: dict[str, Any] = evaluate(pairs, dcfg)
         record = {"time": time.strftime("%Y-%m-%dT%H:%M:%S"), "run": args.run, "split": split,
@@ -102,6 +116,9 @@ def main() -> None:
                   "degrade_level": args.degrade, "config_hash": cfg_hash,
                   **weights_info, "n_failures": len(failures),
                   "n_invalid_graphml": len(invalid), "invalid_graphml": invalid,
+                  **({"n_invalid_dexpi": len(invalid_dexpi), "invalid_dexpi": invalid_dexpi,
+                      "dexpi_report": {k: dict(v) for k, v in dexpi_totals.items()}}
+                     if args.dexpi else {}),
                   "failures": failures, "sec_per_drawing": sum(times) / max(1, len(times)),
                   **res}
         (pred_root / f"metrics_{split}.json").write_text(json.dumps(record, indent=1))
