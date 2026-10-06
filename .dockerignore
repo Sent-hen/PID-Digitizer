@@ -18,3 +18,4 @@ scripts
 docker/sample
 *.md
 !README.md
+examples

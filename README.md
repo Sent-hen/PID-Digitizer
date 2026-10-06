@@ -8,6 +8,18 @@ It runs a tiled Faster R-CNN symbol detector, orthogonal line extraction with de
 
 > **Status:** all six milestones of the [plan](docs/PROPOSAL.md) are complete: pipeline, evaluation, exports, service, review UI and container. See [PROGRESS.md](PROGRESS.md).
 
+## Example
+
+One validation drawing processed by the service. All files are committed in [`examples/dataset_pid_10/`](examples/dataset_pid_10/), so you can inspect the output without running anything.
+
+| Input drawing | Detected graph (colored by confidence) |
+|---|---|
+| ![input](examples/dataset_pid_10/input_preview.jpg) | ![overlay](examples/dataset_pid_10/overlay_confidence.jpg) |
+
+**Output:** [GraphML](examples/dataset_pid_10/result.graphml) with 410 nodes and 458 edges, and the same graph as [DEXPI 2.0.1 XML](examples/dataset_pid_10/result.dexpi.xml).
+
+**On this sheet:** edge F1 0.909 and edge mAP 0.913 against the ground truth ([details](examples/dataset_pid_10/README.md)).
+
 ## Results (test splits, run once)
 
 <!-- final:start -->
