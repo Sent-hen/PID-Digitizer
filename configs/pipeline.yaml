@@ -28,11 +28,13 @@ graph:
   collinear_tol: 3         # max centerline offset for merging collinear fragments
   merge_gap: 12            # max gap bridged between collinear fragments
   join_tol: 8              # H/V segments within this distance meet at a node
+  dashed_extra_tol: 20     # dashed segments end up to one gap (~16 px) short of what they meet
   snap_tol: 12             # segment end within this distance of a symbol border -> ankle
   node_merge_tol: 3
   struct_size: 8           # crossing/ankle box size, as in the dataset
   min_segment_length: 0
   prune_symbolless_components: true  # drop line networks touching no symbol (frame, tables, text)
+  enforce_ankle_ports: true  # ankles must join a symbol to a continuing pipe (GT ankle degree = 2)
 
 crop:
   enabled: true            # val: Dataset-PID edge F1 0.886 -> 0.904 (RESULTS R-004)
@@ -43,3 +45,7 @@ crop:
   separator_min_frac: 0.8  # interior separator spans >= 80% of the frame
   separator_band: 0.4      # separators only within the right/bottom 40% of the frame
   frame_margin_frac: 0.01  # ignore rules within 1% of the frame edge (double frames)
+
+confidence:
+  enabled: false           # set after fitting (scripts/fit_confidence.py)
+  model: configs/confidence_model.json

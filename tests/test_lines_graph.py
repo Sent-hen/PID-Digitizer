@@ -149,3 +149,41 @@ def test_end_to_end_matches_gt_graph(pcfg: dict[str, Any]) -> None:
     pred = run(img, s, pcfg)
     c = edge_prf(gt, pred)
     assert (c.tp, c.fp, c.fn) == (9, 0, 0)
+
+
+def test_outline_outside_box_creates_no_edges(pcfg: dict[str, Any]) -> None:
+    """A rectangular symbol whose outline is drawn just outside its annotated box must
+    not produce ankle-ankle edges along its own border."""
+    img = canvas()
+    hline(img, 300, 100, 380)
+    hline(img, 300, 460, 700)
+    hline(img, 255, 380, 460, t=3)  # top outline drawn 5 px above the annotated box
+    s = [sym("A", 60, 280, 100, 320), sym("V", 380, 260, 460, 340),
+         sym("B", 700, 280, 740, 320)]
+    d = run(img, s, pcfg)
+    owner_v = [e for e in d.edges if "V" in (e.source, e.target)]
+    assert len(owner_v) == 2  # only the two real ports of V
+    assert len(d.edges) == 6
+
+
+def test_text_stroke_touching_symbol_is_not_a_port(pcfg: dict[str, Any]) -> None:
+    img = canvas()
+    hline(img, 300, 100, 380)
+    vline(img, 400, 200, 284)          # a tall text-like stroke ending on V's top border
+    s = [sym("A", 60, 280, 100, 320), sym("V", 380, 285, 420, 315)]
+    d = run(img, s, pcfg)
+    assert sorted(x.cls for x in d.symbols).count("ankle") == 2  # A's and V's left port
+    assert len(d.edges) == 3
+
+
+def test_confidence_fit_recovers_signal() -> None:
+    from pid.graph.confidence import FEATURES, expected_calibration_error, fit
+
+    rng = np.random.default_rng(0)
+    X = rng.normal(size=(2000, len(FEATURES)))
+    true_p = 1 / (1 + np.exp(-(2.0 * X[:, 2] - 1.0 * X[:, 5])))  # fill up, slack down
+    y = (rng.random(2000) < true_p).astype(float)
+    m = fit(X, y, l2=0.1)
+    assert m.coef[2] > 1.0 and m.coef[5] < -0.5
+    ece, _ = expected_calibration_error(m.predict(X), y)
+    assert ece < 0.05

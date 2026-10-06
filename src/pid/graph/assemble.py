@@ -78,7 +78,7 @@ class _Nodes:
 
 
 def _snap_to_symbol(seg: Segment, end: str, symbols: Sequence[Symbol], tol: float,
-                    ) -> tuple[Symbol, tuple[float, float]] | None:
+                    ) -> tuple[Symbol, tuple[float, float], float] | None:
     """Find the symbol a segment end runs into; return it and the ankle point on its
     border (where the line enters the box)."""
     a = seg.a1 if end == "hi" else seg.a0
@@ -99,7 +99,7 @@ def _snap_to_symbol(seg: Segment, end: str, symbols: Sequence[Symbol], tol: floa
             pt = (min(max(seg.c, b.xmin), b.xmax), edge)
         if d <= tol and (best is None or d < best[0]):
             best = (d, s, pt)
-    return None if best is None else (best[1], best[2])
+    return None if best is None else (best[1], best[2], float(best[0]))
 
 
 def _drop_inactive_crossings(members: list[list[tuple[float, int]]], nodes: _Nodes,
@@ -134,6 +134,33 @@ def _drop_inactive_crossings(members: list[list[tuple[float, int]]], nodes: _Nod
             members[k] = [(a, m) for a, m in members[k] if m != n]
 
 
+def _enforce_ankle_ports(edge_set: dict[frozenset[str], LineType],
+                         owners: Mapping[str, set[str]]) -> dict[frozenset[str], LineType]:
+    """Apply the dataset invariant that an ankle is a port: it joins a symbol to a pipe
+    that continues to another node (GT ankles have degree 2).
+
+    1. Drop edges between two ankles of the same symbol - a pipe never leaves a symbol
+       and re-enters it directly; these come from symbol outlines drawn just outside
+       the box.
+    2. Repeatedly drop ankles left with only their symbol edge (text strokes or symbol
+       remnants touching the box, with no pipe continuing from them).
+    """
+    out = {k: v for k, v in edge_set.items()
+           if not (len(k) == 2 and all(n in owners for n in k)
+                   and set.intersection(*(owners[n] for n in k)))}
+    while True:
+        deg: dict[str, int] = {}
+        for k in out:
+            for n in k:
+                deg[n] = deg.get(n, 0) + 1
+        dead = {n for n in owners if deg.get(n, 0) <= 1}
+        dead_edges = [k for k in out if k & dead]
+        if not dead_edges:
+            return out
+        for k in dead_edges:
+            del out[k]
+
+
 def _prune_symbolless(edge_set: dict[frozenset[str], LineType], symbol_ids: set[str],
                       ) -> dict[frozenset[str], LineType]:
     """Drop connected components that contain no symbol: text strokes, table rules
@@ -155,9 +182,15 @@ def _prune_symbolless(edge_set: dict[frozenset[str], LineType], symbol_ids: set[
 
 
 def assemble(drawing_id: str, symbols: Sequence[Symbol], segments: Sequence[Segment],
-             cfg: Mapping[str, Any], subset: str = "") -> Drawing:
+             cfg: Mapping[str, Any], subset: str = "",
+             features_out: dict[str, dict[str, float]] | None = None) -> Drawing:
+    """Build the graph. If `features_out` is given it is filled with per-edge
+    features (keyed by edge id) for the confidence model (graph/confidence.py)."""
     join_tol = float(cfg["join_tol"])
     snap_tol = float(cfg["snap_tol"])
+    # A dashed segment ends at its last dash, up to one dash gap short of the line or
+    # symbol it meets, so non-solid segments get gap-sized tolerances.
+    dash_tol = float(cfg.get("dashed_extra_tol", 0.0))
     half = float(cfg.get("struct_size", 8)) / 2
     segs = merge_collinear(segments, float(cfg["collinear_tol"]), float(cfg["merge_gap"]))
     segs = [s for s in segs if s.length >= float(cfg.get("min_segment_length", 0))]
@@ -173,9 +206,15 @@ def assemble(drawing_id: str, symbols: Sequence[Symbol], segments: Sequence[Segm
         vc = np.array([segs[i].c for i in V])
         va0 = np.array([segs[i].a0 for i in V])
         va1 = np.array([segs[i].a1 for i in V])
-        hit = ((vc[None, :] >= ha0[:, None] - join_tol) & (vc[None, :] <= ha1[:, None] + join_tol)
-               & (hc[:, None] >= va0[None, :] - join_tol)
-               & (hc[:, None] <= va1[None, :] + join_tol))
+        ht = np.array([join_tol + (dash_tol if segs[i].line_type == LineType.NON_SOLID
+                                   else 0.0) for i in H])
+        vt = np.array([join_tol + (dash_tol if segs[i].line_type == LineType.NON_SOLID
+                                   else 0.0) for i in V])
+        # each segment may be extended along its own axis by its own tolerance
+        hit = ((vc[None, :] >= ha0[:, None] - ht[:, None])
+               & (vc[None, :] <= ha1[:, None] + ht[:, None])
+               & (hc[:, None] >= va0[None, :] - vt[None, :])
+               & (hc[:, None] <= va1[None, :] + vt[None, :]))
         for hi, vi in zip(*np.nonzero(hit), strict=True):
             ih, iv = H[hi], V[vi]
             x, y = segs[iv].c, segs[ih].c
@@ -184,34 +223,60 @@ def assemble(drawing_id: str, symbols: Sequence[Symbol], segments: Sequence[Segm
             members[iv].append((y, n))
 
     sym_edges: set[tuple[int, str]] = set()
+    snap_info: dict[tuple[int, str], tuple[float, int]] = {}  # (node, sym) -> (dist, seg)
     for k, s in enumerate(segs):
         for end in ("lo", "hi"):
             a = s.a0 if end == "lo" else s.a1
-            if any(abs(m_a - a) <= join_tol for m_a, _ in members[k]):
+            extra = dash_tol if s.line_type == LineType.NON_SOLID else 0.0
+            if any(abs(m_a - a) <= join_tol + extra for m_a, _ in members[k]):
                 continue  # this end is already a junction
-            snap = _snap_to_symbol(s, end, symbols, snap_tol)
+            snap = _snap_to_symbol(s, end, symbols, snap_tol + extra)
             if snap is None:
                 continue  # dangling end: no node (walking skeleton)
-            sym, (px, py) = snap
+            sym, (px, py), dist = snap
             n = nodes.add(px, py, "ankle", sym.id)
             members[k].append((py if s.orient == "v" else px, n))
             sym_edges.add((n, sym.id))
+            snap_info.setdefault((n, sym.id), (dist, k))
 
     _drop_inactive_crossings(members, nodes, segs, join_tol)
 
     edge_set: dict[frozenset[str], LineType] = {}
+    feats: dict[frozenset[str], dict[str, float]] = {}
 
     def nid(i: int) -> str:
         return f"{nodes.kind[i][0]}{i}"
 
+    def slack(seg: Segment, a: float) -> float:  # how far a node lies beyond the run
+        return max(0.0, seg.a0 - a, a - seg.a1)
+
     for k, s in enumerate(segs):
         seq = sorted(set(members[k]))
-        for (_, u), (_, v) in zip(seq, seq[1:], strict=False):
+        for (au, u), (av, v) in zip(seq, seq[1:], strict=False):
             if u != v:
-                edge_set.setdefault(frozenset((nid(u), nid(v))), s.line_type)
+                key = frozenset((nid(u), nid(v)))
+                edge_set.setdefault(key, s.line_type)
+                feats.setdefault(key, {
+                    "is_port": 0.0, "nonsolid": float(s.line_type == LineType.NON_SOLID),
+                    "fill": s.fill, "width": s.width, "log_len": float(np.log1p(av - au)),
+                    "slack": max(slack(s, au), slack(s, av)),
+                    "n_ankle_ends": float((nodes.kind[u] == "ankle") + (nodes.kind[v] == "ankle")),
+                    "snap_dist": 0.0, "sym_score": 1.0})
+    sym_score = {sy.id: sy.score for sy in symbols}
     for n, sid in sym_edges:
-        edge_set.setdefault(frozenset((nid(n), sid)), LineType.SOLID)
+        key = frozenset((nid(n), sid))
+        edge_set.setdefault(key, LineType.SOLID)
+        dist, k = snap_info[(n, sid)]
+        feats.setdefault(key, {
+            "is_port": 1.0, "nonsolid": float(segs[k].line_type == LineType.NON_SOLID),
+            "fill": segs[k].fill, "width": segs[k].width, "log_len": 0.0, "slack": 0.0,
+            "n_ankle_ends": 1.0, "snap_dist": dist, "sym_score": sym_score.get(sid, 1.0)})
 
+    if cfg.get("enforce_ankle_ports", True):
+        owners: dict[str, set[str]] = {}
+        for n, sid in sym_edges:
+            owners.setdefault(nid(n), set()).add(sid)
+        edge_set = _enforce_ankle_ports(edge_set, owners)
     if cfg.get("prune_symbolless_components", True):
         edge_set = _prune_symbolless(edge_set, {s.id for s in symbols})
     used = {x for key in edge_set for x in key}
@@ -221,8 +286,17 @@ def assemble(drawing_id: str, symbols: Sequence[Symbol], segments: Sequence[Segm
             out_syms.append(Symbol(id=nid(i), cls=nodes.kind[i],
                                    bbox=BBox(xmin=x - half, ymin=y - half, xmax=x + half,
                                              ymax=y + half)))
+    deg: dict[str, int] = {}
+    for key in edge_set:
+        for x in key:
+            deg[x] = deg.get(x, 0) + 1
     edges = []
     for j, (key, lt) in enumerate(sorted(edge_set.items(), key=lambda t: sorted(t[0]))):
         src, dst = sorted(key)
         edges.append(Edge(id=f"e{j}", source=src, target=dst, line_type=lt))
+        if features_out is not None:
+            f = dict(feats[key])
+            f["deg_min"] = float(min(deg[src], deg[dst]))
+            f["deg_max"] = float(max(deg[src], deg[dst]))
+            features_out[f"e{j}"] = f
     return Drawing(id=drawing_id, subset=subset, symbols=out_syms, edges=edges)

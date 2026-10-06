@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
+from functools import cache
 from pathlib import Path
 from typing import Any, cast
 
@@ -10,7 +11,9 @@ import cv2
 import numpy as np
 from numpy.typing import NDArray
 
+from pid.config import resolve
 from pid.graph.assemble import assemble
+from pid.graph.confidence import ConfidenceModel, apply_confidence
 from pid.io.drawing import BBox, Drawing, Symbol
 from pid.lines.extract import extract_segments
 from pid.preprocess.crop import detect_content_box
@@ -34,10 +37,16 @@ def load_gray(path: str | Path) -> U8:
     return out
 
 
+@cache
+def _confidence_model(path: str) -> ConfidenceModel:
+    return ConfidenceModel.load(resolve(path))
+
+
 def digitize(image_path: str | Path, cfg: Mapping[str, Any], drawing_id: str = "",
              subset: str = "", detector: Detector | None = None,
              oracle_symbols: Sequence[Symbol] | None = None,
-             gray: U8 | None = None) -> Drawing:
+             gray: U8 | None = None,
+             features_out: dict[str, dict[str, float]] | None = None) -> Drawing:
     """Run the pipeline on one sheet. Exactly one of `detector` / `oracle_symbols`
     (ground-truth symbols in original coordinates, for error-propagation analysis)
     must be given. Returns a `Drawing` in original image coordinates."""
@@ -82,7 +91,11 @@ def digitize(image_path: str | Path, cfg: Mapping[str, Any], drawing_id: str = "
                        and box.ymin <= sy.bbox.center[1] <= box.ymax]
 
     segments = extract_segments(masked, [s.bbox for s in symbols], cfg["lines"])
-    graph = assemble(drawing_id, symbols, segments, cfg["graph"], subset)
+    feats: dict[str, dict[str, float]] = {} if features_out is None else features_out
+    graph = assemble(drawing_id, symbols, segments, cfg["graph"], subset, features_out=feats)
+    ccfg = cfg.get("confidence", {})
+    if ccfg.get("enabled"):
+        graph = apply_confidence(graph, feats, _confidence_model(str(ccfg["model"])))
     if back is not None:  # map results from the deskewed frame back to the input's
         graph = transform_drawing(graph, back, float(cfg["graph"].get("struct_size", 8)))
     out = scale_drawing(graph, 1.0 / f)

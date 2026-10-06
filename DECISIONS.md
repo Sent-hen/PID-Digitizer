@@ -216,3 +216,13 @@ The full change table is in `docs/PROPOSAL.md` §9.
   - This supersedes the rot/flip part of D-018.
 - **Pipeline:** deskew on, crop on, inference overlap 256 (512 gave no gain at 2× cost).
 - **Rejected:** m1b, the M1 detector. It's 0.003–0.010 better in clean edge F1, but much worse on degraded input (Synthetic level 2: symbol mAP 0.859 vs 0.996, edge F1 0.747 vs 0.877).
+
+## D-020 Milestone 2 sign-off (2026-10-05)
+
+- **Decision:** Milestone 2 is accepted with clean-val symbol mAP@0.5 saturated at 0.996–1.000 for both M1 and M2, so that metric can only tie.
+- **How "beats M1" was judged instead:**
+  - node AP: Dataset-PID 0.847 → 0.869;
+  - degraded val (level 2), where M2 wins by a wide margin (R-007).
+- **Rejected:**
+  - rewriting the acceptance metric before continuing;
+  - spending a one-time OPEN100 test run on an intermediate configuration.

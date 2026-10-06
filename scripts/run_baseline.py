@@ -99,7 +99,8 @@ def main() -> None:
         record = {"time": time.strftime("%Y-%m-%dT%H:%M:%S"), "run": args.run, "split": split,
                   "oracle_symbols": args.oracle_symbols, "overrides": args.set,
                   "detect_overrides": args.set_detect,
-                  "degrade_level": args.degrade, **weights_info, "n_failures": len(failures),
+                  "degrade_level": args.degrade, "config_hash": cfg_hash,
+                  **weights_info, "n_failures": len(failures),
                   "n_invalid_graphml": len(invalid), "invalid_graphml": invalid,
                   "failures": failures, "sec_per_drawing": sum(times) / max(1, len(times)),
                   **res}
