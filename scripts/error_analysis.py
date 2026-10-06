@@ -11,6 +11,8 @@ as in the primary metric):
 * false_symbol      predicted symbol matching no GT symbol
 * broken_pipe       GT edge missed: both endpoints found but not connected, or a
                     structural endpoint missing (line not extracted / joined)
+  broken_pipe_node_offset  subset whose two GT endpoints both have a predicted node within
+                    4 px (pipe found, node just outside the IoU-0.5 tolerance)
 * spurious_link     predicted edge with no GT edge (between matched nodes, or through
                     a spurious structural node)
 * dashed_error      GT non-solid edge missed, or a found edge with the wrong line type
@@ -53,6 +55,11 @@ def analyze(gt: Drawing, pred: Drawing) -> dict[str, list[tuple[float, float]]]:
     out["false_symbol"] += [s.bbox.center for s in psym if s.id not in ms]
 
     m = greedy_match(gt.symbols, pred.symbols)  # all nodes, for edges
+    pc = np.array([p.bbox.center for p in pred.symbols]) if pred.symbols else np.zeros((0, 2))
+
+    def near(xy: tuple[float, float], tol: float = 4.0) -> bool:
+        return bool(len(pc)) and float(np.min(np.abs(pc - np.asarray(xy)).max(1))) <= tol
+
     inv = {g: p for p, g in m.items()}
     G, P = gt.symbol_by_id(), pred.symbol_by_id()
     pk = {e.key(): e for e in pred.edges}
@@ -63,6 +70,10 @@ def analyze(gt: Drawing, pred: Drawing) -> dict[str, list[tuple[float, float]]]:
         hit = pu and pv and frozenset((pu, pv)) in pk
         if not hit:
             out["broken_pipe"].append(mid)  # type: ignore[arg-type]
+            # Sub-category: both GT endpoints have *some* predicted node within 4 px, i.e.
+            # the pipe was found but a node is placed just outside the IoU-0.5 tolerance.
+            if all(near(G[n].bbox.center) for n in (e.source, e.target)):
+                out["broken_pipe_node_offset"].append(mid)  # type: ignore[arg-type]
             if e.line_type.value == "non-solid":
                 out["dashed_error"].append(mid)  # type: ignore[arg-type]
         elif pk[frozenset((pu, pv))].line_type != e.line_type:  # type: ignore[arg-type]

@@ -2,9 +2,21 @@
 
 Spec: [docs/PROPOSAL.md](docs/PROPOSAL.md) **v3** (GraphML primary output, dataset-driven scope, option B).
 
-## Current milestone: 5 (Evaluation and error analysis): not started
+## Current milestone: 6 (Service, review UI, container): not started
 
-Milestones 0–4 are complete.
+Milestones 0–5 are complete.
+
+### Milestone 5 (complete 2026-10-06; D-024, RESULTS R-010)
+- [x] **Final metrics on test, run once per final config** (`make eval` → `docs/FINAL_RESULTS.md`), edge F1 / edge mAP:
+  - Dataset-PID: 0.915 / 0.898;
+  - Synthetic: 0.915 / 0.918;
+  - OPEN100: 0.486 / 0.380.
+  - Per-drawing median and p10 are reported.
+- [x] **Robustness:** levels 1–3 on test, with the per-stage figure `docs/robustness.png`. Generated subsets keep edge F1 ≥ 0.84 at L3; OPEN100 collapses at L3 (simulator scale, D-024).
+- [x] **Ablations:** crop, ankle-port rule, dashed tolerance, confidence, deskew (at L2), and OPEN100 oversampling (R-003).
+- [x] **Error propagation:** oracle vs predicted symbols, edge F1 gap −0.039 / −0.065 / −0.108.
+- [x] **`docs/ERROR_ANALYSIS.md`:** counts and examples per category, plus causes and fixes tried. 80% of Dataset-PID edge misses are 2–4 px node offsets.
+- [x] **Report reproducibility:** `make eval` regenerates every table and figure, and the README results block is generated and identical to RESULTS.md's.
 
 ### Milestone 4 (complete 2026-10-06; D-023, RESULTS R-009)
 - [x] **GraphML:** versioned schema 1.0, documented in `docs/GRAPHML_SCHEMA.md`. XSD-valid, with an exact round trip, and readers reject an incompatible major version.
@@ -62,10 +74,9 @@ An early robustness run silently loaded 20-iteration smoke-test weights, because
 - **Machine speed:** the GPU looked thermally or power-limited during recent runs (timings roughly doubled).
 
 ## Next concrete step
-Milestone 5 (v3 §6):
-1. **Final test run, once per final config** (M3 pipeline, detector m2c): all three test splits, plus `--dexpi`.
-2. **Robustness:** degradation levels 1–3 on test, with the per-stage metric drop.
-3. **Ablations** tied to decisions: crop, deskew, ankle-port rule, dashed tolerance, confidence, OPEN100 oversampling (m1 vs m1b).
-4. **Error propagation:** oracle vs predicted symbols on test.
-5. **`docs/ERROR_ANALYSIS.md`** with counts and examples (`scripts/analyze_errors.py`).
-6. **`make eval`** regenerates all tables; the README table matches RESULTS.
+Milestone 6 (v3 §6):
+1. **FastAPI service:** `POST /jobs`, `GET /jobs/{id}`, `GET /jobs/{id}/result?format=graphml|dexpi`, `GET /jobs/{id}/overlay`, `PATCH /jobs/{id}/graph`, `GET /health`.
+2. **Jobs:** an in-process worker with SQLite job state.
+3. **Static review UI:** confidence overlay, low-confidence filter, inspect, relabel/delete/add edge, download.
+4. **Container:** CPU Dockerfile and docker-compose, a weights fetch script, and `make demo`.
+5. **API tests** with pytest + httpx.
