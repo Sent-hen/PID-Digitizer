@@ -47,13 +47,13 @@ Milestones 0–3 are complete. The current configuration is the M3 pipeline (RES
 ### Incident (fixed)
 An early robustness run silently loaded 20-iteration smoke-test weights, because `detect.yaml` had changed under it and a killed job's shell loop kept running. Those outputs were deleted. Every metrics file now records the weights hash. Jobs run one at a time, because concurrent training and evaluation slowed both about 20×.
 
-### Open issues for Milestone 3
-- **Box precision limits connectivity.** Ankles sit on bbox borders, and an 8 px ankle tolerates about 2.7 px of error. Snapping ankles to the pipe's ink end is a candidate.
-- **Dashed lines in Dataset-PID:** non-solid edge AP is about 0.42.
-- **OPEN100 line extraction:** oracle edge F1 is 0.62 (diagonal lines, direct symbol–symbol edges, faint lines).
-- **Confidence scores** (all structural nodes and edges are 1.0).
-- **Real-world rare classes** (pump, tank) can only be judged at the final OPEN100 test. There's no OPEN100 val (D-014).
-- **Machine speed:** the GPU looked thermally or power-limited during the latest runs (timings roughly doubled).
+### Open issues (carried forward)
+- **Box precision limits connectivity.** Ankles sit on bbox borders, and an 8 px ankle tolerates about 2.7 px of error.
+- **Crossing positions:** Dataset-PID GT marks crossings at the stroke's top-left edge, Synthetic at its centre. That gives up to 2.5 px offsets on thick Dataset-PID strokes. It's a per-subset convention, so it isn't corrected (no subset identity at inference).
+- **OPEN100 line stage:** oracle edge F1 is 0.72 on train sheets. The gaps are diagonal lines, short nozzle stubs, nested symbols, and direct symbol–symbol edges.
+- **Real-world rare classes** (pump, tank) can only be judged at the final OPEN100 test, since there's no OPEN100 val (D-014).
+- **Confidence calibration:** overconfident in the 0.4–0.8 range, which holds under 3% of edges.
+- **Machine speed:** the GPU looked thermally or power-limited during recent runs (timings roughly doubled).
 
 ## Next concrete step
 Milestone 4 (v3 §6):
