@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>P&amp;ID Digitizer review</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>P&amp;ID Digitizer</h1>
+    <form id="upload">
+      <input type="file" id="file" accept=".png,.jpg,.jpeg,.tif,.tiff,.bmp" required>
+      <button type="submit">Digitize</button>
+    </form>
+    <select id="jobs" aria-label="Recent jobs"><option value="">Recent jobs…</option></select>
+    <span id="status" role="status"></span>
+  </header>
+
+  <main>
+    <section id="viewer">
+      <canvas id="canvas" aria-label="Drawing with detected graph"></canvas>
+      <div id="hint">Drag to pan · wheel to zoom · click an element to inspect</div>
+    </section>
+
+    <aside>
+      <h2>Review</h2>
+      <label class="row">Show only confidence below
+        <output id="thrOut">1.00</output></label>
+      <input type="range" id="thr" min="0" max="1" step="0.01" value="1">
+      <label class="row"><input type="checkbox" id="showImg" checked> drawing</label>
+      <div id="counts" class="muted"></div>
+
+      <div id="legend">
+        <span><i style="background:#dc3c28"></i>low</span>
+        <span><i style="background:#e6b42d"></i>medium</span>
+        <span><i style="background:#2fa84f"></i>high confidence</span>
+        <span><i class="dash"></i>non-solid line</span>
+      </div>
+
+      <h3>Selection</h3>
+      <div id="sel" class="muted">Nothing selected.</div>
+      <div id="nodeActions" hidden>
+        <label>Class
+          <select id="cls">
+            <option>general</option><option>tank</option><option>valve</option>
+            <option>instrumentation</option><option>pump</option><option>arrow</option>
+            <option>inlet_outlet</option><option>crossing</option><option>ankle</option>
+          </select>
+        </label>
+        <button id="relabel">Relabel</button>
+        <button id="addEdge" title="then click the other node">Add edge from here</button>
+      </div>
+      <div id="edgeActions" hidden>
+        <button id="toggleType">Toggle solid / non-solid</button>
+      </div>
+      <div id="commonActions" hidden>
+        <button id="confirm">Confirm</button>
+        <button id="delete" class="danger">Delete</button>
+      </div>
+
+      <h3>Download</h3>
+      <div class="downloads">
+        <a id="dlGraphml" class="btn disabled">GraphML</a>
+        <a id="dlDexpi" class="btn disabled">DEXPI XML</a>
+        <a id="dlOverlay" class="btn disabled" target="_blank">Overlay PNG</a>
+      </div>
+      <p class="muted small">Corrections are saved immediately and logged (append-only).
+        The original prediction stays available via <code>?version=original</code>.</p>
+    </aside>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

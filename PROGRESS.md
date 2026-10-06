@@ -2,7 +2,22 @@
 
 Spec: [docs/PROPOSAL.md](docs/PROPOSAL.md) **v3** (GraphML primary output, dataset-driven scope, option B).
 
-## Current milestone: 6 (Service, review UI, container): not started
+## Current milestone: 6 (Service, review UI, container): in progress
+
+- **Done:**
+  - `configs/serve.yaml`;
+  - `api/store.py` (SQLite jobs);
+  - `api/corrections.py` (typed ops, atomic, append-only log);
+  - `api/app.py`, with the planned endpoints plus `/jobs/{id}/image` and `/jobs`. It has upload limits, JSON logs, the model loaded once, and a weights sha1 check;
+  - static UI in `src/pid/ui/`;
+  - `tests/test_api.py` (8 tests, fake pipeline, CPU only).
+  - Verified locally: a real job on a val sheet finishes in about 5 s on the GPU, and the UI loads the job and draws the graph.
+- **Left:**
+  - check UI interactions in the browser (select, relabel, add/delete edge, downloads);
+  - CPU Dockerfile and docker-compose (torch from the CPU index), and `scripts/fetch_weights.py`. Ask the user before publishing weights anywhere, because of the CC BY-SA derivative question;
+  - bundled sample drawing with attribution, `make demo` / `make serve`;
+  - README quickstart, DECISIONS entry, PR.
+  - Docker Desktop's engine was not running at last check (`docker info` failed).
 
 Milestones 0–5 are complete.
 

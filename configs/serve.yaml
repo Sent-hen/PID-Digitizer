@@ -1,0 +1,13 @@
+# FastAPI service (Milestone 6). Paths are relative to the repo root unless absolute;
+# PID_DATA_DIR / PID_WEIGHTS / PID_DEVICE environment variables override.
+data_dir: outputs/serve          # job inputs, results, corrections, SQLite job table
+weights: weights/detector_m2c.pt
+weights_sha1: 531ab26ce150        # refuse to start with other weights (provenance)
+device: auto                      # auto | cpu | cuda
+max_upload_mb: 60
+max_pixels: 60000000              # ~ 9000 x 6600 px; larger sheets are rejected
+allowed_formats: [PNG, JPEG, TIFF, BMP]
+workers: 1                        # one pipeline at a time (model loaded once)
+job_timeout_s: 900
+overlay_max_side: 2400
+ui_image_max_side: 3000
