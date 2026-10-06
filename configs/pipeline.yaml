@@ -1,0 +1,52 @@
+# Walking-skeleton pipeline (Milestone 1). Pixel values refer to the *working* image,
+# i.e. after rescaling each sheet so its long side is `target_long_side`.
+preprocess:
+  target_long_side: 7000   # paper resizes to 4500x7000; equalizes symbol scale across subsets
+
+deskew:
+  enabled: true            # level-2 val: Dataset-PID edge F1 0.496 -> 0.895 (R-006); clean untouched
+  factor: 4                # estimate on a 1/4 block-minimum downscale
+  threshold: 160
+  max_angle: 3.0           # search range (degrees)
+  coarse_step: 0.25
+  fine_step: 0.02
+  min_angle: 0.05          # smaller estimates are treated as level (no resampling)
+
+lines:
+  threshold: 180           # gray < threshold is ink; 150 -> 180 in R-008
+  paper_margin: 25         # ...capped at median paper level - 25 (gray/degraded paper, R-008)
+  mask_pad: 1              # px added around symbol boxes when blanking them
+  min_length: 30           # morphological opening length; shorter runs (text) are dropped
+  bridge_gap: 21           # closing length; bridges dash gaps (Dataset-PID gaps: median 11, p99 20 px)
+  max_width: 14            # thicker components are not lines (text blocks, fills)
+  solid_min_fill: 0.85     # ink coverage below this -> non-solid
+  max_length_frac: 0.8     # longer runs are the drawing frame, not pipes
+  context_offset: 4        # gap between line edge and the side bands checked for ink
+  context_width: 8         # height of each side band
+  max_context_ink: 0.5     # reject candidates with ink beside them along >50% of length (text)
+
+graph:
+  collinear_tol: 3         # max centerline offset for merging collinear fragments
+  merge_gap: 12            # max gap bridged between collinear fragments
+  join_tol: 8              # H/V segments within this distance meet at a node
+  dashed_extra_tol: 20     # dashed segments end up to one gap (~16 px) short of what they meet
+  snap_tol: 12             # segment end within this distance of a symbol border -> ankle
+  node_merge_tol: 3
+  struct_size: 8           # crossing/ankle box size, as in the dataset
+  min_segment_length: 0
+  prune_symbolless_components: true  # drop line networks touching no symbol (frame, tables, text)
+  enforce_ankle_ports: true  # ankles must join a symbol to a continuing pipe (GT ankle degree = 2)
+
+crop:
+  enabled: true            # val: Dataset-PID edge F1 0.886 -> 0.904 (RESULTS R-004)
+  scale: 0.125             # detect ruling lines on a 1/8 downscaled copy
+  threshold: 150
+  frame_min_frac: 0.5      # frame rules span >= 50% of the sheet side
+  frame_edge_frac: 0.1     # frame lies within 10% of at least 3 sheet edges
+  separator_min_frac: 0.8  # interior separator spans >= 80% of the frame
+  separator_band: 0.4      # separators only within the right/bottom 40% of the frame
+  frame_margin_frac: 0.01  # ignore rules within 1% of the frame edge (double frames)
+
+confidence:
+  enabled: true            # 2-fold CV on val: ECE 0.017, edge mAP 0.776 -> 0.898 (R-008)
+  model: configs/confidence_model.json

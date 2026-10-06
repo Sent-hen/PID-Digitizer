@@ -1,0 +1,36 @@
+# Degradation simulator (Milestone 2). Each severity level applies every operation in
+# this order: contrast loss -> blur -> skew -> noise -> resolution loss -> JPEG ->
+# (level 3 only) fax-like binarization. Pixel sizes refer to the original sheet.
+seed: 2026
+levels:
+  1:
+    contrast: 0.85        # ink darkness kept (1.0 = unchanged); background moves toward gray
+    background: 235       # paper gray level
+    blur_sigma: 0.6
+    skew_deg: 0.3         # max |angle|, sign and magnitude drawn per sheet
+    noise_sigma: 6
+    speckle: 0.0005       # fraction of pixels flipped to black/white
+    downscale: 0.85       # resample down and back up (scanner resolution loss)
+    jpeg_quality: 85
+    binarize: false
+  2:
+    contrast: 0.7
+    background: 220
+    blur_sigma: 1.0
+    skew_deg: 0.8
+    noise_sigma: 12
+    speckle: 0.002
+    downscale: 0.7
+    jpeg_quality: 60
+    binarize: false
+  3:
+    contrast: 0.55
+    background: 205
+    blur_sigma: 1.5
+    skew_deg: 1.5
+    noise_sigma: 20
+    speckle: 0.005
+    downscale: 0.55
+    jpeg_quality: 40
+    binarize: true        # fax-like hard threshold after all other effects
+    binarize_threshold: 150

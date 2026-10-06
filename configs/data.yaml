@@ -1,0 +1,44 @@
+# Dataset locations and label normalization. Paths are relative to the repo root.
+dataset_root: PID2Graph
+complete_dir: Complete
+subsets:
+  dataset_pid: "Dataset PID"
+  open100: "PID2Graph OPEN100"
+  synthetic: "PID2Graph Synthetic"
+
+# Raw PID2Graph node label -> canonical class. `null` = not a graph node
+# ("background" rectangles mark the frame/title block and become ignore regions).
+label_map:
+  general: general
+  tank: tank
+  valve: valve
+  instrumentation: instrumentation
+  pump: pump
+  arrow: arrow
+  inlet/outlet: inlet_outlet
+  crossing: crossing
+  connector: ankle
+  background: null
+
+# Symbol classes evaluated by symbol mAP (paper Table I). Structural nodes excluded.
+symbol_classes: [general, tank, valve, instrumentation, pump, arrow, inlet_outlet]
+# Structural node classes (uniform 8x8 boxes at line intersections / bends).
+structural_classes: [crossing, ankle]
+
+splits:
+  dir: splits
+  seed: 1234
+  # fraction of each trainable subset's groups
+  val_fraction: 0.15
+  test_fraction: 0.15
+  # subsets never used for training; kept whole as a cross-domain test set
+  held_out_subsets: []
+  # subsets too small for a val split: n_train sheets go to training, chosen so every
+  # class stays in test and rare classes appear in train (proposal v3, option B)
+  small_subsets:
+    open100:
+      n_train: 4
+      rare_classes: [tank, pump, inlet_outlet]
+  # ink-map Jaccard similarity at or above which two drawings share a group
+  # (near-duplicate / same-template control; see scripts/make_splits.py)
+  ink_jaccard_min: 0.6

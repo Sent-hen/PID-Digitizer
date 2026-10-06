@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Tiny fixture mimicking PID2Graph quirks: key ids differ per attribute type
+     (long vs double declared separately), a degree-0 "background" region with
+     swapped ymin/ymax, connector (ankle) and crossing nodes, both line types. -->
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+  <key id="d9" for="edge" attr.name="edge_label" attr.type="string" />
+  <key id="d8" for="node" attr.name="ymax" attr.type="long" />
+  <key id="d7" for="node" attr.name="xmax" attr.type="long" />
+  <key id="d6" for="node" attr.name="ymin" attr.type="long" />
+  <key id="d5" for="node" attr.name="xmin" attr.type="long" />
+  <key id="d4" for="node" attr.name="ymax" attr.type="double" />
+  <key id="d3" for="node" attr.name="xmax" attr.type="double" />
+  <key id="d2" for="node" attr.name="ymin" attr.type="double" />
+  <key id="d1" for="node" attr.name="xmin" attr.type="double" />
+  <key id="d0" for="node" attr.name="label" attr.type="string" />
+  <graph edgedefault="undirected">
+    <node id="general1">
+      <data key="d0">general</data>
+      <data key="d1">10.0</data><data key="d2">10.0</data><data key="d3">50.0</data><data key="d4">40.0</data>
+    </node>
+    <node id="valve2">
+      <data key="d0">valve</data>
+      <data key="d1">100.5</data><data key="d2">15.0</data><data key="d3">120.5</data><data key="d4">35.0</data>
+    </node>
+    <node id="connector3">
+      <data key="d0">connector</data>
+      <data key="d5">196</data><data key="d6">21</data><data key="d7">204</data><data key="d8">29</data>
+    </node>
+    <node id="crossing4">
+      <data key="d0">crossing</data>
+      <data key="d5">196</data><data key="d6">96</data><data key="d7">204</data><data key="d8">104</data>
+    </node>
+    <node id="instrumentation5">
+      <data key="d0">instrumentation</data>
+      <data key="d1">180.0</data><data key="d2">150.0</data><data key="d3">220.0</data><data key="d4">190.0</data>
+    </node>
+    <node id="inlet6">
+      <data key="d0">inlet/outlet</data>
+      <data key="d1">260.0</data><data key="d2">90.0</data><data key="d3">300.0</data><data key="d4">110.0</data>
+    </node>
+    <node id="background7">
+      <data key="d0">background</data>
+      <data key="d1">0.0</data><data key="d2">240.0</data><data key="d3">320.0</data><data key="d4">220.0</data>
+    </node>
+    <edge source="general1" target="valve2"><data key="d9">solid</data></edge>
+    <edge source="valve2" target="connector3"><data key="d9">solid</data></edge>
+    <edge source="connector3" target="crossing4"><data key="d9">solid</data></edge>
+    <edge source="crossing4" target="inlet6"><data key="d9">solid</data></edge>
+    <edge source="crossing4" target="instrumentation5"><data key="d9">non-solid</data></edge>
+  </graph>
+</graphml>

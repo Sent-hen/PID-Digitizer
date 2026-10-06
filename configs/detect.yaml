@@ -1,0 +1,45 @@
+# Symbol detector (Milestone 1 baseline): torchvision Faster R-CNN R50-FPN v2 (BSD-3),
+# COCO-pretrained, fine-tuned briefly on 1024px tiles of rescaled sheets.
+seed: 0
+classes: [general, tank, valve, instrumentation, pump, arrow, inlet_outlet]
+
+tiles:
+  size: 1024
+  overlap: 256            # > largest symbol in Dataset-PID/Synthetic at working scale
+  min_visible: 0.5        # keep a GT box cut by the tile if >= this fraction is visible
+  empty_keep_prob: 0.1    # fraction of symbol-free tiles kept as negatives
+  cache_dir: .cache/tiles
+  train_splits: [dataset_pid_train, synthetic_train, open100_train]
+  oversample: {open100: 3}   # real sheets are <1% of tiles otherwise (paper: 3x for real P&IDs)
+  val_splits: [dataset_pid_val, synthetic_val]
+
+model:
+  arch: fasterrcnn_resnet50_fpn_v2
+  pretrained: COCO_V1
+  box_detections_per_img: 300
+  min_size: 1024          # tiles are fed at native size (no internal resize)
+  max_size: 1024
+
+train:
+  iterations: 6000
+  batch_size: 4
+  lr: 0.01
+  momentum: 0.9
+  weight_decay: 0.0001
+  warmup_iters: 300
+  amp: true
+  num_workers: 4
+  log_every: 50
+  out: weights/detector_m2c.pt
+  augment:
+    rot90: false          # m2/m2b: rot/flip blur Dataset-PID's asymmetric box convention (R-006)
+    flip: false
+    degrade_prob: 0.3     # m2 used 0.5: hurt box precision on clean val (R-005)
+    degrade_skew: false   # skewed targets are looser hull boxes (R-005 hypothesis)
+  rfs_threshold: 0.04     # repeat-factor sampling for rare classes (pump, tank)
+
+infer:
+  batch_size: 4
+  score_threshold: 0.3
+  merge_iou: 0.5
+  merge_ios: 0.8

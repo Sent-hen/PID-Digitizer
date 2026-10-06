@@ -1,0 +1,54 @@
+{
+ "ink_jaccard_min": 0.6,
+ "grid": [
+  96,
+  64
+ ],
+ "subsets": {
+  "dataset_pid": {
+   "n_drawings": 500,
+   "n_groups": 500,
+   "group_size_hist": {
+    "1": 500
+   },
+   "nearest_neighbor_jaccard": {
+    "min": 0.2874282733437663,
+    "median": 0.3703146252815127,
+    "p99": 0.42736486486486486,
+    "max": 0.43673012318029114
+   },
+   "duplicate_graphs": 0,
+   "multi_member_groups": []
+  },
+  "open100": {
+   "n_drawings": 12,
+   "n_groups": 12,
+   "group_size_hist": {
+    "1": 12
+   },
+   "nearest_neighbor_jaccard": {
+    "min": 0.13352970054000982,
+    "median": 0.20729441527996126,
+    "p99": 0.23877708978328174,
+    "max": 0.23877708978328174
+   },
+   "duplicate_graphs": 0,
+   "multi_member_groups": []
+  },
+  "synthetic": {
+   "n_drawings": 250,
+   "n_groups": 250,
+   "group_size_hist": {
+    "1": 250
+   },
+   "nearest_neighbor_jaccard": {
+    "min": 0.14145907473309607,
+    "median": 0.18905523672680083,
+    "p99": 0.23853923853923853,
+    "max": 0.29690189328743544
+   },
+   "duplicate_graphs": 0,
+   "multi_member_groups": []
+  }
+ }
+}
