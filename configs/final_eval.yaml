@@ -1,0 +1,21 @@
+# Milestone 5 run matrix. Every run uses the final configuration (configs/pipeline.yaml,
+# configs/detect.yaml at the M3/M4 state) unless it lists overrides. Each test run is
+# executed once; scripts/final_eval.py skips runs whose metrics already exist.
+weights: weights/detector_m2c.pt
+weights_sha1: 531ab26ce150
+test_splits: [dataset_pid_test, synthetic_test, open100_test]
+
+runs:
+  final_test:            # headline numbers (+ DEXPI export of every prediction)
+    dexpi: true
+  final_test_oracle:     # error propagation: GT symbols instead of the detector
+    oracle_symbols: true
+  final_test_L1: {degrade: 1}
+  final_test_L2: {degrade: 2}
+  final_test_L3: {degrade: 3}
+  # ablations: one design decision switched off at a time
+  abl_no_crop:        {set: [crop.enabled=false]}
+  abl_no_ankle_ports: {set: [graph.enforce_ankle_ports=false]}
+  abl_no_dashed_tol:  {set: [graph.dashed_extra_tol=0]}
+  abl_no_confidence:  {set: [confidence.enabled=false]}
+  abl_no_deskew_L2:   {degrade: 2, set: [deskew.enabled=false]}
