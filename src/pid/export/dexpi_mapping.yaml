@@ -1,0 +1,49 @@
+# Canonical PID2Graph classes -> DEXPI 2.0.1 classes (DEXPI XML).
+# Class names verified against the DEXPI model vocabulary (dexpi_xsd/dexpi_vocabulary.json).
+dexpi_version: "2.0.1"
+imports:
+  Core: https://data.dexpi.org/models/2.0.1/Core.xml
+  Plant: https://data.dexpi.org/models/2.0.1/Plant.xml
+
+symbols:
+  tank:
+    kind: equipment
+    type: Plant/ProcessEquipment.Tank
+  pump:
+    kind: equipment
+    type: Plant/ProcessEquipment.Pump
+    note: generic pump; the subtype (centrifugal, reciprocating, ...) is not predicted
+  valve:
+    kind: piping_component
+    type: Plant/Piping.OperatedValve
+    note: >-
+      closest concrete parent of the DEXPI valve classes; the valve subtype (gate, globe,
+      ball, check, ...) is not predicted, so check valves are misrepresented as operated
+  instrumentation:
+    kind: instrument
+    type: Plant/Instrumentation.ProcessInstrumentationFunction
+
+# Classes deliberately NOT exported (proposal: list unmapped classes, don't guess).
+unmapped:
+  general: >-
+    PID2Graph's catch-all symbol class (heat exchangers, filters, reducers, ...); DEXPI
+    2.0 has no generic equipment class to map it to
+  arrow: >-
+    flow-direction arrow; DEXPI encodes flow direction as segment data, not as an object,
+    and the arrow's direction is not predicted
+  inlet_outlet: >-
+    off-page connector; DEXPI requires FlowIn- or FlowOutPipeOffPageConnector and the
+    direction is not predicted
+
+structural:
+  ankle_on_equipment: Plant/ProcessEquipment.ProcessNozzle   # owns one PipingNode
+  ankle_on_piping_component: Plant/Piping.PipingNode         # node of the valve
+  junction: Plant/Piping.PipeTee   # crossing with >= 3 pipe branches (4-way also PipeTee)
+  bend: merged into the Pipe connection (degree-2 crossing, geometry only)
+  pipe: Plant/Piping.Pipe          # one Pipe connection per terminal-to-terminal chain
+  segment: Plant/Piping.PipingNetworkSegment
+  system: Plant/Piping.PipingNetworkSystem   # one per connected piping component
+  instrument_to_piping:            # mirrors the DEXPI 2.0 reference P&ID
+    generator: Plant/Instrumentation.ProcessSignalGeneratingFunction
+    line: Plant/Instrumentation.MeasuringLineFunction
+  instrument_to_instrument: Plant/Instrumentation.SignalConveyingFunction

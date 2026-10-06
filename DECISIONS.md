@@ -259,3 +259,29 @@ The full change table is in `docs/PROPOSAL.md` §9.
   - Synthetic edge F1 is 0.010 below M1 because of the robustness-oriented M2 detector, not the line stage (oracle F1 unchanged).
   - The reliability diagram is published. Fixtures pass, with diagonal lines as a documented strict xfail.
 - **Rejected:** switching back to the M1 detector for clean data, which would give up the large degraded-input gains (R-007).
+
+## D-023 DEXPI-structured export (Milestone 4, 2026-10-06)
+
+- **Target: DEXPI 2.0.1, the "DEXPI XML" serialization** (released 2026-09-30). It replaces the Proteus 4.x schema of DEXPI 1.x, and its specification is CC BY 4.0 (gitlab.com/dexpi/Specification).
+  - **Rejected:** Proteus 4.2 / DEXPI 1.4, which is superseded.
+  - **Downside:** tool support for DEXPI 2.0 import is still emerging.
+- **Validation is two-layered:**
+  1. **Official XSD:** vendored unmodified. It checks the generic Object/Components/Data/References structure.
+  2. **DEXPI model vocabulary** (`dexpi_vocabulary.json`, parsed with `ast` from the official Python-DSL model sources, never executed): every class must exist and be concrete; every property must belong to the class or its supertypes, including template-contributed properties; every `#id` reference must resolve.
+  - **Validator check:** it accepts the official DEXPI 2.0.1 reference P&ID with zero errors.
+  - **Not possible here:** `data.dexpi.org` (the model XML) was unreachable from this machine, which is why the vocabulary was derived from the model sources.
+- **Mapping** (`export/dexpi_mapping.yaml`, all classes checked against the vocabulary):
+  - tank → `ProcessEquipment.Tank`; pump → `ProcessEquipment.Pump`;
+  - valve → `Piping.OperatedValve` (subtype unknown);
+  - instrumentation → `Instrumentation.ProcessInstrumentationFunction`;
+  - ankles → `ProcessNozzle` on equipment, or `PipingNode` on valves;
+  - junctions → `PipeTee`; bends folded into the `Pipe`;
+  - instrument-to-piping links → `ProcessSignalGeneratingFunction` (SensingLocation) + `MeasuringLineFunction`, mirroring the reference P&ID.
+- **Unmapped, explicitly and not guessed:**
+  - `general`: no generic equipment class in DEXPI 2.0;
+  - `arrow`: flow direction is segment data, and direction isn't predicted;
+  - `inlet_outlet`: DEXPI needs FlowIn- or FlowOutPipeOffPageConnector, and direction isn't predicted.
+  - Chains to unmapped symbols are exported with one open end, or dropped if both ends are unmapped. All of this is counted in `docs/DEXPI_COVERAGE.md`.
+- **Not exported:** diagram geometry (no Shape/PolyLine representation), tags and line numbers (not produced), confidences (no DEXPI attribute; they stay in GraphML), and line style on `Pipe` objects.
+- **Claim wording:** "DEXPI-structured". It passes schema and vocabulary validation, but hasn't been imported into a DEXPI-certified tool, so it isn't called "DEXPI-compliant".
+- **IDs:** chain-derived object ids use a `ch` prefix, and tee nodes are keyed per chain end. Two collision bugs (a crossing named `c23` vs chain 23, and a loop returning to the same tee) were caught by validating every val prediction, and are covered by regression tests.

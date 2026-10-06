@@ -378,3 +378,32 @@ Runs `m3_final_clean_v2`, `m3_final_L2_v2`. An earlier run with a fixed threshol
 | Synthetic | 0.915 / 0.904 | 0.905 / **0.918** |
 
 Synthetic F1 is −0.010 vs M1. That's attributable to the M2 detector choice (m2c trades 0.010 clean F1 for robustness, R-007). With oracle symbols, Synthetic edge F1 is unchanged at 0.974–0.975 through M3, so the line stage didn't regress (D-022).
+
+## R-009 Milestone 4: GraphML schema and DEXPI-structured export (val + OPEN100 train)
+
+- **Command:** `python scripts/dexpi_coverage.py --split dataset_pid_val --split synthetic_val --split open100_train --pred-dir outputs/preds/m3_final_clean_v2`
+- **Inputs:** M3 predictions (R-008), exported to DEXPI 2.0.1 from their GraphML.
+- **Full report:** [docs/DEXPI_COVERAGE.md](docs/DEXPI_COVERAGE.md).
+- **Validation (XSD + DEXPI vocabulary):**
+  - 0 / 117 ground-truth drawings and 0 / 113 predicted val drawings fail.
+  - The official DEXPI 2.0.1 reference P&ID also passes the validator with 0 errors.
+
+**Symbol instances exported to a DEXPI class (mapped share):**
+
+| split | ground truth | predictions | main unmapped class |
+|---|---|---|---|
+| dataset_pid_val | 68.2% (6228/9136) | 68.0% | general (2664), arrow (244) |
+| synthetic_val | 30.0% (252/841) | 31.5% | general (576) |
+| open100_train | 48.7% (226/464) | n/a | arrow (144), general (65), inlet_outlet (29) |
+
+**Piping chains** (terminal to terminal), ground truth:
+
+| split | both ends mapped | one end open | dropped (both ends unmapped) | instrument ↔ piping |
+|---|---|---|---|---|
+| dataset_pid_val | 10 915 | 4 540 | 208 | 3 239 |
+| synthetic_val | 328 | 573 | 233 | 0 |
+| open100_train | 107 | 250 | 86 | 94 |
+
+PID2Graph's catch-all `general` class is the dominant loss, since DEXPI 2.0 has no generic equipment class (D-023). Finer symbol classes would be needed for a fuller DEXPI export. The dataset doesn't provide them.
+
+**GraphML (primary output):** schema documented in `docs/GRAPHML_SCHEMA.md` (version 1.0). Round trip and XSD validity are tested, with 0 invalid files across all runs since R-003.

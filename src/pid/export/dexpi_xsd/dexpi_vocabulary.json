@@ -1,0 +1,4774 @@
+{
+ "dexpi_version": "2.0.1",
+ "source": "https://gitlab.com/dexpi/Specification (CC BY 4.0)",
+ "classes": {
+  "Core/ConceptualModel": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "MetaData",
+    "Notes",
+    "Roles"
+   ]
+  },
+  "Core/ConceptualObject": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": [
+    "PerformedRoles",
+    "PersistentIdentifiers",
+    "ReferencedNotes"
+   ]
+  },
+  "Core/Diagram.AttributeRepresentation": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.TextTemplateFragment"
+   ],
+   "properties": [
+    "AttributeName",
+    "Object",
+    "Type"
+   ]
+  },
+  "Core/Diagram.Border": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.RepresentationTypeGroup"
+   ],
+   "properties": []
+  },
+  "Core/Diagram.ConnectorLine": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.GraphicalPrimitive"
+   ],
+   "properties": [
+    "InnerPoints",
+    "Source",
+    "Stroke",
+    "Target"
+   ]
+  },
+  "Core/Diagram.CustomSymbol": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Symbol"
+   ],
+   "properties": []
+  },
+  "Core/Diagram.Diagram": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.RepresentationGroup"
+   ],
+   "properties": [
+    "BackgroundColor",
+    "MaxX",
+    "MaxY",
+    "MinX",
+    "MinY",
+    "Name"
+   ]
+  },
+  "Core/Diagram.Ellipse": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.GraphicalPrimitive"
+   ],
+   "properties": [
+    "Center",
+    "FillStyle",
+    "HorizontalSemiAxis",
+    "Rotation",
+    "Stroke",
+    "VerticalSemiAxis"
+   ]
+  },
+  "Core/Diagram.EllipseArc": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.GraphicalPrimitive"
+   ],
+   "properties": [
+    "Center",
+    "EndAngle",
+    "HorizontalSemiAxis",
+    "Rotation",
+    "StartAngle",
+    "Stroke",
+    "VerticalSemiAxis"
+   ]
+  },
+  "Core/Diagram.GraphicalElement": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Core/Diagram.GraphicalPrimitive": {
+   "abstract": true,
+   "supertypes": [
+    "Core/Diagram.GraphicalElement"
+   ],
+   "properties": []
+  },
+  "Core/Diagram.GraphicsGroup": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Core/Diagram.InsulationSymbol": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Symbol"
+   ],
+   "properties": []
+  },
+  "Core/Diagram.Label": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.RepresentationTypeGroup"
+   ],
+   "properties": []
+  },
+  "Core/Diagram.LiteralText": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.TextTemplateFragment"
+   ],
+   "properties": [
+    "Text"
+   ]
+  },
+  "Core/Diagram.MetaData": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "ApprovalDateRepresentation",
+    "ApprovalDescription",
+    "ApproverName",
+    "ArchiveNumber",
+    "BlockName",
+    "BlockNumber",
+    "CheckerName",
+    "Confidentiality",
+    "CreationDateRepresentation",
+    "CreatorName",
+    "DesignerName",
+    "DrafterName",
+    "DrawingName",
+    "DrawingNumber",
+    "DrawingSubTitle",
+    "FileName",
+    "LastModificationDateRepresentation",
+    "LocationName",
+    "ProcessCellIdentificationCode",
+    "ProcessCellName",
+    "ProjectName",
+    "ProjectNumber",
+    "ProjectRangeNumber",
+    "ReplacedDrawing",
+    "ResponsibleDepartmentName",
+    "RevisionNumber",
+    "SheetFormat",
+    "SheetNumber",
+    "SubProjectName",
+    "SubProjectNumber",
+    "TotalNumberOfSheets",
+    "UnitIdentificationCode",
+    "UnitName"
+   ]
+  },
+  "Core/Diagram.NodePosition": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": [
+    "Position"
+   ]
+  },
+  "Core/Diagram.PipeFlowArrow": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Symbol"
+   ],
+   "properties": []
+  },
+  "Core/Diagram.PipeSlopeSymbol": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Symbol"
+   ],
+   "properties": []
+  },
+  "Core/Diagram.PolyLine": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.GraphicalPrimitive"
+   ],
+   "properties": [
+    "Points",
+    "Stroke"
+   ]
+  },
+  "Core/Diagram.Polygon": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.GraphicalPrimitive"
+   ],
+   "properties": [
+    "FillStyle",
+    "Points",
+    "Stroke"
+   ]
+  },
+  "Core/Diagram.RepresentationGroup": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.GraphicsGroup"
+   ],
+   "properties": [
+    "Groups",
+    "NodePositions",
+    "Represents"
+   ]
+  },
+  "Core/Diagram.RepresentationTypeGroup": {
+   "abstract": true,
+   "supertypes": [
+    "Core/Diagram.GraphicsGroup"
+   ],
+   "properties": [
+    "Elements"
+   ]
+  },
+  "Core/Diagram.Shape": {
+   "abstract": false,
+   "supertypes": [],
+   "properties": [
+    "Name",
+    "Primitives",
+    "SymbolRegistrationNumber"
+   ]
+  },
+  "Core/Diagram.ShapeCatalogue": {
+   "abstract": false,
+   "supertypes": [],
+   "properties": [
+    "Name",
+    "Shapes"
+   ]
+  },
+  "Core/Diagram.ShapeUsage": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.GraphicalElement"
+   ],
+   "properties": [
+    "IsMirrored",
+    "Position",
+    "Rotation",
+    "ScaleX",
+    "ScaleY",
+    "Shape"
+   ]
+  },
+  "Core/Diagram.Static": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.RepresentationTypeGroup"
+   ],
+   "properties": []
+  },
+  "Core/Diagram.Symbol": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.RepresentationTypeGroup"
+   ],
+   "properties": []
+  },
+  "Core/Diagram.Text": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.GraphicalPrimitive"
+   ],
+   "properties": [
+    "Alignment",
+    "Color",
+    "Font",
+    "Position",
+    "Rotation",
+    "Size",
+    "Template",
+    "Text"
+   ]
+  },
+  "Core/Diagram.TextTemplate": {
+   "abstract": false,
+   "supertypes": [],
+   "properties": [
+    "Fragments"
+   ]
+  },
+  "Core/Diagram.TextTemplateFragment": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Core/EngineeringModel": {
+   "abstract": false,
+   "supertypes": [],
+   "properties": [
+    "ConceptualModel",
+    "Diagram",
+    "ExportDateTime",
+    "OriginatingSystemName",
+    "OriginatingSystemVendorName",
+    "OriginatingSystemVersion",
+    "ShapeCatalogues"
+   ]
+  },
+  "Core/Note": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "LocalNoteIdentifier",
+    "NoteClassification",
+    "NoteRegistrationNumber",
+    "NoteText"
+   ]
+  },
+  "Core/PersistentIdentifier": {
+   "abstract": false,
+   "supertypes": [],
+   "properties": [
+    "Context",
+    "Value"
+   ]
+  },
+  "Core/QualifiedValue": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Case",
+    "CaseUID",
+    "Description",
+    "DisplayText",
+    "Provenance",
+    "ProvenanceURI",
+    "Range",
+    "ReferenceDataURI",
+    "Scope",
+    "SourceURI",
+    "Value"
+   ]
+  },
+  "Core/Role": {
+   "abstract": false,
+   "supertypes": [],
+   "properties": [
+    "Description",
+    "Name",
+    "Uri"
+   ]
+  },
+  "Plant/Diagram.ActuatingElectricalSystemNumberLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.ActuatingSystemNumberLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.CustomLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.DeviceInformationLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.EquipmentBarLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.EquipmentTagNameLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.FailActionLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.FittingLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.InstrumentationNodePosition": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.NodePosition"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.InsulationBreakLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.InsulationLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.MPRelevanceLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.MeasuringSystemNumberLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.NoteIdentifierLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.NoteTextLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.NozzleStandardLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.OffPageConnectorDescriptionLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.OffPageConnectorNumberLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.PipingClassBreakLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.PipingNetworkSegmentLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.PipingNetworkSystemLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.PipingNodePosition": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.NodePosition"
+   ],
+   "properties": [
+    "Node"
+   ]
+  },
+  "Plant/Diagram.PlantMetaData": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.MetaData"
+   ],
+   "properties": [
+    "EnterpriseIdentificationCode",
+    "EnterpriseName",
+    "IndustrialComplexIdentificationCode",
+    "IndustrialComplexName",
+    "PlantAreaIdentificationCode",
+    "PlantAreaName",
+    "PlantSectionIdentificationCode",
+    "PlantSectionName",
+    "PlantSystemIdentificationCode",
+    "PlantSystemName",
+    "PlantTrainIdentificationCode",
+    "PlantTrainName",
+    "ProcessPlantIdentificationCode",
+    "ProcessPlantName",
+    "SiteIdentificationCode",
+    "SiteName"
+   ]
+  },
+  "Plant/Diagram.ProcessInstrumentationFunctionLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.QualityRelevanceLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.ReducerLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.ReferencedPIDNumberLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.SafetyRelevanceLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.SafetyValveOrFittingLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.SignalConveyingFunctionLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.SignalHighHighHighLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.SignalHighHighLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.SignalHighLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.SignalLowLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.SignalLowLowLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.SignalLowLowLowLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.TypicalInformationLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.ValveLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Diagram.VendorNameLabel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.Label"
+   ],
+   "properties": []
+  },
+  "Plant/Instrumentation.ActuatingElectricalFunction": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/Instrumentation.SignalConveyingFunctionTarget",
+    "Plant/PlantStructure.TechnicalItem"
+   ],
+   "properties": [
+    "ActuatingElectricalFunctionNumber",
+    "ActuatingElectricalLocation",
+    "Systems"
+   ]
+  },
+  "Plant/Instrumentation.ActuatingElectricalLocation": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Plant/Instrumentation.ActuatingElectricalSystem": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/PlantStructure.TechnicalItem"
+   ],
+   "properties": [
+    "ActuatingElectricalSystemNumber",
+    "ElectronicFrequencyConverter",
+    "TypicalInformation"
+   ]
+  },
+  "Plant/Instrumentation.ActuatingFunction": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/Instrumentation.SignalConveyingFunctionSource",
+    "Plant/Instrumentation.SignalConveyingFunctionTarget",
+    "Plant/PlantStructure.TechnicalItem"
+   ],
+   "properties": [
+    "ActuatingFunctionNumber",
+    "ActuatingLocation",
+    "Systems"
+   ]
+  },
+  "Plant/Instrumentation.ActuatingSystem": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/PlantStructure.TechnicalItem"
+   ],
+   "properties": [
+    "ActuatingSystemNumber",
+    "ControlledActuator",
+    "OperatedValveReference",
+    "Positioner",
+    "TypicalInformation"
+   ]
+  },
+  "Plant/Instrumentation.ControlledActuator": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "DeviceTypeName",
+    "FailAction",
+    "FailActionRepresentation",
+    "SubTagName"
+   ]
+  },
+  "Plant/Instrumentation.ElectronicFrequencyConverter": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "SubTagName"
+   ]
+  },
+  "Plant/Instrumentation.FlowDetector": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Instrumentation.MeasuringSystem"
+   ],
+   "properties": []
+  },
+  "Plant/Instrumentation.FlowInSignalOffPageConnector": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Instrumentation.SignalOffPageConnector",
+    "Plant/Instrumentation.SignalConveyingFunctionSource"
+   ],
+   "properties": []
+  },
+  "Plant/Instrumentation.FlowOutSignalOffPageConnector": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Instrumentation.SignalOffPageConnector",
+    "Plant/Instrumentation.SignalConveyingFunctionTarget"
+   ],
+   "properties": []
+  },
+  "Plant/Instrumentation.InlineMeasuringElementReference": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Instrumentation.MeasuringElement"
+   ],
+   "properties": [
+    "InlineMeasuringElement"
+   ]
+  },
+  "Plant/Instrumentation.InstrumentationLoopFunction": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/PlantStructure.TechnicalItem"
+   ],
+   "properties": [
+    "InstrumentationLoopFunctionNumber",
+    "ProcessInstrumentationFunctions"
+   ]
+  },
+  "Plant/Instrumentation.MeasuringElement": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "SubTagName"
+   ]
+  },
+  "Plant/Instrumentation.MeasuringLineFunction": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Instrumentation.SignalConveyingFunction"
+   ],
+   "properties": []
+  },
+  "Plant/Instrumentation.MeasuringSystem": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/PlantStructure.TechnicalItem"
+   ],
+   "properties": [
+    "MeasuringElement",
+    "MeasuringSystemNumber",
+    "SensorwellReference",
+    "Transmitter",
+    "TypicalInformation"
+   ]
+  },
+  "Plant/Instrumentation.OfflineMeasuringElement": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Instrumentation.MeasuringElement"
+   ],
+   "properties": [
+    "ConnectionNominalDiameterNumericalValueRepresentation",
+    "ConnectionNominalDiameterRepresentation",
+    "ConnectionNominalDiameterStandard",
+    "ConnectionNominalDiameterTypeRepresentation",
+    "FluidCode",
+    "HeatTracingType",
+    "HeatTracingTypeRepresentation",
+    "InsulationThickness",
+    "InsulationType",
+    "LocationNominalDiameterNumericalValueRepresentation",
+    "LocationNominalDiameterRepresentation",
+    "LocationNominalDiameterStandard",
+    "LocationNominalDiameterTypeRepresentation",
+    "LowerLimitHeatTracingTemperature"
+   ]
+  },
+  "Plant/Instrumentation.OperatedValveReference": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "SubTagName",
+    "Valve"
+   ]
+  },
+  "Plant/Instrumentation.Positioner": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "DeviceTypeName",
+    "SubTagName"
+   ]
+  },
+  "Plant/Instrumentation.ProcessControlFunction": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Instrumentation.ProcessInstrumentationFunction"
+   ],
+   "properties": []
+  },
+  "Plant/Instrumentation.ProcessInstrumentationFunction": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/Instrumentation.SignalConveyingFunctionSource",
+    "Plant/Instrumentation.SignalConveyingFunctionTarget",
+    "Plant/PlantStructure.TechnicalItem"
+   ],
+   "properties": [
+    "ActuatingElectricalFunctions",
+    "ActuatingFunctions",
+    "DeviceInformation",
+    "GmpRelevance",
+    "GuaranteedSupplyFunction",
+    "Location",
+    "PanelIdentificationCode",
+    "ProcessInstrumentationFunctionCategory",
+    "ProcessInstrumentationFunctionModifier",
+    "ProcessInstrumentationFunctionNumber",
+    "ProcessInstrumentationFunctions",
+    "ProcessSignalGeneratingFunctions",
+    "QualityRelevance",
+    "SafetyRelevanceClass",
+    "SignalConnectors",
+    "SignalConveyingFunctions",
+    "TypicalInformation",
+    "VendorCompanyName",
+    "VotingSystemRepresentation"
+   ]
+  },
+  "Plant/Instrumentation.ProcessSafetyFunction": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Instrumentation.ProcessInstrumentationFunction"
+   ],
+   "properties": []
+  },
+  "Plant/Instrumentation.ProcessSignalGeneratingFunction": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/Instrumentation.SignalConveyingFunctionSource",
+    "Plant/PlantStructure.TechnicalItem"
+   ],
+   "properties": [
+    "ProcessSignalGeneratingFunctionNumber",
+    "SensingLocation",
+    "SensorType",
+    "Systems"
+   ]
+  },
+  "Plant/Instrumentation.SensingLocation": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Plant/Instrumentation.SensorwellReference": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Sensorwell",
+    "SubTagName"
+   ]
+  },
+  "Plant/Instrumentation.SignalConveyingFunction": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "PortStatus",
+    "SignalConveyingType",
+    "SignalPointNumber",
+    "SignalProcessControlFunctions",
+    "Source",
+    "Target"
+   ]
+  },
+  "Plant/Instrumentation.SignalConveyingFunctionSource": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Plant/Instrumentation.SignalConveyingFunctionTarget": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Plant/Instrumentation.SignalLineFunction": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Instrumentation.SignalConveyingFunction"
+   ],
+   "properties": []
+  },
+  "Plant/Instrumentation.SignalOffPageConnector": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "ConnectorReference",
+    "SignalConnectorDescription",
+    "SignalConnectorNumber"
+   ]
+  },
+  "Plant/Instrumentation.SignalOffPageConnectorObjectReference": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Instrumentation.SignalOffPageConnectorReference"
+   ],
+   "properties": [
+    "ReferencedConnector"
+   ]
+  },
+  "Plant/Instrumentation.SignalOffPageConnectorReference": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": []
+  },
+  "Plant/Instrumentation.SignalOffPageConnectorReferenceByNumber": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Instrumentation.SignalOffPageConnectorReference"
+   ],
+   "properties": [
+    "ReferencedConnectorNumber",
+    "ReferencedDrawingNumber"
+   ]
+  },
+  "Plant/Instrumentation.Transmitter": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "DeviceTypeName",
+    "SubTagName"
+   ]
+  },
+  "Plant/Piping.AngleBallValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.OperatedValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.AngleGlobeValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.OperatedValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.AnglePlugValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.OperatedValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.AngleValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.OperatedValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.BallValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.OperatedValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.BlindFlange": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.BreatherValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.SafetyValveOrFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.ButterflyValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.OperatedValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.CheckValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipingComponent"
+   ],
+   "properties": [
+    "InsulationThickness",
+    "InsulationType",
+    "PipingClassCode",
+    "PipingComponentName",
+    "PipingComponentNumber"
+   ]
+  },
+  "Plant/Piping.ClampedFlangeCoupling": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.Compensator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.ConicalStrainer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.DirectPipingConnection": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipingConnection"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.ElectromagneticFlowMeter": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.InlineMeasuringElement"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.FlameArrestor": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.SafetyValveOrFitting"
+   ],
+   "properties": [
+    "DetonationProofArtefact",
+    "ExplosionProofArtefact",
+    "FireResistantArtefact"
+   ]
+  },
+  "Plant/Piping.Flange": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.FlangedConnection": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.FlowInPipeOffPageConnector": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeOffPageConnector",
+    "Plant/Piping.PipingSourceItem"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.FlowMeasuringElement": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.InlineMeasuringElement"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.FlowNozzle": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.InlineMeasuringElement"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.FlowOutPipeOffPageConnector": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeOffPageConnector",
+    "Plant/Piping.PipingTargetItem"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.Funnel": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.GateValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.OperatedValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.GlobeCheckValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.CheckValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.GlobeValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.OperatedValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.Hose": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.IlluminatedSightGlass": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.InLineMixer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.InlineMeasuringElement": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipingComponent"
+   ],
+   "properties": [
+    "InsulationThickness",
+    "InsulationType",
+    "PipingComponentName",
+    "PipingComponentNumber"
+   ]
+  },
+  "Plant/Piping.LineBlind": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.MassFlowMeasuringElement": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.InlineMeasuringElement"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.NeedleValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.OperatedValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.OperatedValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipingComponent"
+   ],
+   "properties": [
+    "InsulationThickness",
+    "InsulationType",
+    "NumberOfPorts",
+    "Operation",
+    "PipingClassCode",
+    "PipingComponentName",
+    "PipingComponentNumber"
+   ]
+  },
+  "Plant/Piping.Penetration": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.Pipe": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/Piping.PipingConnection"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.PipeCoupling": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.PipeFitting": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipingComponent"
+   ],
+   "properties": [
+    "InsulationThickness",
+    "InsulationType",
+    "PipingClassCode",
+    "PipingComponentName",
+    "PipingComponentNumber"
+   ]
+  },
+  "Plant/Piping.PipeFlangeSpacer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.PipeFlangeSpade": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.PipeOffPageConnector": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/Piping.PipingNetworkSegmentItem",
+    "Plant/Piping.PipingNodeOwner"
+   ],
+   "properties": [
+    "ConnectorReference",
+    "PipeConnectorDescription",
+    "PipeConnectorNumber"
+   ]
+  },
+  "Plant/Piping.PipeOffPageConnectorObjectReference": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeOffPageConnectorReference"
+   ],
+   "properties": [
+    "ReferencedConnector"
+   ]
+  },
+  "Plant/Piping.PipeOffPageConnectorReference": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.PipeOffPageConnectorReferenceByNumber": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeOffPageConnectorReference"
+   ],
+   "properties": [
+    "ReferencedConnectorNumber",
+    "ReferencedDrawingNumber"
+   ]
+  },
+  "Plant/Piping.PipeReducer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.PipeTee": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.PipingComponent": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/Instrumentation.SensingLocation",
+    "Plant/Piping.PipingNetworkSegmentItem",
+    "Plant/Piping.PipingNodeOwner",
+    "Plant/Piping.PipingSourceItem",
+    "Plant/Piping.PipingTargetItem"
+   ],
+   "properties": [
+    "FluidCode",
+    "HeatTracingType",
+    "HeatTracingTypeRepresentation",
+    "LowerLimitHeatTracingTemperature",
+    "OnHold",
+    "PipingClassArtefact",
+    "PressureTestCircuitNumber"
+   ]
+  },
+  "Plant/Piping.PipingConnection": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": [
+    "SourceItem",
+    "SourceNode",
+    "TargetItem",
+    "TargetNode"
+   ]
+  },
+  "Plant/Piping.PipingNetworkSegment": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/Instrumentation.ActuatingElectricalLocation",
+    "Plant/Instrumentation.SensingLocation"
+   ],
+   "properties": [
+    "ColorCode",
+    "Connections",
+    "FlowDirection",
+    "FluidCode",
+    "HeatTracingType",
+    "HeatTracingTypeRepresentation",
+    "Inclination",
+    "InsulationThickness",
+    "InsulationType",
+    "Items",
+    "JacketedPipe",
+    "LowerLimitHeatTracingTemperature",
+    "NominalDiameterNumericalValueRepresentation",
+    "NominalDiameterRepresentation",
+    "NominalDiameterStandard",
+    "NominalDiameterTypeRepresentation",
+    "OnHold",
+    "OperatingTemperature",
+    "PipingClassCode",
+    "PressureTestCircuitNumber",
+    "PrimarySecondaryPipingNetworkSegment",
+    "SegmentNumber",
+    "Siphon",
+    "Slope",
+    "SourceItem",
+    "SourceNode",
+    "TargetItem",
+    "TargetNode"
+   ]
+  },
+  "Plant/Piping.PipingNetworkSegmentItem": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Plant/Piping.PipingNetworkSystem": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/PlantStructure.TechnicalItem"
+   ],
+   "properties": [
+    "FluidCode",
+    "HeatTracingType",
+    "HeatTracingTypeRepresentation",
+    "InsulationThickness",
+    "InsulationType",
+    "JacketLineNumber",
+    "JacketedLineNumber",
+    "JacketedPipe",
+    "LineNumber",
+    "LowerLimitHeatTracingTemperature",
+    "NominalDiameterNumericalValueRepresentation",
+    "NominalDiameterRepresentation",
+    "NominalDiameterStandard",
+    "NominalDiameterTypeRepresentation",
+    "OnHold",
+    "PipingClassCode",
+    "PipingNetworkSystemGroupNumber",
+    "Segments"
+   ]
+  },
+  "Plant/Piping.PipingNode": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "NominalDiameterNumericalValueRepresentation",
+    "NominalDiameterRepresentation",
+    "NominalDiameterStandard",
+    "NominalDiameterTypeRepresentation"
+   ]
+  },
+  "Plant/Piping.PipingNodeOwner": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": [
+    "Nodes"
+   ]
+  },
+  "Plant/Piping.PipingSourceItem": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Plant/Piping.PipingTargetItem": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Plant/Piping.PlugValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.OperatedValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.PositiveDisplacementFlowMeter": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.InlineMeasuringElement"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.PropertyBreak": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/Piping.PipingNetworkSegmentItem",
+    "Plant/Piping.PipingNodeOwner",
+    "Plant/Piping.PipingSourceItem",
+    "Plant/Piping.PipingTargetItem"
+   ],
+   "properties": [
+    "CompositionBreak",
+    "InsulationBreak",
+    "NominalDiameterBreak",
+    "PipingClassBreak"
+   ]
+  },
+  "Plant/Piping.RestrictionOrifice": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.RuptureDisc": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.SafetyValveOrFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.SafetyValveOrFitting": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipingComponent"
+   ],
+   "properties": [
+    "FlowInPipingClassCode",
+    "FlowOutPipingClassCode",
+    "LocationRegistrationNumber",
+    "PositionNumber",
+    "SetPressureHigh",
+    "SetPressureLow"
+   ]
+  },
+  "Plant/Piping.Sensorwell": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": [
+    "LocationNominalDiameterNumericalValueRepresentation",
+    "LocationNominalDiameterRepresentation",
+    "LocationNominalDiameterStandard",
+    "LocationNominalDiameterTypeRepresentation",
+    "SensorwellTypeRepresentation"
+   ]
+  },
+  "Plant/Piping.SightGlass": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.Silencer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.SpringLoadedAngleGlobeSafetyValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.SafetyValveOrFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.SpringLoadedGlobeSafetyValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.SafetyValveOrFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.SteamTrap": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.StraightwayValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.OperatedValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.Strainer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.SwingCheckValve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.CheckValve"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.TurbineFlowMeter": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.InlineMeasuringElement"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.VariableAreaFlowMeter": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.InlineMeasuringElement"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.VentLine": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.PipeFitting",
+    "Plant/ProcessEquipment.Vent"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.VenturiTube": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.InlineMeasuringElement"
+   ],
+   "properties": []
+  },
+  "Plant/Piping.VolumeFlowMeasuringElement": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/Piping.InlineMeasuringElement"
+   ],
+   "properties": []
+  },
+  "Plant/PlantModel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualModel"
+   ],
+   "properties": [
+    "ActuatingElectricalSystems",
+    "ActuatingSystems",
+    "InstrumentationLoopFunctions",
+    "MeasuringSystems",
+    "PipingNetworkSystems",
+    "PlantStructureItems",
+    "ProcessInstrumentationFunctions",
+    "TaggedPlantItems"
+   ]
+  },
+  "Plant/PlantStructure.Enterprise": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/PlantStructure.IndustrialComplexParentStructure",
+    "Plant/PlantStructure.PlantSectionParentStructure",
+    "Plant/PlantStructure.PlantStructureItem",
+    "Plant/PlantStructure.ProcessPlantParentStructure",
+    "Plant/PlantStructure.TechnicalItemParentStructure"
+   ],
+   "properties": [
+    "EnterpriseIdentificationCode",
+    "EnterpriseName"
+   ]
+  },
+  "Plant/PlantStructure.IndustrialComplex": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/PlantStructure.PlantAreaLocatedStructure",
+    "Plant/PlantStructure.PlantSectionParentStructure",
+    "Plant/PlantStructure.PlantStructureItem",
+    "Plant/PlantStructure.TechnicalItemParentStructure"
+   ],
+   "properties": [
+    "IndustrialComplexIdentificationCode",
+    "IndustrialComplexName",
+    "ParentStructure"
+   ]
+  },
+  "Plant/PlantStructure.IndustrialComplexParentStructure": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Plant/PlantStructure.PlantArea": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/PlantStructure.PlantStructureItem"
+   ],
+   "properties": [
+    "PlantAreaIdentificationCode",
+    "PlantAreaName"
+   ]
+  },
+  "Plant/PlantStructure.PlantAreaLocatedStructure": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": [
+    "PlantArea"
+   ]
+  },
+  "Plant/PlantStructure.PlantSection": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/PlantStructure.PlantAreaLocatedStructure",
+    "Plant/PlantStructure.PlantStructureItem",
+    "Plant/PlantStructure.TechnicalItemParentStructure"
+   ],
+   "properties": [
+    "ParentStructure",
+    "PlantSectionIdentificationCode",
+    "PlantSectionName"
+   ]
+  },
+  "Plant/PlantStructure.PlantSectionParentStructure": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Plant/PlantStructure.PlantStructureItem": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": []
+  },
+  "Plant/PlantStructure.PlantSystem": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/PlantStructure.PlantStructureItem"
+   ],
+   "properties": [
+    "PlantSystemIdentificationCode",
+    "PlantSystemName"
+   ]
+  },
+  "Plant/PlantStructure.PlantSystemLocatedStructure": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": [
+    "PlantSystem"
+   ]
+  },
+  "Plant/PlantStructure.PlantTrain": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/PlantStructure.PlantStructureItem"
+   ],
+   "properties": [
+    "PlantTrainIdentificationCode",
+    "PlantTrainName"
+   ]
+  },
+  "Plant/PlantStructure.PlantTrainLocatedStructure": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": [
+    "PlantTrain"
+   ]
+  },
+  "Plant/PlantStructure.ProcessPlant": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/PlantStructure.PlantAreaLocatedStructure",
+    "Plant/PlantStructure.PlantSectionParentStructure",
+    "Plant/PlantStructure.PlantStructureItem",
+    "Plant/PlantStructure.TechnicalItemParentStructure"
+   ],
+   "properties": [
+    "ParentStructure",
+    "ProcessPlantIdentificationCode",
+    "ProcessPlantName"
+   ]
+  },
+  "Plant/PlantStructure.ProcessPlantParentStructure": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Plant/PlantStructure.Site": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/PlantStructure.IndustrialComplexParentStructure",
+    "Plant/PlantStructure.PlantSectionParentStructure",
+    "Plant/PlantStructure.PlantStructureItem",
+    "Plant/PlantStructure.ProcessPlantParentStructure",
+    "Plant/PlantStructure.TechnicalItemParentStructure"
+   ],
+   "properties": [
+    "ParentStructure",
+    "SiteIdentificationCode",
+    "SiteName"
+   ]
+  },
+  "Plant/PlantStructure.TechnicalItem": {
+   "abstract": true,
+   "supertypes": [
+    "Plant/PlantStructure.PlantAreaLocatedStructure",
+    "Plant/PlantStructure.PlantSystemLocatedStructure",
+    "Plant/PlantStructure.PlantTrainLocatedStructure"
+   ],
+   "properties": [
+    "ParentStructure"
+   ]
+  },
+  "Plant/PlantStructure.TechnicalItemParentStructure": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.AccessNozzle": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Nozzle"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.Agglomerator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignLiquidFeedMassFlowRate",
+    "DesignMassFlowRate",
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "DesignSolidFeedMassFlowRate",
+    "DesignVolumeFlowRate"
+   ]
+  },
+  "Plant/ProcessEquipment.Agitator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "Rotor"
+   ]
+  },
+  "Plant/ProcessEquipment.AgitatorRotor": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "Diameter",
+    "LengthToMountingFlange",
+    "MaterialOfConstructionCode",
+    "RotorType"
+   ]
+  },
+  "Plant/ProcessEquipment.AirCoolingSystem": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.HeatExchanger"
+   ],
+   "properties": [
+    "DesignPower",
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "Rotor"
+   ]
+  },
+  "Plant/ProcessEquipment.AirEjector": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Compressor"
+   ],
+   "properties": [
+    "DesignCapacityMotiveFluid",
+    "Impellers"
+   ]
+  },
+  "Plant/ProcessEquipment.AlternatingCurrentGenerator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ElectricGenerator"
+   ],
+   "properties": [
+    "AlternatingCurrentFrequency"
+   ]
+  },
+  "Plant/ProcessEquipment.AlternatingCurrentMotor": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Motor"
+   ],
+   "properties": [
+    "AlternatingCurrentFrequency",
+    "NominalVoltage"
+   ]
+  },
+  "Plant/ProcessEquipment.AlternatingCurrentMotorAsComponent": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.MotorAsComponent"
+   ],
+   "properties": [
+    "AlternatingCurrentFrequency",
+    "NominalVoltage"
+   ]
+  },
+  "Plant/ProcessEquipment.AxialBlower": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Blower"
+   ],
+   "properties": [
+    "Impellers"
+   ]
+  },
+  "Plant/ProcessEquipment.AxialCompressor": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Compressor"
+   ],
+   "properties": [
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "Impellers"
+   ]
+  },
+  "Plant/ProcessEquipment.AxialFan": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Fan"
+   ],
+   "properties": [
+    "Impellers"
+   ]
+  },
+  "Plant/ProcessEquipment.BatchWeigher": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Weigher"
+   ],
+   "properties": [
+    "DesignCapacityWeighingQuantities",
+    "UpperLimitDesignLoad"
+   ]
+  },
+  "Plant/ProcessEquipment.Blower": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignDifferentialPressure",
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "DesignVolumeFlowRate"
+   ]
+  },
+  "Plant/ProcessEquipment.Boiler": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Heater"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.BriquettingRoller": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Diameter",
+    "MaterialOfConstructionCode",
+    "StageIdentifier"
+   ]
+  },
+  "Plant/ProcessEquipment.Burner": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignPower"
+   ]
+  },
+  "Plant/ProcessEquipment.CentrifugalBlower": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Blower"
+   ],
+   "properties": [
+    "Impellers"
+   ]
+  },
+  "Plant/ProcessEquipment.CentrifugalCompressor": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Compressor"
+   ],
+   "properties": [
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "Impellers"
+   ]
+  },
+  "Plant/ProcessEquipment.CentrifugalPump": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Pump"
+   ],
+   "properties": [
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "Impellers"
+   ]
+  },
+  "Plant/ProcessEquipment.Centrifuge": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "DesignVolumeFlowRate"
+   ]
+  },
+  "Plant/ProcessEquipment.Chamber": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "ChamberDescription",
+    "ChamberFunction",
+    "ChamberFunctionRepresentation",
+    "Height",
+    "InsideDiameter",
+    "Length",
+    "LowerLimitDesignPressure",
+    "LowerLimitDesignTemperature",
+    "MaterialOfConstructionCode",
+    "NominalDiameter",
+    "NominalDiameterTypeRepresentation",
+    "SubTagName",
+    "UpperLimitDesignPressure",
+    "UpperLimitDesignTemperature",
+    "Width"
+   ]
+  },
+  "Plant/ProcessEquipment.ChamberOwner": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": [
+    "Chambers"
+   ]
+  },
+  "Plant/ProcessEquipment.Chimney": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.WasteGasEmitter"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.ColumnInternalsArrangement": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.ColumnPackingsArrangement": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ColumnInternalsArrangement"
+   ],
+   "properties": [
+    "Height",
+    "MaterialOfConstructionCode",
+    "NumberOfPackings",
+    "PackingType"
+   ]
+  },
+  "Plant/ProcessEquipment.ColumnSection": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Height",
+    "InsideDiameter",
+    "Internals"
+   ]
+  },
+  "Plant/ProcessEquipment.ColumnTraysArrangement": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ColumnInternalsArrangement"
+   ],
+   "properties": [
+    "MaterialOfConstructionCode",
+    "NumberOfTrays",
+    "TrayType"
+   ]
+  },
+  "Plant/ProcessEquipment.CombustionEngine": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Motor"
+   ],
+   "properties": [
+    "FuelType"
+   ]
+  },
+  "Plant/ProcessEquipment.CombustionEngineAsComponent": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.MotorAsComponent"
+   ],
+   "properties": [
+    "FuelType"
+   ]
+  },
+  "Plant/ProcessEquipment.Compressor": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignVolumeFlowRate",
+    "DifferentialPressure"
+   ]
+  },
+  "Plant/ProcessEquipment.ContinuousWeigher": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Weigher"
+   ],
+   "properties": [
+    "BeltWidth"
+   ]
+  },
+  "Plant/ProcessEquipment.ConvectionDryer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Dryer"
+   ],
+   "properties": [
+    "AirConsumption"
+   ]
+  },
+  "Plant/ProcessEquipment.Conveyor": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.StationaryTransportSystem"
+   ],
+   "properties": [
+    "ConveyingDistance",
+    "ConveyorType",
+    "DesignCapacityMassFlowRate",
+    "DesignRotationalSpeed"
+   ]
+  },
+  "Plant/ProcessEquipment.CoolingTower": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignHeatFlowRate",
+    "DesignVolumeFlowRate"
+   ]
+  },
+  "Plant/ProcessEquipment.CoolingTowerRotor": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "Diameter",
+    "MaterialOfConstructionCode"
+   ]
+  },
+  "Plant/ProcessEquipment.Crusher": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Mill"
+   ],
+   "properties": [
+    "CrusherElements"
+   ]
+  },
+  "Plant/ProcessEquipment.CrusherElement": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "CrusherElementType",
+    "MaterialOfConstructionCode",
+    "StageIdentifier"
+   ]
+  },
+  "Plant/ProcessEquipment.DirectCurrentGenerator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ElectricGenerator"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.DirectCurrentMotor": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Motor"
+   ],
+   "properties": [
+    "NominalVoltage"
+   ]
+  },
+  "Plant/ProcessEquipment.DirectCurrentMotorAsComponent": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.MotorAsComponent"
+   ],
+   "properties": [
+    "NominalVoltage"
+   ]
+  },
+  "Plant/ProcessEquipment.Displacer": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "MaterialOfConstructionCode",
+    "StageIdentifier",
+    "VolumePerStroke"
+   ]
+  },
+  "Plant/ProcessEquipment.DryCoolingTower": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.CoolingTower"
+   ],
+   "properties": [
+    "CoolingTowerRotor",
+    "DesignRotationalSpeed",
+    "DesignShaftPower"
+   ]
+  },
+  "Plant/ProcessEquipment.Dryer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignMassFlowRate",
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "DesignVolumeFlowRate"
+   ]
+  },
+  "Plant/ProcessEquipment.DryingChamber": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "DesignVolumeFlowRate",
+    "MaterialOfConstructionCode",
+    "SubTagName"
+   ]
+  },
+  "Plant/ProcessEquipment.EjectorPump": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Pump"
+   ],
+   "properties": [
+    "DesignCapacityMotiveFluid"
+   ]
+  },
+  "Plant/ProcessEquipment.ElectricGenerator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignInletPower",
+    "DesignInletRotationalFrequency",
+    "DesignOutletPower",
+    "DesignOutletVoltage"
+   ]
+  },
+  "Plant/ProcessEquipment.ElectricHeater": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Heater"
+   ],
+   "properties": [
+    "DesignHeatTransferArea",
+    "DesignHeatTransferCoefficient",
+    "DesignPower"
+   ]
+  },
+  "Plant/ProcessEquipment.ElectricalSeparator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Separator"
+   ],
+   "properties": [
+    "DesignPower"
+   ]
+  },
+  "Plant/ProcessEquipment.EquipmentVent": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Vent"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.Extruder": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignMassFlowRate",
+    "DesignRotationalSpeed",
+    "DesignShaftPower"
+   ]
+  },
+  "Plant/ProcessEquipment.Fan": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignDifferentialPressure",
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "DesignVolumeFlowRate"
+   ]
+  },
+  "Plant/ProcessEquipment.Feeder": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignMassFlowRate",
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "UpperLimitDesignParticleSize"
+   ]
+  },
+  "Plant/ProcessEquipment.Filter": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.FilterUnit": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "Efficiency",
+    "FilterArea",
+    "LowerLimitAllowableSolidsConcentration",
+    "LowerLimitPermeableParticleDiameter",
+    "MaterialOfConstructionCode",
+    "NumberOfFilterElements",
+    "UpperLimitAllowableSolidsConcentration",
+    "UpperLimitPermeableParticleDiameter"
+   ]
+  },
+  "Plant/ProcessEquipment.FilteringCentrifuge": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Centrifuge"
+   ],
+   "properties": [
+    "FilteringCentrifugeDrum",
+    "MinimumParticleSize"
+   ]
+  },
+  "Plant/ProcessEquipment.FilteringCentrifugeDrum": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "Diameter",
+    "MaterialOfConstructionCode"
+   ]
+  },
+  "Plant/ProcessEquipment.Flare": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.WasteGasEmitter"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.ForkliftTruck": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.MobileTransportSystem"
+   ],
+   "properties": [
+    "UpperLimitDischargeHead"
+   ]
+  },
+  "Plant/ProcessEquipment.Furnace": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Heater"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.GasFilter": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Filter"
+   ],
+   "properties": [
+    "DesignCapacityVolumeFlowRate",
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "FilterUnit",
+    "UpperLimitAllowableDesignPressureDrop"
+   ]
+  },
+  "Plant/ProcessEquipment.GasTurbine": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Turbine"
+   ],
+   "properties": [
+    "FuelType"
+   ]
+  },
+  "Plant/ProcessEquipment.GearBox": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "DesignInletPower",
+    "DesignInletRotationalFrequency",
+    "DesignOutletPower",
+    "DesignOutletRotationalFrequency",
+    "SubTagName"
+   ]
+  },
+  "Plant/ProcessEquipment.GravitationalSeparator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Separator"
+   ],
+   "properties": [
+    "DesignPower",
+    "DesignRotationalSpeed"
+   ]
+  },
+  "Plant/ProcessEquipment.Grinder": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Mill"
+   ],
+   "properties": [
+    "GrindingElements"
+   ]
+  },
+  "Plant/ProcessEquipment.GrindingElement": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "GrindingElementType",
+    "MaterialOfConstructionCode",
+    "StageIdentifier"
+   ]
+  },
+  "Plant/ProcessEquipment.HeatExchanger": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "Agitator",
+    "DesignHeatFlowRate",
+    "DesignHeatTransferArea",
+    "DesignHeatTransferCoefficient"
+   ]
+  },
+  "Plant/ProcessEquipment.HeatExchangerRotor": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "MaterialOfConstructionCode"
+   ]
+  },
+  "Plant/ProcessEquipment.HeatedSurfaceDryer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Dryer"
+   ],
+   "properties": [
+    "HeatedSurfaceArea"
+   ]
+  },
+  "Plant/ProcessEquipment.Heater": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignHeatFlowRate",
+    "DesignMassFlowRate",
+    "DesignOutletPressure",
+    "DesignOutletTemperature",
+    "DesignVolumeFlowRate",
+    "TubeBundle"
+   ]
+  },
+  "Plant/ProcessEquipment.Impeller": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "Diameter",
+    "MaterialOfConstructionCode",
+    "StageIdentifier"
+   ]
+  },
+  "Plant/ProcessEquipment.InstrumentNozzle": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Nozzle"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.Kneader": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Mixer"
+   ],
+   "properties": [
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "UpperLimitAllowableDesignPressureDrop"
+   ]
+  },
+  "Plant/ProcessEquipment.Lift": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.StationaryTransportSystem"
+   ],
+   "properties": [
+    "DischargeHead",
+    "UpperLimitLoadCapacity",
+    "UpperLimitVolumeCapacity"
+   ]
+  },
+  "Plant/ProcessEquipment.LiquidFilter": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Filter"
+   ],
+   "properties": [
+    "DesignCapacityVolumeFlowRate",
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "FilterUnit",
+    "UpperLimitAllowableDesignPressureDrop"
+   ]
+  },
+  "Plant/ProcessEquipment.LoadingUnloadingSystem": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.StationaryTransportSystem"
+   ],
+   "properties": [
+    "UpperLimitConveyingDistance",
+    "UpperLimitDischargeHead",
+    "UpperLimitLoadCapacity"
+   ]
+  },
+  "Plant/ProcessEquipment.MechanicalSeparator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Separator"
+   ],
+   "properties": [
+    "DesignPower"
+   ]
+  },
+  "Plant/ProcessEquipment.Mill": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignCapacityMassFlowRate",
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "LowerLimitDesignOutputParticleSize",
+    "UpperLimitDesignInputParticleSize",
+    "UpperLimitDesignOutputParticleSize"
+   ]
+  },
+  "Plant/ProcessEquipment.Mixer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "MixingElementAssemblies"
+   ]
+  },
+  "Plant/ProcessEquipment.MixingElementAssembly": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "MaterialOfConstructionCode",
+    "NumberOfMixingElements"
+   ]
+  },
+  "Plant/ProcessEquipment.MobileTransportSystem": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "UpperLimitLoadCapacity",
+    "UpperLimitVolumeCapacity"
+   ]
+  },
+  "Plant/ProcessEquipment.Motor": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "NominalPower",
+    "NominalRotationalFrequency"
+   ]
+  },
+  "Plant/ProcessEquipment.MotorAsComponent": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/ProcessEquipment.TransmissionDriver"
+   ],
+   "properties": [
+    "NominalPower",
+    "NominalRotationalFrequency",
+    "SubTagName"
+   ]
+  },
+  "Plant/ProcessEquipment.Mount": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/Instrumentation.SensingLocation"
+   ],
+   "properties": [
+    "MountedObject",
+    "SubTagName"
+   ]
+  },
+  "Plant/ProcessEquipment.Nozzle": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/Instrumentation.ActuatingElectricalLocation",
+    "Plant/Instrumentation.SensingLocation",
+    "Plant/Piping.PipingNodeOwner",
+    "Plant/Piping.PipingSourceItem",
+    "Plant/Piping.PipingTargetItem"
+   ],
+   "properties": [
+    "Chamber",
+    "NominalPressureNumericalValueRepresentation",
+    "NominalPressureRepresentation",
+    "NominalPressureStandard",
+    "NominalPressureTypeRepresentation",
+    "SubTagName"
+   ]
+  },
+  "Plant/ProcessEquipment.NozzleOwner": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": [
+    "Nozzles"
+   ]
+  },
+  "Plant/ProcessEquipment.PackagingSystem": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignCapacityMassFlowRate",
+    "DesignCapacityPackagingUnits",
+    "DesignPower",
+    "PackagingSystemType"
+   ]
+  },
+  "Plant/ProcessEquipment.PelletizerDisc": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Diameter",
+    "MaterialOfConstructionCode"
+   ]
+  },
+  "Plant/ProcessEquipment.PlateHeatExchanger": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.HeatExchanger"
+   ],
+   "properties": [
+    "NumberOfPlates",
+    "PlateHeight",
+    "PlateWidth"
+   ]
+  },
+  "Plant/ProcessEquipment.PressureVessel": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Vessel"
+   ],
+   "properties": [
+    "CylinderLength"
+   ]
+  },
+  "Plant/ProcessEquipment.ProcessColumn": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "ColumnSections",
+    "NominalCapacityVolume"
+   ]
+  },
+  "Plant/ProcessEquipment.ProcessEquipment": {
+   "abstract": true,
+   "supertypes": [
+    "Plant/ProcessEquipment.ChamberOwner",
+    "Plant/ProcessEquipment.NozzleOwner",
+    "Plant/ProcessEquipment.TaggedPlantItem",
+    "Plant/ProcessEquipment.TransmissionDriver"
+   ],
+   "properties": [
+    "DrivingTransmissionSystem",
+    "DryingChambers",
+    "EquipmentDescription",
+    "Motors",
+    "Mounts",
+    "SprayNozzles",
+    "TransmissionSystems",
+    "Vents"
+   ]
+  },
+  "Plant/ProcessEquipment.ProcessNozzle": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Nozzle"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.Pump": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignPressureHead",
+    "DesignVolumeFlowRate",
+    "DifferentialPressure"
+   ]
+  },
+  "Plant/ProcessEquipment.RadialFan": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Fan"
+   ],
+   "properties": [
+    "Impellers"
+   ]
+  },
+  "Plant/ProcessEquipment.RailWaggon": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.MobileTransportSystem"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.ReciprocatingCompressor": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Compressor"
+   ],
+   "properties": [
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "Displacers"
+   ]
+  },
+  "Plant/ProcessEquipment.ReciprocatingExtruder": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Extruder"
+   ],
+   "properties": [
+    "Displacers"
+   ]
+  },
+  "Plant/ProcessEquipment.ReciprocatingPressureAgglomerator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Agglomerator"
+   ],
+   "properties": [
+    "Displacers",
+    "LowerLimitDesignPressingForce",
+    "UpperLimitDesignPressingForce"
+   ]
+  },
+  "Plant/ProcessEquipment.ReciprocatingPump": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Pump"
+   ],
+   "properties": [
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "Displacers"
+   ]
+  },
+  "Plant/ProcessEquipment.RevolvingSieve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Sieve"
+   ],
+   "properties": [
+    "DesignRotationalFrequency",
+    "DesignShaftPower"
+   ]
+  },
+  "Plant/ProcessEquipment.RotaryCompressor": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Compressor"
+   ],
+   "properties": [
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "Displacers"
+   ]
+  },
+  "Plant/ProcessEquipment.RotaryMixer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Mixer"
+   ],
+   "properties": [
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "UpperLimitAllowableDesignPressureDrop"
+   ]
+  },
+  "Plant/ProcessEquipment.RotaryPump": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Pump"
+   ],
+   "properties": [
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "Displacers"
+   ]
+  },
+  "Plant/ProcessEquipment.RotatingExtruder": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Extruder"
+   ],
+   "properties": [
+    "Screws"
+   ]
+  },
+  "Plant/ProcessEquipment.RotatingGrowthAgglomerator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Agglomerator"
+   ],
+   "properties": [
+    "PelletizerDisc"
+   ]
+  },
+  "Plant/ProcessEquipment.RotatingPressureAgglomerator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Agglomerator"
+   ],
+   "properties": [
+    "BriquettingRollers",
+    "LowerLimitDesignPressingForce",
+    "UpperLimitDesignPressingForce"
+   ]
+  },
+  "Plant/ProcessEquipment.Screw": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Diameter",
+    "MaterialOfConstructionCode",
+    "StageIdentifier"
+   ]
+  },
+  "Plant/ProcessEquipment.ScrubbingSeparator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Separator"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.SedimentalCentrifuge": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Centrifuge"
+   ],
+   "properties": [
+    "Efficiency",
+    "SedimentalCentrifugeDrum"
+   ]
+  },
+  "Plant/ProcessEquipment.SedimentalCentrifugeDrum": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "Diameter",
+    "MaterialOfConstructionCode"
+   ]
+  },
+  "Plant/ProcessEquipment.Separator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignVolumeFlowRate",
+    "Efficiency",
+    "UpperLimitAllowableDesignPressureDrop"
+   ]
+  },
+  "Plant/ProcessEquipment.Ship": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.MobileTransportSystem"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.Sieve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignMassFlowRate",
+    "SieveElements"
+   ]
+  },
+  "Plant/ProcessEquipment.SieveElement": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "Efficiency",
+    "MaterialOfConstructionCode",
+    "ScreeningArea",
+    "StageIdentifier",
+    "UpperLimitPermeableParticleDiameter"
+   ]
+  },
+  "Plant/ProcessEquipment.Silo": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Vessel"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.SpiralHeatExchanger": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.HeatExchanger"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.SprayCooler": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.CoolingTower"
+   ],
+   "properties": [
+    "DesignSprayFlowRate"
+   ]
+  },
+  "Plant/ProcessEquipment.SprayNozzle": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "DesignVolumeFlowRate",
+    "SubTagName"
+   ]
+  },
+  "Plant/ProcessEquipment.StaticMixer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Mixer"
+   ],
+   "properties": [
+    "UpperLimitAllowableDesignPressureDrop"
+   ]
+  },
+  "Plant/ProcessEquipment.StationarySieve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Sieve"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.StationaryTransportSystem": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignPower"
+   ]
+  },
+  "Plant/ProcessEquipment.SteamGenerator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Heater"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.SteamTurbine": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Turbine"
+   ],
+   "properties": [
+    "DesignInletMassFlow",
+    "DesignInletVolumeFlow"
+   ]
+  },
+  "Plant/ProcessEquipment.SubTaggedColumnSection": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ColumnSection"
+   ],
+   "properties": [
+    "SubTagName"
+   ]
+  },
+  "Plant/ProcessEquipment.TaggedColumnSection": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ColumnSection",
+    "Plant/ProcessEquipment.TaggedPlantItem"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.TaggedPlantItem": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/PlantStructure.TechnicalItem"
+   ],
+   "properties": [
+    "TagName",
+    "TagNamePrefix",
+    "TagNameSequenceNumber",
+    "TagNameSuffix"
+   ]
+  },
+  "Plant/ProcessEquipment.Tank": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Vessel"
+   ],
+   "properties": [
+    "CylinderLength"
+   ]
+  },
+  "Plant/ProcessEquipment.ThinFilmEvaporator": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.HeatExchanger"
+   ],
+   "properties": [
+    "DesignPower",
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "Rotor"
+   ]
+  },
+  "Plant/ProcessEquipment.TransmissionDriver": {
+   "abstract": true,
+   "supertypes": [],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.TransmissionSystem": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject",
+    "Plant/ProcessEquipment.TransmissionDriver"
+   ],
+   "properties": [
+    "Driver",
+    "GearBoxes",
+    "SubTagName"
+   ]
+  },
+  "Plant/ProcessEquipment.TransportableContainer": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.MobileTransportSystem"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.Truck": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.MobileTransportSystem"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.TubeBundle": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Chamber",
+    "NumberOfTubes",
+    "TubeLength",
+    "TubeMaterialOfConstructionCode",
+    "TubeNominalDiameterNumericalValueRepresentation",
+    "TubeNominalDiameterRepresentation",
+    "TubeNominalDiameterStandard",
+    "TubeNominalDiameterTypeRepresentation"
+   ]
+  },
+  "Plant/ProcessEquipment.TubularHeatExchanger": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.HeatExchanger"
+   ],
+   "properties": [
+    "TemaStandardType",
+    "TubeBundle"
+   ]
+  },
+  "Plant/ProcessEquipment.Turbine": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignPower",
+    "DesignRotationalFrequency"
+   ]
+  },
+  "Plant/ProcessEquipment.Vent": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": []
+  },
+  "Plant/ProcessEquipment.Vessel": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "Agitator",
+    "ColumnSections",
+    "NominalCapacityVolume"
+   ]
+  },
+  "Plant/ProcessEquipment.VibratingSieve": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.Sieve"
+   ],
+   "properties": [
+    "DesignPower"
+   ]
+  },
+  "Plant/ProcessEquipment.WasteGasEmitter": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignVolumeFlowRate"
+   ]
+  },
+  "Plant/ProcessEquipment.Weigher": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.ProcessEquipment"
+   ],
+   "properties": [
+    "DesignMassFlowRate",
+    "DesignPower"
+   ]
+  },
+  "Plant/ProcessEquipment.WetCoolingTower": {
+   "abstract": false,
+   "supertypes": [
+    "Plant/ProcessEquipment.CoolingTower"
+   ],
+   "properties": [
+    "CoolingTowerRotor",
+    "DesignRotationalSpeed",
+    "DesignShaftPower",
+    "DesignSprayFlowRate"
+   ]
+  },
+  "Process/Diagram.PortNodePosition": {
+   "abstract": false,
+   "supertypes": [
+    "Core/Diagram.NodePosition"
+   ],
+   "properties": [
+    "Port"
+   ]
+  },
+  "Process/Process.Absorbing": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByPhysicalProcess"
+   ],
+   "properties": []
+  },
+  "Process/Process.Adsorbing": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByPhysicalProcess"
+   ],
+   "properties": []
+  },
+  "Process/Process.Agglomerating": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.IncreasingParticleSize"
+   ],
+   "properties": [
+    "PressingForce",
+    "RotationalFrequency"
+   ]
+  },
+  "Process/Process.Agitating": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStepDetail"
+   ],
+   "properties": [
+    "RotationalFrequency",
+    "ShaftPower"
+   ]
+  },
+  "Process/Process.BlowingDown": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SteeringFlow"
+   ],
+   "properties": []
+  },
+  "Process/Process.Boiling": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingThermalEnergy"
+   ],
+   "properties": [
+    "Efficiency"
+   ]
+  },
+  "Process/Process.CalculatingProcessVariable": {
+   "abstract": true,
+   "supertypes": [
+    "Process/Process.InstrumentationActivity"
+   ],
+   "properties": []
+  },
+  "Process/Process.CalculatingRatio": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.CalculatingProcessVariable"
+   ],
+   "properties": [
+    "Gain",
+    "Offset",
+    "OutputValue"
+   ]
+  },
+  "Process/Process.CalculatingSplitRange": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.CalculatingProcessVariable"
+   ],
+   "properties": [
+    "InputValue",
+    "Output1Value",
+    "Output2Value",
+    "SplitValue"
+   ]
+  },
+  "Process/Process.Coalescing": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.IncreasingParticleSize"
+   ],
+   "properties": []
+  },
+  "Process/Process.Composition": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Display",
+    "MassFlow",
+    "MassFractions",
+    "MoleFlow",
+    "MoleFractions"
+   ]
+  },
+  "Process/Process.Compressing": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.GeneratingFlow"
+   ],
+   "properties": [
+    "CompressionRatio",
+    "Method",
+    "NumberOfStages",
+    "PolytropicEfficiency",
+    "PolytropicHead",
+    "ShaftPower"
+   ]
+  },
+  "Process/Process.ContactingInPacking": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStepDetail"
+   ],
+   "properties": [
+    "Height",
+    "NumberOfTheoreticalStages"
+   ]
+  },
+  "Process/Process.ContactingOnTray": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStepDetail"
+   ],
+   "properties": [
+    "Number"
+   ]
+  },
+  "Process/Process.ControllingProcessVariable": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.InstrumentationActivity"
+   ],
+   "properties": [
+    "InputValue",
+    "OutputValue",
+    "Setpoint"
+   ]
+  },
+  "Process/Process.ConveyingSignal": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.InstrumentationActivity"
+   ],
+   "properties": [
+    "InformationValue"
+   ]
+  },
+  "Process/Process.Cooling": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.RemovingThermalEnergy"
+   ],
+   "properties": []
+  },
+  "Process/Process.Crushing": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ReducingParticleSize"
+   ],
+   "properties": []
+  },
+  "Process/Process.Crystallizing": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.IncreasingParticleSize"
+   ],
+   "properties": [
+    "Duty"
+   ]
+  },
+  "Process/Process.CustomMaterialComponent": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.MaterialComponent"
+   ],
+   "properties": [
+    "ProjectReference"
+   ]
+  },
+  "Process/Process.Cutting": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ReducingParticleSize"
+   ],
+   "properties": []
+  },
+  "Process/Process.Distilling": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByThermalProcess"
+   ],
+   "properties": [
+    "BottomPressure",
+    "BottomTemperature",
+    "CondenserDuty",
+    "Diameter",
+    "Height",
+    "Level",
+    "PressureDifference",
+    "RefluxRatio",
+    "TopPressure",
+    "TopTemperature"
+   ]
+  },
+  "Process/Process.Draining": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SteeringFlow"
+   ],
+   "properties": []
+  },
+  "Process/Process.DrivingByEngine": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingMechanicalEnergy"
+   ],
+   "properties": [
+    "FuelFlow",
+    "Method"
+   ]
+  },
+  "Process/Process.DrivingByMotor": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingMechanicalEnergy"
+   ],
+   "properties": [
+    "Method"
+   ]
+  },
+  "Process/Process.DrivingByTurbine": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingMechanicalEnergy"
+   ],
+   "properties": [
+    "Flow",
+    "Method",
+    "PressureDifference"
+   ]
+  },
+  "Process/Process.Drying": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByThermalProcess"
+   ],
+   "properties": [
+    "Area",
+    "GasMassFlow",
+    "SolidsMassFlow"
+   ]
+  },
+  "Process/Process.ElectricalEnergyFlow": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.EnergyFlow"
+   ],
+   "properties": [
+    "Current",
+    "Frequency",
+    "NumberOfPhases",
+    "Voltage"
+   ]
+  },
+  "Process/Process.ElectricalEnergyPort": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.EnergyPort"
+   ],
+   "properties": []
+  },
+  "Process/Process.Emitting": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "MassFlow",
+    "VolumeFlow"
+   ]
+  },
+  "Process/Process.EnergyFlow": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessConnection"
+   ],
+   "properties": [
+    "Duty"
+   ]
+  },
+  "Process/Process.EnergyPort": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Port"
+   ],
+   "properties": []
+  },
+  "Process/Process.Evaporating": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByThermalProcess"
+   ],
+   "properties": [
+    "Area",
+    "EvaporationRate"
+   ]
+  },
+  "Process/Process.ExchangingThermalEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "Area",
+    "ColdFlow",
+    "Duty",
+    "HeatTransferCoefficient",
+    "HeatTransferResistance",
+    "HotFlow",
+    "Method",
+    "SkinTemperature",
+    "TemperatureDifference"
+   ]
+  },
+  "Process/Process.Extruding": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.FormingSolidMaterial"
+   ],
+   "properties": []
+  },
+  "Process/Process.FeedingMaterial": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SteeringFlow"
+   ],
+   "properties": [
+    "Capacity"
+   ]
+  },
+  "Process/Process.Filtering": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingMechanically"
+   ],
+   "properties": [
+    "ParticleSize",
+    "PermeateFlow",
+    "PressureDifference"
+   ]
+  },
+  "Process/Process.Flaring": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "Duty",
+    "Flow",
+    "SkinTemperature"
+   ]
+  },
+  "Process/Process.Flocculating": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.IncreasingParticleSize"
+   ],
+   "properties": []
+  },
+  "Process/Process.FormingSolidMaterial": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "Duty",
+    "FeedParticleSize",
+    "Flow",
+    "Power",
+    "ProductParticleSize"
+   ]
+  },
+  "Process/Process.GeneratingACPower": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingElectricalEnergy"
+   ],
+   "properties": [
+    "Frequency"
+   ]
+  },
+  "Process/Process.GeneratingDCPower": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingElectricalEnergy"
+   ],
+   "properties": []
+  },
+  "Process/Process.GeneratingFlow": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "Flow",
+    "PressureDifference"
+   ]
+  },
+  "Process/Process.GeneratingInFuelCell": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingElectricalEnergy"
+   ],
+   "properties": [
+    "FuelFlow"
+   ]
+  },
+  "Process/Process.GeneratingSteam": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingThermalEnergy"
+   ],
+   "properties": []
+  },
+  "Process/Process.Grinding": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ReducingParticleSize"
+   ],
+   "properties": []
+  },
+  "Process/Process.HeatingElectrical": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingThermalEnergy"
+   ],
+   "properties": [
+    "Current",
+    "Efficiency",
+    "Power",
+    "Voltage"
+   ]
+  },
+  "Process/Process.HeatingInFurnace": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingThermalEnergy"
+   ],
+   "properties": [
+    "Efficiency",
+    "FuelFlow"
+   ]
+  },
+  "Process/Process.Humidifying": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Mixing"
+   ],
+   "properties": [
+    "Flow",
+    "WaterFlow"
+   ]
+  },
+  "Process/Process.IncreasingParticleSize": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "FeedParticleSize",
+    "Flow",
+    "LiquidFlow",
+    "Power",
+    "ProductParticleSize",
+    "SolidsFlow"
+   ]
+  },
+  "Process/Process.InformationFlow": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessConnection"
+   ],
+   "properties": [
+    "InformationValue"
+   ]
+  },
+  "Process/Process.InformationPort": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Port"
+   ],
+   "properties": []
+  },
+  "Process/Process.InformationVariant": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "BooleanValue",
+    "DoubleValue",
+    "IntegerValue",
+    "VariantType",
+    "VectorSize"
+   ]
+  },
+  "Process/Process.InstrumentationActivity": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Description",
+    "Identifier",
+    "InformationPorts",
+    "Label"
+   ]
+  },
+  "Process/Process.InstrumentationSystemActivity": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Description",
+    "Identifier",
+    "InstrumentationActivities",
+    "Label"
+   ]
+  },
+  "Process/Process.Kneading": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Mixing"
+   ],
+   "properties": [
+    "Flow",
+    "Power",
+    "RotationalFrequency"
+   ]
+  },
+  "Process/Process.LimitingFlow": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SteeringFlow"
+   ],
+   "properties": [
+    "PressureDifference"
+   ]
+  },
+  "Process/Process.ListOfMaterialComponents": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Component"
+   ]
+  },
+  "Process/Process.MaterialComponent": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Description",
+    "Identifier",
+    "Label"
+   ]
+  },
+  "Process/Process.MaterialPort": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Port"
+   ],
+   "properties": [
+    "MaterialTemplateReference"
+   ]
+  },
+  "Process/Process.MaterialState": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Description",
+    "Identifier",
+    "Label",
+    "Phases",
+    "State"
+   ]
+  },
+  "Process/Process.MaterialStateType": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Composition",
+    "Density",
+    "Description",
+    "Identifier",
+    "Label",
+    "MassFlow",
+    "SpecificEnthalpy",
+    "Viscosity",
+    "VolumeFlow"
+   ]
+  },
+  "Process/Process.MaterialTemplate": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Description",
+    "Identifier",
+    "Label",
+    "ListOfComponents",
+    "NumberOfMaterialComponents",
+    "NumberOfPhases",
+    "PhaseLabel"
+   ]
+  },
+  "Process/Process.MeasuringProcessVariable": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.InstrumentationActivity"
+   ],
+   "properties": [
+    "ConnectionReference",
+    "InputValue",
+    "MeasuredVariable",
+    "MeasuredVariableReference",
+    "OutputValue",
+    "ProcessStepDetailReference",
+    "ProcessStepReference"
+   ]
+  },
+  "Process/Process.MechanicalEnergyFlow": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.EnergyFlow"
+   ],
+   "properties": [
+    "RotationalFrequency",
+    "Torque"
+   ]
+  },
+  "Process/Process.MechanicalEnergyPort": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.EnergyPort"
+   ],
+   "properties": []
+  },
+  "Process/Process.Milling": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ReducingParticleSize"
+   ],
+   "properties": []
+  },
+  "Process/Process.Mixing": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": []
+  },
+  "Process/Process.MixingSimple": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Mixing"
+   ],
+   "properties": []
+  },
+  "Process/Process.Packaging": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": []
+  },
+  "Process/Process.Pelletizing": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.FormingSolidMaterial"
+   ],
+   "properties": []
+  },
+  "Process/Process.Port": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "ConnectorReference",
+    "Description",
+    "Identifier",
+    "NominalDirection",
+    "SubReference",
+    "SuperReference"
+   ]
+  },
+  "Process/Process.PreventingBackflow": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SteeringFlow"
+   ],
+   "properties": [
+    "ClosingTime",
+    "PressureDifference"
+   ]
+  },
+  "Process/Process.ProcessConnection": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Description",
+    "Identifier",
+    "Label",
+    "Source",
+    "Target"
+   ]
+  },
+  "Process/Process.ProcessStep": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "AmbientPressure",
+    "AmbientTemperature",
+    "Description",
+    "HierarchyLevel",
+    "Identifier",
+    "Label",
+    "Ports",
+    "Pressure",
+    "ProcessStepDetails",
+    "SubProcessSteps",
+    "Temperature"
+   ]
+  },
+  "Process/Process.ProcessStepDetail": {
+   "abstract": true,
+   "supertypes": [
+    "Core/ConceptualObject"
+   ],
+   "properties": [
+    "Description",
+    "Identifier",
+    "Label",
+    "Ports",
+    "Pressure",
+    "Temperature"
+   ]
+  },
+  "Process/Process.Pumping": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.GeneratingFlow"
+   ],
+   "properties": [
+    "Head",
+    "Method",
+    "VolumeFlow"
+   ]
+  },
+  "Process/Process.PureMaterialComponent": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.MaterialComponent"
+   ],
+   "properties": [
+    "ChEBI_identifier",
+    "IUPAC_identifier"
+   ]
+  },
+  "Process/Process.ReactingChemicals": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "Method",
+    "Volume"
+   ]
+  },
+  "Process/Process.ReducingParticleSize": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "FeedParticleSize",
+    "Flow",
+    "Power",
+    "ProductParticleSize"
+   ]
+  },
+  "Process/Process.RegulatingFlow": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SteeringFlow"
+   ],
+   "properties": [
+    "ClosingTime",
+    "OpeningTime",
+    "PressureDifference"
+   ]
+  },
+  "Process/Process.RelievingOverpressure": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SteeringFlow"
+   ],
+   "properties": []
+  },
+  "Process/Process.RelievingVacuum": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SteeringFlow"
+   ],
+   "properties": []
+  },
+  "Process/Process.RelievingVacuumAndOverpressure": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SteeringFlow"
+   ],
+   "properties": []
+  },
+  "Process/Process.RemovingThermalEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "Area",
+    "Duty",
+    "HeatTransferCoefficient",
+    "HeatTransferResistance",
+    "Method",
+    "SkinTemperature",
+    "TemperatureDifference"
+   ]
+  },
+  "Process/Process.RotaryMixing": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Mixing"
+   ],
+   "properties": [
+    "Power",
+    "RotationalFrequency"
+   ]
+  },
+  "Process/Process.SelectingProcessVariable": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.CalculatingProcessVariable"
+   ],
+   "properties": [
+    "SelectorType"
+   ]
+  },
+  "Process/Process.Separating": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "ProductRecovery",
+    "SeparationEfficiency",
+    "WasteInProduct"
+   ]
+  },
+  "Process/Process.SeparatingByCentrifugalForce": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByPhaseSeparation"
+   ],
+   "properties": [
+    "Flow",
+    "ParticleSize",
+    "Power",
+    "RotationalFrequency"
+   ]
+  },
+  "Process/Process.SeparatingByContact": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByPhysicalProcess"
+   ],
+   "properties": []
+  },
+  "Process/Process.SeparatingByCyclonicMotion": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByPhaseSeparation"
+   ],
+   "properties": [
+    "ParticleSize"
+   ]
+  },
+  "Process/Process.SeparatingByElectromagneticForce": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Separating"
+   ],
+   "properties": [
+    "ParticleSize",
+    "Power"
+   ]
+  },
+  "Process/Process.SeparatingByElectrostaticForce": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByElectromagneticForce"
+   ],
+   "properties": [
+    "RotationalFrequency",
+    "Velocity"
+   ]
+  },
+  "Process/Process.SeparatingByFlash": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByThermalProcess"
+   ],
+   "properties": []
+  },
+  "Process/Process.SeparatingByGravity": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByPhaseSeparation"
+   ],
+   "properties": [
+    "Density",
+    "ParticleSize"
+   ]
+  },
+  "Process/Process.SeparatingByIonExchange": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByPhysicalProcess"
+   ],
+   "properties": []
+  },
+  "Process/Process.SeparatingByMagneticForce": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByElectromagneticForce"
+   ],
+   "properties": [
+    "FieldIntensity",
+    "RotationalFrequency",
+    "Velocity"
+   ]
+  },
+  "Process/Process.SeparatingByPhaseSeparation": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Separating"
+   ],
+   "properties": []
+  },
+  "Process/Process.SeparatingByPhysicalProcess": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Separating"
+   ],
+   "properties": []
+  },
+  "Process/Process.SeparatingBySurfaceTension": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingByPhysicalProcess"
+   ],
+   "properties": [
+    "FrotherFlow",
+    "GasFlow",
+    "ParticleSize",
+    "PulpDensity",
+    "SurfactantFlow",
+    "Volume",
+    "pH"
+   ]
+  },
+  "Process/Process.SeparatingByThermalProcess": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Separating"
+   ],
+   "properties": [
+    "Duty"
+   ]
+  },
+  "Process/Process.SeparatingMechanically": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Separating"
+   ],
+   "properties": []
+  },
+  "Process/Process.ShuttingOffFlow": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SteeringFlow"
+   ],
+   "properties": [
+    "ClosingTime",
+    "OpeningTime",
+    "PressureDifference"
+   ]
+  },
+  "Process/Process.Sieving": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingMechanically"
+   ],
+   "properties": [
+    "Flow",
+    "ParticleSize",
+    "Power"
+   ]
+  },
+  "Process/Process.Sink": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "SourceReference"
+   ]
+  },
+  "Process/Process.Skimming": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SeparatingMechanically"
+   ],
+   "properties": [
+    "Flow"
+   ]
+  },
+  "Process/Process.Source": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "SinkReference"
+   ]
+  },
+  "Process/Process.Splitting": {
+   "abstract": true,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": []
+  },
+  "Process/Process.SplittingEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Splitting"
+   ],
+   "properties": [
+    "Capacity"
+   ]
+  },
+  "Process/Process.SplittingMaterial": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Splitting"
+   ],
+   "properties": [
+    "Flow"
+   ]
+  },
+  "Process/Process.StabilizingDistilling": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Distilling"
+   ],
+   "properties": []
+  },
+  "Process/Process.StaticMixing": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Mixing"
+   ],
+   "properties": []
+  },
+  "Process/Process.SteeringFlow": {
+   "abstract": true,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "Flow",
+    "VolumeFlow"
+   ]
+  },
+  "Process/Process.StoringElectricalEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.StoringEnergy"
+   ],
+   "properties": [
+    "ChargeCurrent",
+    "DischargeCurrent",
+    "Voltage"
+   ]
+  },
+  "Process/Process.StoringEnergy": {
+   "abstract": true,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "ChargeCapacity",
+    "EnergyDensity",
+    "MassSpecificEnergy"
+   ]
+  },
+  "Process/Process.StoringFluids": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.StoringMaterial"
+   ],
+   "properties": [
+    "Level"
+   ]
+  },
+  "Process/Process.StoringInBattery": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.StoringElectricalEnergy"
+   ],
+   "properties": []
+  },
+  "Process/Process.StoringInPressureVessel": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.StoringFluids"
+   ],
+   "properties": []
+  },
+  "Process/Process.StoringInSilo": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.StoringSolids"
+   ],
+   "properties": [
+    "Level"
+   ]
+  },
+  "Process/Process.StoringInTank": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.StoringFluids"
+   ],
+   "properties": []
+  },
+  "Process/Process.StoringMaterial": {
+   "abstract": true,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "Capacity",
+    "Volume"
+   ]
+  },
+  "Process/Process.StoringMechanicalEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.StoringEnergy"
+   ],
+   "properties": []
+  },
+  "Process/Process.StoringSolids": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.StoringMaterial"
+   ],
+   "properties": []
+  },
+  "Process/Process.StoringThermalEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.StoringEnergy"
+   ],
+   "properties": []
+  },
+  "Process/Process.Stream": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessConnection"
+   ],
+   "properties": [
+    "MassFlow",
+    "MaterialStateReference",
+    "MaterialTemplateReference",
+    "Pressure",
+    "Temperature",
+    "VolumeFlow"
+   ]
+  },
+  "Process/Process.StrippingDistilling": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Distilling"
+   ],
+   "properties": []
+  },
+  "Process/Process.SupplyingElectricalEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingEnergy"
+   ],
+   "properties": [
+    "Efficiency",
+    "Power",
+    "Voltage"
+   ]
+  },
+  "Process/Process.SupplyingEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": []
+  },
+  "Process/Process.SupplyingFluids": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingMaterial"
+   ],
+   "properties": []
+  },
+  "Process/Process.SupplyingMaterial": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "Capacity",
+    "Flow"
+   ]
+  },
+  "Process/Process.SupplyingMechanicalEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingEnergy"
+   ],
+   "properties": [
+    "Efficiency",
+    "RotationalFrequency",
+    "ShaftPower"
+   ]
+  },
+  "Process/Process.SupplyingSolids": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.SupplyingMaterial"
+   ],
+   "properties": []
+  },
+  "Process/Process.SupplyingThermalEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "Area",
+    "Duty",
+    "Flow",
+    "HeatTransferCoefficient",
+    "HeatTransferResistance",
+    "Method",
+    "SkinTemperature",
+    "TemperatureDifference"
+   ]
+  },
+  "Process/Process.SupplyingThermalEnergyWithBurner": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStepDetail"
+   ],
+   "properties": [
+    "Duty",
+    "FuelConsumption"
+   ]
+  },
+  "Process/Process.ThermalEnergyFlow": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.EnergyFlow"
+   ],
+   "properties": [
+    "Temperature"
+   ]
+  },
+  "Process/Process.ThermalEnergyPort": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.EnergyPort"
+   ],
+   "properties": []
+  },
+  "Process/Process.TransformingProcessVariable": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.CalculatingProcessVariable"
+   ],
+   "properties": [
+    "Gain",
+    "InputValue",
+    "Offset",
+    "OutputValue"
+   ]
+  },
+  "Process/Process.TransportingElectricalEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.TransportingEnergy"
+   ],
+   "properties": [
+    "Current",
+    "Frequency",
+    "NumberOfPhases",
+    "Voltage"
+   ]
+  },
+  "Process/Process.TransportingEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "Capacity",
+    "Efficiency"
+   ]
+  },
+  "Process/Process.TransportingFluids": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.TransportingMaterial"
+   ],
+   "properties": [
+    "Length",
+    "PressureDifference",
+    "VolumeFlow"
+   ]
+  },
+  "Process/Process.TransportingFluidsInChannel": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.TransportingFluids"
+   ],
+   "properties": [
+    "Depth",
+    "Width"
+   ]
+  },
+  "Process/Process.TransportingFluidsInHose": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.TransportingFluids"
+   ],
+   "properties": [
+    "Diameter"
+   ]
+  },
+  "Process/Process.TransportingFluidsInPipe": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.TransportingFluids"
+   ],
+   "properties": [
+    "Diameter"
+   ]
+  },
+  "Process/Process.TransportingMaterial": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.ProcessStep"
+   ],
+   "properties": [
+    "Flow"
+   ]
+  },
+  "Process/Process.TransportingMechanicalEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.TransportingEnergy"
+   ],
+   "properties": []
+  },
+  "Process/Process.TransportingSolids": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.TransportingMaterial"
+   ],
+   "properties": []
+  },
+  "Process/Process.TransportingSolidsContinuously": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.TransportingSolids"
+   ],
+   "properties": [
+    "Power",
+    "Velocity"
+   ]
+  },
+  "Process/Process.TransportingSolidsDiscontinuously": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.TransportingSolids"
+   ],
+   "properties": [
+    "BatchSize"
+   ]
+  },
+  "Process/Process.TransportingThermalEnergy": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.TransportingEnergy"
+   ],
+   "properties": []
+  },
+  "Process/Process.VacuumDistilling": {
+   "abstract": false,
+   "supertypes": [
+    "Process/Process.Distilling"
+   ],
+   "properties": []
+  },
+  "Process/ProcessModel": {
+   "abstract": false,
+   "supertypes": [
+    "Core/ConceptualModel"
+   ],
+   "properties": [
+    "InstrumentationSystemActivities",
+    "ListsOfMaterialComponents",
+    "MaterialComponents",
+    "MaterialStates",
+    "MaterialTemplates",
+    "ProcessConnections",
+    "ProcessSteps"
+   ]
+  }
+ }
+}

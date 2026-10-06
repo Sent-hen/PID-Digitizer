@@ -1,8 +1,8 @@
 # P&ID Digitizer
 
-Converts raster P&ID drawings into a graph, with equipment, valves and instruments as nodes and pipes and signal lines as edges. Outputs GraphML (primary) and DEXPI-structured XML (planned). Evaluated on [PID2Graph](https://zenodo.org/records/14803338) with graph-level metrics.
+Converts raster P&ID drawings into a graph, with equipment, valves and instruments as nodes and pipes and signal lines as edges. Outputs GraphML (primary, [schema](docs/GRAPHML_SCHEMA.md)) and DEXPI-structured XML (DEXPI 2.0.1, [coverage](docs/DEXPI_COVERAGE.md)). Evaluated on [PID2Graph](https://zenodo.org/records/14803338) with graph-level metrics.
 
-> **Status: Milestone 1 of 6 complete (walking-skeleton baseline).** See [PROGRESS.md](PROGRESS.md) and the plan in [docs/PROPOSAL.md](docs/PROPOSAL.md).
+> **Status: Milestones 0–4 of 6 complete.** Final test-set evaluation (Milestone 5) is pending; the table below is the Milestone 1 baseline. See [PROGRESS.md](PROGRESS.md) and the plan in [docs/PROPOSAL.md](docs/PROPOSAL.md).
 
 ## Baseline results (Milestone 1, test splits)
 
