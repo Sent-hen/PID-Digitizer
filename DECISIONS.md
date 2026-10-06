@@ -323,3 +323,14 @@ The full change table is in `docs/PROPOSAL.md` §9.
 - **Weights distribution:** GitHub release `weights-detector-m2c-v1` (asset `detector_m2c.pt`, sha1 `531ab26c…`), published at the user's request with CC BY-SA 4.0 attribution to PID2Graph and its sources.
   - The repository is private, so `scripts/fetch_weights.py` tries the public URL, then `GITHUB_TOKEN`, then `gh release download`, and verifies the sha1 before installing the file.
 - **Demo:** `make demo` fetches the weights, runs `docker compose up -d --build`, then uploads a bundled sample (Dataset-P&ID validation sheet 10, grayscale, CC BY-SA 4.0, `docker/sample/`) with `scripts/demo.py`.
+
+## D-026 DEXPI vocabulary re-sourced from the official 2.0.1 model files (2026-10-06)
+
+- **Source:** the specification site (https://dexpi.org/specification/2.0.1/html/) publishes the machine-readable models `_static/Core.xml` and `_static/Plant.xml`, with templates already expanded into properties. `scripts/build_dexpi_vocab.py` now reads these instead of parsing the Python-DSL model sources (D-023), which had been a workaround because `data.dexpi.org` was unreachable.
+- **Verification:**
+  - All 342 Core and Plant classes match the previous vocabulary exactly (abstractness, supertypes, properties).
+  - The 2.0.1 changelog items are present.
+  - The vendored XSD is byte-identical to the site's copy.
+  - The site's reference P&ID validates with zero errors.
+  - Export imports use the same `data.dexpi.org/models/2.0.1/{Core,Plant}.xml` URIs as the official reference.
+- **Change:** the export was already up to date. The only change is that the 152 Process-model (PFD) classes are no longer in the vocabulary, since the P&ID export never uses them.
