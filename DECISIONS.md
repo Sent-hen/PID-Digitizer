@@ -297,3 +297,40 @@ The full change table is in `docs/PROPOSAL.md` §9.
   - **Degradation level 3 collapses OPEN100** (edge F1 0.037). The simulator's parameters are in original-sheet pixels, and OPEN100 sheets are about 2.7× smaller than the working scale, so the same blur, resampling and binarization are relatively much harsher. A resolution-relative simulator would be fairer, but changing the protocol after seeing test results would be tuning on test. This is documented as a limitation instead.
   - **OPEN100 edge F1** is roughly unchanged since M1 (0.492 → 0.486; edge mAP 0.375 → 0.380). M2/M3 gains came on the generated subsets and on degraded input. The error analysis attributes OPEN100 losses to the crossing convention, nested and short connections, and limited real training data.
 - **Rejected:** spending further test runs on the variants above (one run per final config).
+
+## D-025 Service, review UI, container and weights distribution (Milestone 6, 2026-10-06)
+
+- **Service:** FastAPI (MIT) + uvicorn (BSD), with an in-process `ThreadPoolExecutor` (1 worker) and SQLite job state (`api/store.py`).
+  - **Rejected:** Redis + RQ/Celery. A distributed queue adds a service without need at this scale.
+  - **Behaviour:**
+    - jobs left queued or running by a crash are marked failed on startup;
+    - the model is loaded once, and the service refuses weights whose sha1 differs from `configs/serve.yaml`;
+    - uploads are checked for size, decodability and format (PNG/JPEG/TIFF/BMP), with a pixel cap that also guards against decompression bombs;
+    - structured JSON logs.
+  - **Job timeout:** checked after the run, since Python threads can't be pre-empted. An overlong job is marked failed rather than killed.
+- **Corrections:** typed operations (relabel, delete node/edge, add edge, set line type, confirm), applied atomically. Human-touched elements get confidence 1.0.
+  - Every PATCH is appended to `corrections.jsonl` next to the job, and the original prediction stays retrievable (`?version=original`).
+  - The log is the natural input for later active learning.
+- **UI:** dependency-free static HTML/JS (canvas), served by the API.
+  - **Rejected:** a JS framework or build step. More to maintain than the review task needs.
+- **JSON** is used only as API/UI transport (proposal v3 §4). Downloads are GraphML or DEXPI.
+- **Container:**
+  - multi-stage CPU image on python:3.13-slim;
+  - runtime dependencies exported from `uv.lock`, plus the CPU build of the same torch/torchvision versions;
+  - non-root user, a health check that requires the model to be loaded, and job data in a named volume;
+  - code and configs at `/app` (`PYTHONPATH`), because `pid.config` resolves configs relative to the repo root.
+  - **Not baked in:** weights. They're mounted read-only, which keeps the image small and the weights' license separate.
+- **Weights distribution:** GitHub release `weights-detector-m2c-v1` (asset `detector_m2c.pt`, sha1 `531ab26c…`), published at the user's request with CC BY-SA 4.0 attribution to PID2Graph and its sources.
+  - The repository is private, so `scripts/fetch_weights.py` tries the public URL, then `GITHUB_TOKEN`, then `gh release download`, and verifies the sha1 before installing the file.
+- **Demo:** `make demo` fetches the weights, runs `docker compose up -d --build`, then uploads a bundled sample (Dataset-P&ID validation sheet 10, grayscale, CC BY-SA 4.0, `docker/sample/`) with `scripts/demo.py`.
+
+## D-026 DEXPI vocabulary re-sourced from the official 2.0.1 model files (2026-10-06)
+
+- **Source:** the specification site (https://dexpi.org/specification/2.0.1/html/) publishes the machine-readable models `_static/Core.xml` and `_static/Plant.xml`, with templates already expanded into properties. `scripts/build_dexpi_vocab.py` now reads these instead of parsing the Python-DSL model sources (D-023), which had been a workaround because `data.dexpi.org` was unreachable.
+- **Verification:**
+  - All 342 Core and Plant classes match the previous vocabulary exactly (abstractness, supertypes, properties).
+  - The 2.0.1 changelog items are present.
+  - The vendored XSD is byte-identical to the site's copy.
+  - The site's reference P&ID validates with zero errors.
+  - Export imports use the same `data.dexpi.org/models/2.0.1/{Core,Plant}.xml` URIs as the official reference.
+- **Change:** the export was already up to date. The only change is that the 152 Process-model (PFD) classes are no longer in the vocabulary, since the P&ID export never uses them.

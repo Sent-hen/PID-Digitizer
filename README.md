@@ -6,7 +6,7 @@ Converts raster P&ID drawings (scans or rendered sheets) into a graph:
 
 It runs a tiled Faster R-CNN symbol detector, orthogonal line extraction with deskew and frame cropping, graph assembly, and per-edge confidence scores calibrated to observed accuracy. Output is GraphML ([schema](docs/GRAPHML_SCHEMA.md)) plus DEXPI-structured XML (DEXPI 2.0.1, [coverage](docs/DEXPI_COVERAGE.md)). It's evaluated on [PID2Graph](https://zenodo.org/records/14803338) under the dataset's official graph metrics.
 
-> **Status: Milestones 0–5 of 6 complete.** Milestone 6 (service, review UI, Docker) is next. See [PROGRESS.md](PROGRESS.md) and [docs/PROPOSAL.md](docs/PROPOSAL.md).
+> **Status:** all six milestones of the [plan](docs/PROPOSAL.md) are complete: pipeline, evaluation, exports, service, review UI and container. See [PROGRESS.md](PROGRESS.md).
 
 ## Results (test splits, run once)
 
@@ -43,6 +43,31 @@ Final test results (run once; detector `weights/detector_m2c.pt` sha1 `531ab26ce
 - **Port-aware node placement:** snap ankles to where the pipe's ink actually meets the symbol, rather than to the box edge.
 - **Finer symbol classes:** for fuller DEXPI coverage.
 
+## Quickstart (Docker, CPU)
+
+```bash
+python scripts/fetch_weights.py      # detector weights from the GitHub release (sha1-checked)
+docker compose up --build            # http://localhost:8000: review UI; API docs at /docs
+python scripts/demo.py               # upload the bundled sample drawing and print result URLs
+```
+
+`make demo` runs all three. The weights are the release asset [`weights-detector-m2c-v1`](https://github.com/Sent-hen/PID-Digitizer/releases/tag/weights-detector-m2c-v1). For a private repository, `fetch_weights.py` uses `GITHUB_TOKEN` or an authenticated `gh` CLI.
+
+**Using the service:**
+- Upload a PNG/JPEG/TIFF/BMP sheet in the UI, or run `curl -F file=@sheet.png localhost:8000/jobs`.
+- Review the graph colored by confidence. Use the slider to show only low-confidence elements, click to inspect, and relabel, delete, confirm or add edges.
+- Download **GraphML** or **DEXPI** XML.
+- Corrections are saved immediately to an append-only log, and the original prediction stays available.
+
+| endpoint | purpose |
+|---|---|
+| `POST /jobs` | upload an image (multipart `file`) → job id |
+| `GET /jobs/{id}` | status and progress |
+| `GET /jobs/{id}/result?format=graphml\|dexpi&version=current\|original` | download the graph |
+| `GET /jobs/{id}/graph`, `PATCH /jobs/{id}/graph` | JSON graph and reviewer corrections |
+| `GET /jobs/{id}/overlay` | PNG overlay colored by confidence |
+| `GET /health` | liveness and model status |
+
 ## Dataset
 
 PID2Graph (Stürmer, Graumann & Koch, IEEE DSAA 2025), CC BY-SA 4.0. Download it from Zenodo and unzip it so that `PID2Graph/Complete/...` sits at the repo root. Format, quirks and protocol are in [DATASET_NOTES.md](DATASET_NOTES.md).
@@ -58,6 +83,7 @@ make tiles && make train                    # detector, about 0.9-1.7 GPU-hours 
 uv run python scripts/fit_confidence.py --split dataset_pid_val --split synthetic_val
 make eval                                   # final test matrix (resumable) + all tables
 make report                                 # tables/figures only, from saved metrics
+make serve                                  # API + UI locally (GPU if available)
 ```
 
 ## License and attribution
