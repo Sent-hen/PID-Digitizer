@@ -4,6 +4,12 @@ Converts raster P&ID drawings into a graph, with equipment, valves and instrumen
 
 > **Status: Milestones 0–4 of 6 complete.** Final test-set evaluation (Milestone 5) is pending; the table below is the Milestone 1 baseline. See [PROGRESS.md](PROGRESS.md) and the plan in [docs/PROPOSAL.md](docs/PROPOSAL.md).
 
+## Final results (Milestone 5, test splits)
+
+<!-- final:start -->
+(pending: run `make eval`)
+<!-- final:end -->
+
 ## Baseline results (Milestone 1, test splits)
 
 Our own splits are used, because PID2Graph releases no training data (see [DATASET_NOTES.md](DATASET_NOTES.md)). Predictions are GraphML files. All numbers are from [RESULTS.md](RESULTS.md) (R-003).

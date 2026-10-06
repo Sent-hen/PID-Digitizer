@@ -16,7 +16,7 @@ VAL_SPLITS ?= --split dataset_pid_val --split synthetic_val
 RUN ?= m1b_baseline
 
 .PHONY: install lint typecheck test test-dataset check inspect splits eval-oracle \
-        tiles train baseline baseline-val baseline-oracle eval demo
+        tiles train baseline baseline-val baseline-oracle eval report demo
 
 install:
 	uv sync
@@ -59,7 +59,12 @@ baseline:  ## Milestone 1: end-to-end on the test splits
 baseline-oracle:  ## same pipeline with ground-truth symbols (error propagation)
 	$(PY) scripts/run_baseline.py --run $(RUN)_oracle_symbols --oracle-symbols $(VAL_SPLITS) $(TEST_SPLITS)
 
-eval: baseline
+eval:  ## Milestone 5: run the final test matrix once (resumable), then all tables
+	$(PY) scripts/final_eval.py
+	$(PY) scripts/make_report.py
+
+report:  ## regenerate tables/figures from saved metrics only
+	$(PY) scripts/make_report.py
 
 demo:
 	@echo "Milestone 6: not implemented yet" && exit 1

@@ -48,5 +48,5 @@ crop:
   frame_margin_frac: 0.01  # ignore rules within 1% of the frame edge (double frames)
 
 confidence:
-  enabled: true            # 2-fold CV on val: ECE 0.017, edge mAP 0.776 -> 0.898 (R-008)
+  enabled: true            # 2-fold CV on val: ECE 0.015, edge mAP 0.787 -> 0.905 (R-008)
   model: configs/confidence_model.json

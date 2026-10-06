@@ -407,3 +407,11 @@ Synthetic F1 is −0.010 vs M1. That's attributable to the M2 detector choice (m
 PID2Graph's catch-all `general` class is the dominant loss, since DEXPI 2.0 has no generic equipment class (D-023). Finer symbol classes would be needed for a fuller DEXPI export. The dataset doesn't provide them.
 
 **GraphML (primary output):** schema documented in `docs/GRAPHML_SCHEMA.md` (version 1.0). Round trip and XSD validity are tested, with 0 invalid files across all runs since R-003.
+
+## R-010 Milestone 5: final test results (generated)
+
+Full tables: [docs/FINAL_RESULTS.md](docs/FINAL_RESULTS.md).
+
+<!-- final:start -->
+(pending: run `make eval`)
+<!-- final:end -->
