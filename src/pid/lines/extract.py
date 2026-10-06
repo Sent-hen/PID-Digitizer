@@ -113,9 +113,20 @@ def _segments_one_direction(binary: U8, orient: Literal["h", "v"], cfg: Mapping[
     return segs
 
 
+def ink_threshold(gray: U8, cfg: Mapping[str, Any]) -> int:
+    """Fixed threshold, capped at (paper level - margin) so gray or degraded paper
+    (Dataset-PID paper is ~199, ~186 after level-2 contrast loss) never counts as ink."""
+    thr = int(cfg["threshold"])
+    margin = cfg.get("paper_margin")
+    if margin is not None:
+        paper = float(np.median(gray[::8, ::8]))
+        thr = min(thr, int(paper - float(margin)))
+    return thr
+
+
 def extract_segments(gray: U8, symbol_boxes: Iterable[BBox], cfg: Mapping[str, Any],
                      ) -> list[Segment]:
-    binary = mask_boxes(binarize(gray, int(cfg["threshold"])), symbol_boxes,
+    binary = mask_boxes(binarize(gray, ink_threshold(gray, cfg)), symbol_boxes,
                         int(cfg.get("mask_pad", 1)))
     return (_segments_one_direction(binary, "h", cfg)
             + _segments_one_direction(binary, "v", cfg))

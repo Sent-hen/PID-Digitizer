@@ -331,3 +331,50 @@ Overlap 512 changes metrics by ≤0.003 and doubles detection time, so 256 is ke
 | Synthetic | level 2 | 0.391 → 0.904 | 0.386 → 0.877 |
 
 Clean symbol mAP@0.5 is saturated at 0.996–1.000 for both models.
+
+## R-008 Milestone 3: lines, connectivity, confidence (val)
+
+**Pipeline:**
+- **Detector:** m2c (sha1 `531ab26ce150`). Deskew and crop on.
+- **Changes in this milestone** (D-021):
+  - ankle-port rule;
+  - dashed join/snap tolerance 20 px;
+  - ink threshold 180, capped at the paper's median gray level − 25;
+  - calibrated confidence (`configs/confidence_model.json`).
+- **Config hash:** `23bb6984b356`.
+- **Commit:** `297c309` + the paper-relative threshold (committed with this entry).
+
+**Confidence model fit** (`scripts/fit_confidence.py`, val, 43 660 predicted edges, 91.5% correct):
+- 2-fold cross-validation by drawing, so both numbers are out-of-sample:
+  - ECE = **0.015**;
+  - edge mAP **0.787** with constant scores vs **0.905** with confidence (pooled over both val subsets).
+- Reliability diagram: `docs/reliability_diagram.png`. Sample review overlay: `docs/confidence_overlay_dataset_pid_147.jpg`.
+- The final model is fitted on all of val, so the val edge mAP rows below are in-sample for the confidence model. The CV numbers above and the test run are the out-of-sample checks.
+
+**Full pipeline, val:**
+
+| split | input | Symbols mAP@0.5 | Nodes AP | Edge P / R / F1 | median / p10 F1 | Edge mAP (AP solid / non-solid) |
+|---|---|---|---|---|---|---|
+| dataset_pid_val | clean | 1.000 | 0.935 | 0.916 / 0.917 / **0.917** | 0.920 / 0.867 | **0.909** (0.975 / 0.843) |
+| synthetic_val | clean | 0.996 | 0.933 | 0.899 / 0.911 / 0.905 | 0.895 / 0.865 | **0.918** (0.925 / 0.910) |
+| dataset_pid_val | level 2 | 1.000 | 0.936 | 0.907 / 0.902 / **0.904** | 0.902 / 0.857 | 0.894 (0.960 / 0.827) |
+| synthetic_val | level 2 | 0.996 | 0.903 | 0.860 / 0.876 / 0.868 | 0.882 / 0.802 | 0.911 (0.903 / 0.920) |
+
+Runs `m3_final_clean_v2`, `m3_final_L2_v2`. An earlier run with a fixed threshold of 180 (`m3_final_L2`) collapsed on degraded Dataset-PID, to edge F1 0.687 with p10 = 0, because gray paper at about 186 fell below the threshold. The paper-relative cap fixes this, and clean results are unchanged.
+
+**Oracle symbols** (line + graph only, run `m3_final_oracle`, before the threshold cap; clean sheets are unaffected by the cap):
+
+| split | Nodes AP | Edge P / R / F1 | Edge mAP |
+|---|---|---|---|
+| dataset_pid_val | 0.967 | 0.954 / 0.955 / 0.955 | 0.913 |
+| synthetic_val | 0.985 | 0.967 / 0.982 / 0.974 | 0.935 |
+| open100_train (4 sheets) | 0.729 | 0.910 / 0.595 / 0.719 | 0.590 |
+
+**Milestone 3 vs the Milestone 1 baseline** (R-003 val, edge F1 / edge mAP):
+
+| split | M1 (R-003) | M3 |
+|---|---|---|
+| Dataset-PID | 0.886 / 0.647 | **0.917 / 0.909** |
+| Synthetic | 0.915 / 0.904 | 0.905 / **0.918** |
+
+Synthetic F1 is −0.010 vs M1. That's attributable to the M2 detector choice (m2c trades 0.010 clean F1 for robustness, R-007). With oracle symbols, Synthetic edge F1 is unchanged at 0.974–0.975 through M3, so the line stage didn't regress (D-022).

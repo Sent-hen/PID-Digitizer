@@ -2,13 +2,32 @@
 
 Spec: [docs/PROPOSAL.md](docs/PROPOSAL.md) **v3** (GraphML primary output, dataset-driven scope, option B).
 
-## Current milestone: 2 (Detection and preprocessing): work done, acceptance needs a decision
+## Current milestone: 4 (Export: GraphML schema doc + DEXPI-structured XML): not started
 
-Adopted configuration (D-019):
-- detector `weights/detector_m2c.pt` (degradation augmentation + repeat-factor sampling, no rot/flip);
-- deskew on, crop on, tile overlap 256.
+Milestones 0–3 are complete. The current configuration is the M3 pipeline (RESULTS R-008):
+- detector m2c;
+- deskew, crop, and the ankle-port rule;
+- dashed-join tolerance and the paper-relative ink threshold;
+- calibrated confidence.
 
-### Milestone 2 acceptance (v3 §6)
+### Milestone 3 (complete 2026-10-05; D-021, D-022)
+- [x] **Val edge F1 / edge mAP vs M1** (R-008):
+  - Dataset-PID: 0.886 → 0.917 F1, 0.647 → 0.909 mAP.
+  - Synthetic: 0.904 → 0.918 mAP, but F1 0.915 → 0.905 (−0.010, from the M2 detector trade-off; line stage unchanged per oracle). Accepted in D-022.
+- [x] **Fixtures pass:** T, X, bend, inline valve, dashed line, outline-outside-box, text-stroke port, text next to a line. Diagonal line is a strict xfail (limitation).
+- [x] **Reliability diagram:** `docs/reliability_diagram.png`. 2-fold CV ECE is 0.015, and out-of-sample edge mAP goes from 0.787 to 0.905.
+- [x] **Confidence-colored visualization:** `render_overlay(color_by="confidence")`, sample in `docs/`.
+- **What changed:**
+  - ankle-port rule (Dataset-PID oracle F1 0.938 → 0.954);
+  - dashed joins (non-solid recall 0.78 → 0.90);
+  - threshold 180 with paper cap;
+  - confidence model;
+  - `scripts/analyze_errors.py`.
+- **Substitutions and limitations:**
+  - text handled by heuristics instead of a learned text detector, which would be a heavy dependency (D-021);
+  - diagonal lines and OPEN100 nested-symbol / short-stub connections aren't handled.
+
+### Milestone 2 acceptance (v3 §6, accepted in D-020)
 - [x] **Degradation simulator deterministic** for a fixed seed: `preprocess/degrade.py`, with tests.
 - [x] **Cropping IoU reported** (R-004): 0.950 on Dataset-PID (the ceiling) and 0.959 on OPEN100 train. No false crops on Synthetic, zero GT nodes lost.
 - [~] **"Val symbol mAP and node AP beat Milestone 1", with a per-class AP table** (R-007):
@@ -37,4 +56,8 @@ An early robustness run silently loaded 20-iteration smoke-test weights, because
 - **Machine speed:** the GPU looked thermally or power-limited during the latest runs (timings roughly doubled).
 
 ## Next concrete step
-Pending user confirmation that Milestone 2 is accepted given the saturated clean val. Then start Milestone 3: text mask, dashed lines, OPEN100 line gaps, ankle snapping, confidence calibration.
+Milestone 4 (v3 §6):
+1. `docs/GRAPHML_SCHEMA.md` and a versioned schema check. XSD validation and round trip already exist.
+2. DEXPI: fetch the current DEXPI specification and Proteus schema, and record the version.
+3. `export/dexpi_mapping.yaml` with an explicit unmapped list, an `lxml` writer, then XSD or required-element validation.
+4. Mapping coverage table.

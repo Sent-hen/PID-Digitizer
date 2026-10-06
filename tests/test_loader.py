@@ -52,3 +52,18 @@ def test_overlay_renders(mini: Drawing, tmp_path: Path) -> None:
     # an edge pixel between general1 and valve2 centers should be colored
     assert out.getpixel((80, 25)) != (255, 255, 255)
     assert LineType.SOLID in {e.line_type for e in mini.edges}
+
+
+def test_overlay_confidence_mode(mini: Drawing) -> None:
+    from pid.io.overlay import confidence_color
+
+    d = mini.model_copy(deep=True)
+    for e in d.edges:
+        e.score = 0.1
+    img = Image.new("RGB", (320, 240), "white")
+    out = render_overlay(d, image=img, color_by="confidence")
+    r, g, _ = out.getpixel((80, 25))
+    assert r > g  # low confidence edges render red-ish
+    assert confidence_color(1.0)[1] > confidence_color(1.0)[0]
+    with pytest.raises(ValueError):
+        render_overlay(d, image=img, color_by="nope")

@@ -25,9 +25,20 @@ EDGE_COLORS = {LineType.SOLID: (20, 120, 255), LineType.NON_SOLID: (255, 40, 40)
 DEFAULT_COLOR = (128, 128, 128)
 
 
+def confidence_color(p: float) -> tuple[int, int, int]:
+    """Red (0) -> amber (0.5) -> green (1)."""
+    p = min(1.0, max(0.0, p))
+    if p < 0.5:
+        return (220, round(60 + 300 * p), 40)
+    return (round(220 - 400 * (p - 0.5)), 190, 60)
+
+
 def render_overlay(drawing: Drawing, image: Image.Image | None = None,
-                   max_side: int = 3000) -> Image.Image:
-    """Return an RGB overlay downscaled so its longest side is at most `max_side`."""
+                   max_side: int = 3000, color_by: str = "class") -> Image.Image:
+    """Return an RGB overlay downscaled so its longest side is at most `max_side`.
+    `color_by="confidence"` colors nodes and edges by their score (review view)."""
+    if color_by not in ("class", "confidence"):
+        raise ValueError(f"color_by must be 'class' or 'confidence', not {color_by!r}")
     if image is None:
         if drawing.image_path is None:
             raise ValueError("drawing has no image_path and no image was given")
@@ -49,11 +60,13 @@ def render_overlay(drawing: Drawing, image: Image.Image | None = None,
     by_id = drawing.symbol_by_id()
     for e in drawing.edges:
         (x0, y0), (x1, y1) = by_id[e.source].bbox.center, by_id[e.target].bbox.center
-        draw.line([x0 * scale, y0 * scale, x1 * scale, y1 * scale],
-                  fill=EDGE_COLORS[e.line_type], width=lw)
+        ecol = (confidence_color(e.score) if color_by == "confidence"
+                else EDGE_COLORS[e.line_type])
+        draw.line([x0 * scale, y0 * scale, x1 * scale, y1 * scale], fill=ecol, width=lw)
 
     for s in drawing.symbols:
-        color = CLASS_COLORS.get(s.cls, DEFAULT_COLOR)
+        color = (confidence_color(s.score) if color_by == "confidence"
+                 else CLASS_COLORS.get(s.cls, DEFAULT_COLOR))
         b = s.bbox
         if s.cls in ("crossing", "ankle"):
             cx, cy = b.center
@@ -66,8 +79,10 @@ def render_overlay(drawing: Drawing, image: Image.Image | None = None,
 
     # Legend
     y = 8
-    for name, color in [*CLASS_COLORS.items(), *((f"{k.value} line", c)
-                                                  for k, c in EDGE_COLORS.items())]:
+    legend = ([(f"confidence {v:.2f}", confidence_color(v)) for v in (0.0, 0.25, 0.5, 0.75, 1.0)]
+              if color_by == "confidence" else
+              [*CLASS_COLORS.items(), *((f"{k.value} line", c) for k, c in EDGE_COLORS.items())])
+    for name, color in legend:
         draw.rectangle([8, y, 26, y + 14], fill=color)
         draw.text((32, y), name, fill=(0, 0, 0))
         y += 18

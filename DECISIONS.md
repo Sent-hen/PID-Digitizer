@@ -250,3 +250,12 @@ The full change table is in `docs/PROPOSAL.md` §9.
   - Two-fold CV by drawing gives ECE and edge mAP on held-out drawings.
   - The mid-range (0.4–0.8) is overconfident, but those bins hold fewer than 3% of edges. A second calibration step (isotonic) was rejected for so little mass.
   - Structural node confidence = mean of incident edge confidences.
+
+## D-022 Milestone 3 sign-off and paper-relative threshold (2026-10-05)
+
+- **Paper-relative ink threshold:** `min(180, median paper gray − 25)`, computed per sheet. A fixed 180 broke degraded Dataset-PID, whose gray paper (about 199) falls to about 186 at level 2 (edge F1 0.904 → 0.687). The cap restores 0.904 and leaves clean results unchanged.
+- **Milestone 3 accepted.**
+  - Edge mAP beats M1 on both val subsets (0.647 → 0.909, 0.904 → 0.918). Edge F1 beats M1 on Dataset-PID (0.886 → 0.917).
+  - Synthetic edge F1 is 0.010 below M1 because of the robustness-oriented M2 detector, not the line stage (oracle F1 unchanged).
+  - The reliability diagram is published. Fixtures pass, with diagonal lines as a documented strict xfail.
+- **Rejected:** switching back to the M1 detector for clean data, which would give up the large degraded-input gains (R-007).

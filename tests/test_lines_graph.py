@@ -206,3 +206,12 @@ def test_text_next_to_line_adds_no_nodes(pcfg: dict[str, Any]) -> None:
     s = [sym("A", 60, 280, 100, 320), sym("B", 700, 280, 740, 320)]
     d = run(img, s, pcfg)
     assert len(d.edges) == 3 and not any(x.cls == "crossing" for x in d.symbols)
+
+
+def test_ink_threshold_caps_below_gray_paper() -> None:
+    from pid.lines.extract import ink_threshold
+
+    cfg = {"threshold": 180, "paper_margin": 25}
+    assert ink_threshold(np.full((64, 64), 255, np.uint8), cfg) == 180
+    assert ink_threshold(np.full((64, 64), 186, np.uint8), cfg) == 161  # degraded gray paper
+    assert ink_threshold(np.full((64, 64), 186, np.uint8), {"threshold": 180}) == 180

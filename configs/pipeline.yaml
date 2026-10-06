@@ -13,7 +13,8 @@ deskew:
   min_angle: 0.05          # smaller estimates are treated as level (no resampling)
 
 lines:
-  threshold: 180           # gray < threshold is ink (Dataset-PID paper ~199); 150 -> 180 in R-008
+  threshold: 180           # gray < threshold is ink; 150 -> 180 in R-008
+  paper_margin: 25         # ...capped at median paper level - 25 (gray/degraded paper, R-008)
   mask_pad: 1              # px added around symbol boxes when blanking them
   min_length: 30           # morphological opening length; shorter runs (text) are dropped
   bridge_gap: 21           # closing length; bridges dash gaps (Dataset-PID gaps: median 11, p99 20 px)
