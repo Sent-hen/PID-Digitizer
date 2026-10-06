@@ -187,3 +187,22 @@ def test_confidence_fit_recovers_signal() -> None:
     assert m.coef[2] > 1.0 and m.coef[5] < -0.5
     ece, _ = expected_calibration_error(m.predict(X), y)
     assert ece < 0.05
+
+
+@pytest.mark.xfail(reason="diagonal lines are not extracted (orthogonal-only line stage, "
+                          "DECISIONS D-021); 6% of OPEN100 structural edges", strict=True)
+def test_diagonal_line(pcfg: dict[str, Any]) -> None:
+    img = canvas()
+    cv2.line(img, (100, 100), (500, 400), 0, 5)
+    s = [sym("A", 60, 60, 100, 100), sym("B", 500, 400, 540, 440)]
+    d = run(img, s, pcfg)
+    assert len(d.edges) >= 1
+
+
+def test_text_next_to_line_adds_no_nodes(pcfg: dict[str, Any]) -> None:
+    img = canvas()
+    hline(img, 300, 100, 700)
+    cv2.putText(img, "SIZE-RCS-100078-SPEC", (180, 290), cv2.FONT_HERSHEY_SIMPLEX, 0.9, 0, 2)
+    s = [sym("A", 60, 280, 100, 320), sym("B", 700, 280, 740, 320)]
+    d = run(img, s, pcfg)
+    assert len(d.edges) == 3 and not any(x.cls == "crossing" for x in d.symbols)

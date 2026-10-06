@@ -13,7 +13,7 @@ deskew:
   min_angle: 0.05          # smaller estimates are treated as level (no resampling)
 
 lines:
-  threshold: 150           # gray < threshold is ink (Dataset-PID background is gray ~199)
+  threshold: 180           # gray < threshold is ink (Dataset-PID paper ~199); 150 -> 180 in R-008
   mask_pad: 1              # px added around symbol boxes when blanking them
   min_length: 30           # morphological opening length; shorter runs (text) are dropped
   bridge_gap: 21           # closing length; bridges dash gaps (Dataset-PID gaps: median 11, p99 20 px)
@@ -47,5 +47,5 @@ crop:
   frame_margin_frac: 0.01  # ignore rules within 1% of the frame edge (double frames)
 
 confidence:
-  enabled: false           # set after fitting (scripts/fit_confidence.py)
+  enabled: true            # 2-fold CV on val: ECE 0.017, edge mAP 0.776 -> 0.898 (R-008)
   model: configs/confidence_model.json

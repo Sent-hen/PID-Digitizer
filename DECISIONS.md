@@ -226,3 +226,27 @@ The full change table is in `docs/PROPOSAL.md` §9.
 - **Rejected:**
   - rewriting the acceptance metric before continuing;
   - spending a one-time OPEN100 test run on an intermediate configuration.
+
+## D-021 Milestone 3 line/graph decisions (2026-10-05)
+
+- **Ankles as ports:** two graph rules from the GT invariant that ankles have degree 2:
+  - drop edges between two ankles of the same symbol;
+  - iteratively drop ankles left with only their symbol edge.
+  - These remove ports created by text strokes and by symbol outlines drawn just outside the box (diagnosed on val sheet 147). Oracle val, Dataset-PID: edge F1 0.938 → 0.954.
+- **Dashed joins:** non-solid segments get `dashed_extra_tol` = 20 px on join and snap. A dashed run ends at its last dash, up to one gap (about 16 px) short of the line or symbol it meets (diagnosed on val sheet 333). Oracle non-solid recall 0.778 → 0.898.
+- **Ink threshold 150 → 180:**
+  - better on OPEN100 train (edge F1 0.689 → 0.719) and Dataset-PID val (0.953 → 0.955), Synthetic unchanged;
+  - degraded paper stays above 180 (level-2 paper 220, noise σ 12; level 3 is binarized).
+- **Mask padding:** 1 px kept; 3 and 5 px made no difference with detector boxes.
+- **Text mask:** substituted, not implemented as a separate model.
+  - Proposal v3 asked for "text detection only, permissive detector". Text-induced false structure is already handled by the side-ink filter (D-010), the ankle-port rule above, and symbol-free component pruning. A "text next to a line" fixture passes.
+  - A learned text detector (CRAFT/EasyOCR/PaddleOCR) would be a heavy new dependency that needs user approval (CLAUDE.md), and the remaining errors on val aren't text-dominated.
+  - Revisit if the error analysis (Milestone 5) shows text-induced errors.
+- **Diagonal lines are not supported** (orthogonal-only line stage). They're 6% of OPEN100 structural edges and absent from the generated subsets. Fixture `test_diagonal_line` is a strict xfail, and this goes under Limitations.
+- **Remaining OPEN100 misses** (inspected on train sheets 6 and 9):
+  - very short nozzle stubs between small symbols and tank walls, below `min_length`;
+  - symbols nested inside a large symbol's box, blanked along with the outer box.
+- **Confidence:** a logistic model over 11 geometric/detector features (graph/confidence.py), fitted on val.
+  - Two-fold CV by drawing gives ECE and edge mAP on held-out drawings.
+  - The mid-range (0.4–0.8) is overconfident, but those bins hold fewer than 3% of edges. A second calibration step (isotonic) was rejected for so little mass.
+  - Structural node confidence = mean of incident edge confidences.
