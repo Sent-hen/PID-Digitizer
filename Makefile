@@ -16,7 +16,7 @@ VAL_SPLITS ?= --split dataset_pid_val --split synthetic_val
 RUN ?= m1b_baseline
 
 .PHONY: install lint typecheck test test-dataset check inspect splits eval-oracle \
-        tiles train baseline baseline-val baseline-oracle eval report demo
+        tiles train baseline baseline-val baseline-oracle eval report weights serve docker-build demo demo-down
 
 install:
 	uv sync
@@ -66,5 +66,18 @@ eval:  ## Milestone 5: run the final test matrix once (resumable), then all tabl
 report:  ## regenerate tables/figures from saved metrics only
 	$(PY) scripts/make_report.py
 
-demo:
-	@echo "Milestone 6: not implemented yet" && exit 1
+weights:  ## download detector weights from the GitHub release (sha1-checked)
+	python scripts/fetch_weights.py
+
+serve:  ## run the API + review UI locally (GPU if available) on http://localhost:8000
+	$(PY) -m uvicorn pid.api.app:app --host 127.0.0.1 --port 8000
+
+docker-build:
+	docker compose build
+
+demo: weights  ## start the container stack and process the bundled sample drawing
+	docker compose up -d --build
+	python scripts/demo.py
+
+demo-down:
+	docker compose down

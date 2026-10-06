@@ -54,4 +54,4 @@ Internally, `connector` is called `ankle` and `inlet/outlet` is called `inlet_ou
 - **Exact round trip:** `Drawing → GraphML → Drawing` is exact, and `GraphML → Drawing → GraphML` is byte-identical (floats written with `repr`; edge order and endpoint orientation preserved). Tested in `tests/test_graphml.py`.
 - **IDs:** node ids are XML NMTOKENs. PID2Graph OPEN100 ids such as `inlet/outlet3` are sanitized to `inlet_outlet3` on load.
 - **Not encoded:** line geometry and edge polylines (edges run between node centres), text and tags (not produced), and ports beyond ankle nodes.
-- **Versioning:** changing these attributes after Milestone 4 requires a schema version bump and user approval (CLAUDE.md).
+- **Versioning:** any change to these attributes requires a new `schema_version`; readers reject an incompatible major version.

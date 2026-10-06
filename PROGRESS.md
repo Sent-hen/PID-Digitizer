@@ -2,24 +2,29 @@
 
 Spec: [docs/PROPOSAL.md](docs/PROPOSAL.md) **v3** (GraphML primary output, dataset-driven scope, option B).
 
-## Current milestone: 6 (Service, review UI, container): in progress
+## Current state: all milestones (0–6) complete
 
-- **Done:**
-  - `configs/serve.yaml`;
-  - `api/store.py` (SQLite jobs);
-  - `api/corrections.py` (typed ops, atomic, append-only log);
-  - `api/app.py`, with the planned endpoints plus `/jobs/{id}/image` and `/jobs`. It has upload limits, JSON logs, the model loaded once, and a weights sha1 check;
-  - static UI in `src/pid/ui/`;
-  - `tests/test_api.py` (8 tests, fake pipeline, CPU only).
-  - Verified locally: a real job on a val sheet finishes in about 5 s on the GPU, and the UI loads the job and draws the graph.
-- **Left:**
-  - check UI interactions in the browser (select, relabel, add/delete edge, downloads);
-  - CPU Dockerfile and docker-compose (torch from the CPU index), and `scripts/fetch_weights.py`. Ask the user before publishing weights anywhere, because of the CC BY-SA derivative question;
-  - bundled sample drawing with attribution, `make demo` / `make serve`;
-  - README quickstart, DECISIONS entry, PR.
-  - Docker Desktop's engine was not running at last check (`docker info` failed).
+The plan in `docs/PROPOSAL.md` (v3) is done. There's no active milestone. To build on the project, start from "Ideas for next work" below and the open issues.
 
-Milestones 0–5 are complete.
+### Milestone 6 (complete 2026-10-06; D-025, RESULTS R-011)
+- [x] **API:** `POST /jobs`, `GET /jobs[/{id}]`, `GET|PATCH /jobs/{id}/graph`, `GET /jobs/{id}/result?format=graphml|dexpi`, `GET /jobs/{id}/overlay`, `GET /jobs/{id}/image`, `GET /health`, and OpenAPI at `/docs`.
+- [x] **Jobs:** in-process worker with SQLite job state. Upload size/type/pixel limits, a timeout, JSON logs, the model loaded once with a sha1 check.
+- [x] **Review UI:**
+  - pan/zoom, confidence colouring, a low-confidence filter, click to inspect;
+  - relabel, delete, confirm, line type, add edge;
+  - GraphML/DEXPI/overlay downloads;
+  - an append-only corrections log.
+  - Verified in the browser.
+- [x] **Container:** CPU Dockerfile (non-root, health check, pinned via `uv.lock`) and `docker-compose.yml`. `make demo` processes the bundled sample from a clean start.
+- [x] **Weights:** published as the GitHub release `weights-detector-m2c-v1`, fetched by `scripts/fetch_weights.py` (sha1-checked; the repository is private, so it uses `gh` or a token).
+- [x] **API tests:** pytest + httpx, covering upload, polling, GraphML/DEXPI retrieval, a correction round trip, validation errors and a failed job.
+
+### Ideas for next work (not started)
+- **Crossing convention:** learn junction-vs-crossing (junction dots, line hops), which needs a few labelled real sheets. This is the main OPEN100 loss (docs/ERROR_ANALYSIS.md).
+- **Ankle placement:** snap ankles to where the pipe's ink meets the symbol, not to the box edge. Most generated-subset misses are 2–4 px node offsets.
+- **Robustness simulator:** make it resolution-relative (D-024).
+- **Active learning:** retrain from the reviewer corrections log.
+- **Stretch items** from the proposal: the vector-PDF path, and tag reading (OCR) on a hand-labelled sample.
 
 ### Milestone 5 (complete 2026-10-06; D-024, RESULTS R-010)
 - [x] **Final metrics on test, run once per final config** (`make eval` → `docs/FINAL_RESULTS.md`), edge F1 / edge mAP:
@@ -89,9 +94,4 @@ An early robustness run silently loaded 20-iteration smoke-test weights, because
 - **Machine speed:** the GPU looked thermally or power-limited during recent runs (timings roughly doubled).
 
 ## Next concrete step
-Milestone 6 (v3 §6):
-1. **FastAPI service:** `POST /jobs`, `GET /jobs/{id}`, `GET /jobs/{id}/result?format=graphml|dexpi`, `GET /jobs/{id}/overlay`, `PATCH /jobs/{id}/graph`, `GET /health`.
-2. **Jobs:** an in-process worker with SQLite job state.
-3. **Static review UI:** confidence overlay, low-confidence filter, inspect, relabel/delete/add edge, download.
-4. **Container:** CPU Dockerfile and docker-compose, a weights fetch script, and `make demo`.
-5. **API tests** with pytest + httpx.
+None pending. Pick an item from "Ideas for next work". Open a new branch from `main`, and add a DECISIONS entry and a RESULTS entry for any new experiment.

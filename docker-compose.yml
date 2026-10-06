@@ -1,0 +1,19 @@
+# docker compose up --build   ->  http://localhost:8000  (review UI; API docs at /docs)
+# Requires weights/detector_m2c.pt on the host: python scripts/fetch_weights.py
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: pid-digitizer:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./weights:/app/weights:ro
+      - pid-data:/data
+    environment:
+      PID_DEVICE: cpu
+    restart: unless-stopped
+
+volumes:
+  pid-data:

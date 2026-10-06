@@ -425,3 +425,16 @@ Final test results (run once; detector `weights/detector_m2c.pt` sha1 `531ab26ce
 | Synthetic (38 sheets) | 0.991 | 0.934 | 0.915 | 0.918 | 0.897 / 0.881 / 0.837 |
 | OPEN100 (real) (8 sheets) | 0.666 | 0.588 | 0.486 | 0.380 | 0.411 / 0.232 / 0.037 |
 <!-- final:end -->
+
+## R-011 Milestone 6: service and container (smoke measurements)
+
+These are functional checks, not benchmarks. The same sample, Dataset-P&ID validation sheet 10 (7168×4561), was processed through the API.
+
+| setup | time per sheet | output |
+|---|---|---|
+| `make serve`, RTX 4070 Laptop (CUDA) | about 5 s | 410 nodes, 459 edges |
+| `make demo`, Docker CPU image (`OMP_NUM_THREADS=4`, Core Ultra 9 185H) | 146 s | 410 nodes, 458 edges |
+
+- **CPU vs GPU:** the one-edge difference comes from CPU vs GPU floating-point differences in the detector.
+- **Validity:** both runs' GraphML and DEXPI downloads validate with zero errors.
+- **Container:** reports healthy and runs as uid 10001. Image size 2.06 GB (CPU torch).
