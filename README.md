@@ -4,9 +4,9 @@ Converts raster P&ID drawings (scans or rendered sheets) into a graph:
 - **nodes:** symbols, plus line crossings and the ports where pipes enter symbols;
 - **edges:** pipes and signal lines.
 
-It runs a tiled Faster R-CNN symbol detector, orthogonal line extraction with deskew and frame cropping, graph assembly, and per-edge confidence scores calibrated to observed accuracy. Output is GraphML ([schema](docs/GRAPHML_SCHEMA.md)) plus DEXPI-structured XML (DEXPI 2.0.1, [coverage](docs/DEXPI_COVERAGE.md)). It's evaluated on [PID2Graph](https://zenodo.org/records/14803338) under the dataset's official graph metrics.
+A Faster R-CNN model finds the symbols, working on the sheet in tiles. Lines are pulled out separately (horizontal and vertical only), after straightening the scan and cropping off the frame. The pieces are then joined into a graph, and every edge gets a confidence score calibrated against how often edges at that score turned out right. Output is GraphML ([schema](docs/GRAPHML_SCHEMA.md)) plus DEXPI-structured XML (DEXPI 2.0.1, [coverage](docs/DEXPI_COVERAGE.md)). I score it on [PID2Graph](https://zenodo.org/records/14803338) with the dataset's official graph metrics.
 
-> **Status:** all six milestones of the [plan](docs/PROPOSAL.md) are complete: pipeline, evaluation, exports, service, review UI and container. See [PROGRESS.md](PROGRESS.md).
+> **Status:** all six milestones in the [plan](docs/PROPOSAL.md) are done (pipeline, evaluation, exports, service, review UI, container). See [PROGRESS.md](PROGRESS.md).
 
 ## Example
 
